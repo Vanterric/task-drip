@@ -26,32 +26,45 @@ useEffect(() => {
   let startX = 0;
   let currentX = 0;
   let touchingSidebar = false;
+  let hasMovedEnoughToTrigger = false;
+
+  const movementThreshold = 15; // 🧠 minimum movement before we even start sliding
 
   const handleTouchStart = (e) => {
     if (!isOpen) return;
-    
     startX = e.touches[0].clientX;
     touchingSidebar = true;
-    panel.style.transition = ""; // reset any existing transition
+    hasMovedEnoughToTrigger = false;
+    panel.style.transition = ""; // remove transition for drag
   };
 
   const handleTouchMove = (e) => {
     if (!touchingSidebar) return;
-    e.preventDefault(); 
+
     currentX = e.touches[0].clientX;
-    const translateX = Math.min(0, currentX - startX); // Only allow left-swipe
+    const deltaX = currentX - startX;
+
+    // Ignore slight wiggles
+    if (!hasMovedEnoughToTrigger && Math.abs(deltaX) < movementThreshold) {
+      return;
+    }
+
+    hasMovedEnoughToTrigger = true;
+    e.preventDefault(); // stop horizontal page scroll
+    const translateX = Math.min(0, deltaX);
     panel.style.transform = `translateX(${translateX}px)`;
   };
 
   const handleTouchEnd = () => {
     if (!touchingSidebar) return;
     touchingSidebar = false;
+
     const diff = currentX - startX;
 
-    if (diff < -60) {
-      onClose(); // close sidebar
+    if (hasMovedEnoughToTrigger && diff < -60) {
+      onClose(); // intentional swipe
     } else {
-      // Snap back
+      // snap back
       panel.style.transition = "transform 0.2s ease-out";
       panel.style.transform = "translateX(0)";
       setTimeout(() => {
@@ -61,17 +74,16 @@ useEffect(() => {
   };
 
   panel.addEventListener("touchstart", handleTouchStart, { passive: true });
-panel.addEventListener("touchmove", handleTouchMove, { passive: false });
-panel.addEventListener("touchend", handleTouchEnd, { passive: true });
-
+  panel.addEventListener("touchmove", handleTouchMove, { passive: false });
+  panel.addEventListener("touchend", handleTouchEnd, { passive: true });
 
   return () => {
-    panel.removeEventListener("touchstart", handleTouchStart, { passive: true });
-panel.removeEventListener("touchmove", handleTouchMove, { passive: false });
-panel.removeEventListener("touchend", handleTouchEnd, { passive: true });
-
+    panel.removeEventListener("touchstart", handleTouchStart);
+    panel.removeEventListener("touchmove", handleTouchMove);
+    panel.removeEventListener("touchend", handleTouchEnd);
   };
 }, [isOpen, onClose]);
+
 
 useEffect(() => {
   const panel = panelRef.current;
@@ -137,6 +149,7 @@ useEffect(() => {
   
 
   return (
+    <div>
     <div className="fixed inset-0 z-50 flex pointer-events-none">
      <div
     className={`fixed inset-0 transition-opacity duration-300 ${
@@ -265,9 +278,9 @@ useEffect(() => {
           </button>
         </div>
       </div>
-      
-      
-      <DeleteTaskListModal
+
+    </div>
+    <DeleteTaskListModal
   isOpen={showDeleteModal}
   onClose={() => {
     setShowDeleteModal(false);
@@ -317,7 +330,6 @@ if (activeTaskList?._id === listToDelete._id) {
   token={token}
   onSave={refetchTaskListsOrUpdateUI}
 />
-
     </div>
   );
 }
