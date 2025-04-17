@@ -4,6 +4,8 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 const jwt = require('jsonwebtoken');
 const User = require('./models/User');
+const TaskList = require('./models/TaskList');
+const Task = require('./models/Task');
 const nodemailer = require('nodemailer');
 const app = express();
 app.use(cors());
@@ -18,7 +20,6 @@ mongoose.connect(process.env.MONGO_URI)
 app.listen(process.env.PORT || 3001, () =>
   console.log("Backend running on port", process.env.PORT || 3001)
 );
-
 
 
 
@@ -41,15 +42,23 @@ const verifyToken = (req, res, next) => {
     }
   };
 
+  app.get('/auth/verifyToken', verifyToken, (req, res) => {
+    res.json({ valid: true, user: req.user });
+  });
+  
   
   app.post('/auth/request-link', async (req, res) => {
     const { email } = req.body;
   
     try {
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: '10m' });
-  
       let user = await User.findOne({ email });
       if (!user) user = await User.create({ email });
+  
+      const token = jwt.sign(
+        { email: user.email, id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '10m' }
+      );
   
       user.magicToken = token;
       await user.save();
@@ -65,21 +74,40 @@ const verifyToken = (req, res, next) => {
       res.status(500).json({ error: 'Something went wrong.' });
     }
   });
+  
 
 
   app.get('/auth/validate', async (req, res) => {
     const { token } = req.query;
+  
     try {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
+  
       const user = await User.findOne({ email: payload.email });
+      if (!user || user.magicToken !== token) {
+        return res.status(401).json({ error: 'Invalid token' });
+      }
   
-      if (!user || user.magicToken !== token) return res.status(401).json({ error: 'Invalid token' });
+      // ✅ Generate a new long-lived session token
+      const sessionToken = jwt.sign(
+        { email: user.email, id: user._id },
+        process.env.JWT_SECRET,
+        { expiresIn: '7d' }
+      );
   
-      res.json({ token, user: { email: user.email, isPro: user.isPro } });
-    } catch {
+      res.json({
+        token: sessionToken, // ✅ new token replaces the magic one
+        user: {
+          email: user.email,
+          isPro: user.isPro,
+        },
+      });
+    } catch (err) {
+      console.error("Token validation failed:", err);
       res.status(400).json({ error: 'Token expired or invalid' });
     }
   });
+  
   
   // user routes
   app.get('/user', verifyToken, async (req, res) => {
@@ -117,6 +145,30 @@ const verifyToken = (req, res, next) => {
     await Task.deleteMany({ tasklistId: req.params.id });
     res.json({ success: true });
   });
+  
+  app.put('/tasklists/:id', verifyToken, async (req, res) => {
+    const { name } = req.body;
+  
+    if (!name || name.trim() === "") {
+      return res.status(400).json({ error: "Name is required" });
+    }
+  
+    try {
+      const updated = await TaskList.findByIdAndUpdate(
+        req.params.id,
+        { name },
+        { new: true }
+      );
+  
+      if (!updated) return res.status(404).json({ error: "Task list not found" });
+  
+      res.json(updated);
+    } catch (err) {
+      console.error("Error updating task list:", err);
+      res.status(500).json({ error: "Something went wrong" });
+    }
+  });
+  
 
 
   // task routes
@@ -146,6 +198,17 @@ const verifyToken = (req, res, next) => {
   app.delete('/tasks/:id', verifyToken, async (req, res) => {
     await Task.deleteOne({ _id: req.params.id });
     res.json({ success: true });
+  });
+
+  app.patch('/tasks/:id', verifyToken, async (req, res) => {
+    try {
+      const updated = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if (!updated) return res.status(404).json({ error: "Task not found" });
+      res.json(updated);
+    } catch (err) {
+      console.error("PATCH error:", err);
+      res.status(500).json({ error: "Something went wrong." });
+    }
   });
   
   

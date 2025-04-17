@@ -1,15 +1,16 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import LoginPage from "./pages/login/LoginPage";
-
-// Placeholder for protected app area (we'll wire that up next)
-const AppHome = () => <div className="p-8">🏠 Task Drip App</div>;
+import UnlockPage from "./pages/unlock/Unlock";
+import PrivateRoute from "./components/PrivateRoute";
+import HomePage from "./pages/home/homePage";
 
 function App() {
   return (
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-        <Route path="/app" element={<AppHome />} />
+        <Route path="/unlock" element={<UnlockPage />} />
+        <Route path="/app" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/" element={<Navigate to="/login" />} />
       </Routes>
     </Router>
