@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 
-import { CheckCircle, Droplet, Menu, Plus, RefreshCw } from "lucide-react"; // optional icon lib, or use emoji
+import { CheckCircle, Droplet, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -178,6 +178,12 @@ export default function HomePage() {
   <Plus className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
   Add Task
 </button>
+{user?.isPro ? <button
+  className= {`cursor-pointer group fixed bottom-6 left-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  
+>
+<Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
+</button> : null}
 
 
 <AddTaskModal
