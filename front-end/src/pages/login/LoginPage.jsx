@@ -1,3 +1,4 @@
+import { CheckCircle } from "lucide-react";
 import { useState } from "react";
 
 export default function LoginPage() {
@@ -34,10 +35,10 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#F6F8FA] px-4 py-10 md:px-10">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAECE5] px-4 py-10 md:px-10">
       <div className="w-full h-full max-w-4xl bg-white rounded-3xl shadow-lg p-6 md:p-16 flex flex-col justify-center">
         <h1 className="text-3xl md:text-5xl font-bold text-[#4F5962] mb-4 text-center">
-          Welcome to Task Drip
+          Welcome to DewList
         </h1>
         <p className="text-base md:text-lg text-[#91989E] mb-10 leading-relaxed text-center max-w-2xl mx-auto">
           One task at a time. Built for ADHD brains. We'll email you a magic login link—
@@ -45,15 +46,16 @@ export default function LoginPage() {
         </p>
 
         {status === "success" ? (
-          <div className="text-[#6DBF67] font-medium text-center text-lg">
-            ✅ Magic link sent! Check your inbox.
-          </div>
+          <div className="flex items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-lg">
+          <CheckCircle className="w-5 h-5" />
+          Magic link sent! Check your inbox.
+        </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col items-center gap-6">
             <div className="w-full flex justify-center">
             <input
               type="email"
-              className="w-full max-w-lg rounded-2xl border border-[#4F596254] px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#4E81AF] transition"
+              className="w-full max-w-lg rounded-2xl border border-[#4F596254] px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition"
               placeholder="you@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -63,7 +65,7 @@ export default function LoginPage() {
             <div className="w-full flex justify-center">
             <button
               type="submit"
-              className={`w-full max-w-lg bg-[#4E81AF] hover:bg-[#3A6892] text-white text-lg font-semibold py-4 rounded-2xl transition-all duration-200 ${
+              className={`cursor-pointer w-full max-w-lg bg-[#4C6CA8] hover:bg-[#3A5D91] text-white text-lg font-semibold py-4 rounded-2xl transition-all duration-200 ${
                 status === "loading" ? "opacity-50 cursor-not-allowed" : ""
               }`}
               disabled={status === "loading"}

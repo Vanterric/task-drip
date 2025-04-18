@@ -11,7 +11,36 @@ export function AuthProvider({ children }) {
 
   const isAuthenticated = !!token;
 
+
+  useEffect(() => {
+    console.log("User:", user);
+    if (!user?.isPro || !user?.proExpiresAt) return;
   
+    const now = new Date();
+    const expiry = new Date(user.proExpiresAt);
+    console.log('now:', now);
+    console.log('expiry:', expiry);
+    if (expiry < now) {
+      
+      // Membership has lapsed
+      const downgradedUser = { ...user, isPro: false };
+  
+      // Optional: hit your backend to update DB
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/downgrade`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+        },
+        body: JSON.stringify({ email: user.email }),
+      });
+      
+      setUser(downgradedUser);
+      localStorage.setItem('user', JSON.stringify(downgradedUser)); // if you're caching that
+    }
+  }, [user]);
+  
+
 
   // Save to localStorage on change
   useEffect(() => {
@@ -56,6 +85,4 @@ export function AuthProvider({ children }) {
   );
 }
 
-export function useAuth() {
-  return useContext(AuthContext);
-}
+export const useAuth = () => useContext(AuthContext);

@@ -9,7 +9,7 @@ const Task = require('./models/Task');
 const nodemailer = require('nodemailer');
 const app = express();
 app.use(cors());
-app.use(express.json());
+
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
 
 
@@ -21,8 +21,37 @@ app.listen(process.env.PORT || 3001, () =>
   console.log("Backend running on port", process.env.PORT || 3001)
 );
 
+//Stripe Payment Fulfillment
+app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
+  const sig = req.headers['stripe-signature'];
+  let event;
+  const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  try {
+    event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+  } catch (err) {
+    console.error('Webhook Error:', err.message);
+    return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
 
+  if (event.type === 'payment_intent.succeeded') {
+    const intent = event.data.object;
+    const email = intent.receipt_email || intent.billing_details.email;
 
+    // ✅ Update your DB (MongoDB, etc)
+    await User.updateOne(
+      { email },
+      {
+        isPro: true,
+        isLifeTimePro: intent.metadata?.plan === 'lifetime',
+        proExpiresAt: intent.metadata?.plan === 'lifetime' ? null : Date.now() + 1000 * 60 * 60 * 24 * 30 // or Stripe's subscription end
+      }
+    );
+  }
+
+  res.json({ received: true });
+});
+
+app.use(express.json());
 // auth routes
 
 const verifyToken = (req, res, next) => {
@@ -84,27 +113,43 @@ const verifyToken = (req, res, next) => {
       const payload = jwt.verify(token, process.env.JWT_SECRET);
   
       const user = await User.findOne({ email: payload.email });
-      if (!user || user.magicToken !== token) {
-        return res.status(401).json({ error: 'Invalid token' });
-      }
+      if (!user) return res.status(401).json({ error: 'User not found' });
   
-      // ✅ Generate a new long-lived session token
+      // Issue a new 7-day token
       const sessionToken = jwt.sign(
         { email: user.email, id: user._id },
         process.env.JWT_SECRET,
         { expiresIn: '7d' }
       );
   
+      // Store it if needed
+      user.magicToken = sessionToken;
+      await user.save();
+  
       res.json({
-        token: sessionToken, // ✅ new token replaces the magic one
+        token: sessionToken,
         user: {
           email: user.email,
           isPro: user.isPro,
+          isLifeTimePro: user.isLifeTimePro,
+          proExpiresAt: user.proExpiresAt,
         },
       });
     } catch (err) {
       console.error("Token validation failed:", err);
       res.status(400).json({ error: 'Token expired or invalid' });
+    }
+  });
+  
+  app.post('/auth/downgrade', verifyToken, async (req, res) => {
+    const { email } = req.body;
+  
+    try {
+      await User.updateOne({ email }, { isPro: false });
+      res.json({ success: true });
+    } catch (err) {
+      console.error("Downgrade error:", err);
+      res.status(500).json({ error: "Failed to downgrade" });
     }
   });
   
@@ -210,5 +255,28 @@ const verifyToken = (req, res, next) => {
       res.status(500).json({ error: "Something went wrong." });
     }
   });
+  
+  // stripe endpoints
+  const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+  app.post('/create-payment-intent', async (req, res) => {
+    const { email, plan } = req.body;
+  
+    const amountMap = {
+      monthly: 500,
+      yearly: 3000,
+      lifetime: 10000,
+    };
+  
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountMap[plan],
+      currency: 'usd',
+      receipt_email: email,
+      metadata: { plan },
+    });
+  
+    res.json({ clientSecret: paymentIntent.client_secret });
+  });
+
   
   

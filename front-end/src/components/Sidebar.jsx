@@ -3,6 +3,7 @@ import { useState } from "react";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
+import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
@@ -191,39 +192,42 @@ useEffect(() => {
                 onSelectList(list);
                 onClose();
               }}
-              className="text-left w-full px-3 py-2 rounded-lg hover:bg-[#E0ECFC] text-[#4F5962]"
+              className="cursor-pointer text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.15)] text-[#4F5962]"
             >
               {list.name}
             </button>
           
             <button
               onClick={(e) => {e.stopPropagation();setActiveKebab(list._id)}}
-              className="text-[#91989E] px-2"
+              className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962]"
             >
               ⋮
             </button>
           
             {activeKebab === list._id && (
               <div className="absolute right-4 mt-10 w-32 bg-white shadow-lg rounded-xl text-sm text-[#4F5962] z-50">
+                  <button
+                    className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] text-[#4C6CA8] transition rounded"
+                    onClick={() => {
+                      setShowEditModal(true);
+                      setListToEdit(list);
+                      setActiveKebab(null);
+                    }}
+                  >
+                    <Pencil className="w-4 h-4 text-[#4C6CA8]" />
+                    Edit List
+                  </button>
+
                 <button
-                  className="w-full text-left px-4 py-2 hover:bg-[#F6F8FA]"
-                  onClick={() => {
-                    setShowEditModal(true);
-                    setListToEdit(list);
-                    setActiveKebab(null);
-                  }}
-                >
-                  ✏️ Edit List
-                </button>
-                <button
-                  className="w-full text-left px-4 py-2 text-[#DF7C52] hover:bg-[#FAECE5]"
+                  className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 text-[#D66565] hover:bg-[rgba(214,101,101,0.15)] transition rounded"
                   onClick={() => {
                     setListToDelete(list);
                     setShowDeleteModal(true);
                     setActiveKebab(null);
                   }}
                 >
-                  🗑️ Delete List
+                  <Trash2 className="w-4 h-4 text-[#D66565]" />
+                  Delete List
                 </button>
               </div>
             )}
@@ -238,12 +242,12 @@ useEffect(() => {
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
                 placeholder="New list name"
-                className="w-full px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none"
+                className="w-full px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
               />
               <div className="flex gap-2">
                 <button
                   onClick={handleAdd}
-                  className="bg-[#4E81AF] text-white px-4 py-1 rounded hover:bg-[#3a6892]"
+                  className="bg-[#4C6CA8] text-white px-4 py-1 rounded hover:bg-[#3A5D91] cursor-pointer"
                 >
                   Add
                 </button>
@@ -252,7 +256,7 @@ useEffect(() => {
                     setShowInput(false);
                     setNewListName("");
                   }}
-                  className="text-sm text-[#91989E] hover:text-[#4F5962]"
+                  className="text-sm text-[#91989E] hover:text-[#4F5962] cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -261,20 +265,23 @@ useEffect(() => {
           ) : (
             <button
               onClick={() => setShowInput(true)}
-              className="mt-4 text-sm text-[#4F5962] px-2 py-2 rounded hover:bg-[#F6F8FA] transition"
+              className="mt-4 flex items-center gap-2 text-sm text-[#4C6CA8] font-medium px-3 py-2 rounded-full hover:bg-[#F6F8FA] transition cursor-pointer"
             >
-              ➕ Add New Task List
+              <Plus className="w-4 h-4 text-[#4C6CA8]" />
+              Add New Task List
             </button>
+
           )}
         </div>
 
         {/* Sticky logout */}
         <div className="p-4 border-t">
           <button
-            className="w-full text-sm text-[#DF7C52] font-medium hover:text-red-600 transition"
+            className="cursor-pointer w-full flex justify-center items-center gap-2 text-[#D66565] hover:text-[#B94E4E] text-sm font-medium py-2 rounded transition"
             onClick={logout}
           >
-            🚪 Logout
+            <LogOut className="w-4 h-4" />
+            Logout
           </button>
         </div>
       </div>

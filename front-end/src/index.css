@@ -4,3 +4,109 @@
 body {
   @apply font-sans;
 }
+@keyframes sparkleBurst {
+  0% {
+    opacity: 1;
+    transform: translate(0, 0) scale(1) rotate(0deg);
+  }
+  100% {
+    opacity: 0;
+    transform: var(--sparkle-translate) scale(0.3) rotate(var(--sparkle-rotate));
+  }
+}
+
+
+.animate-sparkleBurst {
+  animation: sparkleBurst 0.8s ease-out forwards;
+}
+@keyframes medalIn {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateY(-180deg) scale(0.3);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(800px) rotateY(15deg) scale(1.15);
+  }
+  100% {
+    transform: perspective(800px) rotateY(0deg) scale(1);
+  }
+}
+
+@keyframes medalHover {
+  0%, 100% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(3deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-3deg);
+  }
+}
+
+@keyframes sparkleOnce {
+  0% {
+    background: radial-gradient(circle, rgba(255,255,255,0.4) 20%, transparent 20%);
+    background-position: 0 0;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+    background-position: 10px 10px;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+
+.animate-medal-in {
+  animation: medalIn 1s ease-out forwards;
+  transform-style: preserve-3d;
+}
+
+.animate-medal-hover {
+  animation: medalHover 0.6s ease-in-out infinite;
+}
+
+.sparkle-once {
+  animation: sparkleOnce 1s ease-in-out 0.4s forwards;
+}
+
+@keyframes realSparkle {
+  0% {
+    transform: scale(0.4) rotate(0deg);
+    opacity: 0;
+  }
+  30% {
+    opacity: 0.9;
+    transform: scale(1.4) rotate(90deg);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2) rotate(180deg);
+  }
+  100% {
+    transform: scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+.animate-real-sparkle {
+  animation: realSparkle 1.2s ease-out forwards;
+}
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 0px rgba(255, 215, 0, 0);
+  }
+  50% {
+    box-shadow: 0 0 20px 6px rgba(255, 215, 0, 0.7);
+  }
+}
+
+.glow-pulse {
+  animation: pulse-glow 1.5s ease-in-out infinite;
+}
+
+

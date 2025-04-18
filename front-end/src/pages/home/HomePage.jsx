@@ -3,16 +3,20 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 
-import { Menu } from "lucide-react"; // optional icon lib, or use emoji
+import { CheckCircle, Droplet, Menu, Plus, RefreshCw } from "lucide-react"; // optional icon lib, or use emoji
+import UpgradePromptModal from "../../components/UpgradePromptModal";
+import ProgressBar from "../../components/ProgressBar";
+import TaskDripBadge from "../../components/TaskDripBadge";
 
 export default function HomePage() {
-  const { token } = useAuth();
+  const { token, user } = useAuth();
   const [activeTaskList, setActiveTaskList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [taskLists, setTaskLists] = useState([]);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   
 
@@ -80,24 +84,40 @@ export default function HomePage() {
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962]">
       {/* Masthead */}
       <div className="flex items-center justify-between px-4 py-4">
-      <button className="p-2 rounded-full bg-white shadow-md" onClick={() => setShowSidebar(true)}>
-  <Menu size={24} className="text-[#4F5962]" />
-</button>
+  {/* TaskDrip branding + hamburger */}
+  <div className="flex items-center justify-between px-4 py-4 w-full">
+  {/* Left: Branding */}
+  <div className="flex items-center space-x-2">
+    <button
+      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-white shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6] transition cursor-pointer`}
+      onClick={() => setShowSidebar(true)}
+    >
+      <Menu size={24} className="text-[#4F5962]" />
+    </button>
+    <div className="flex items-center text-[#4F5962] font-semibold text-base tracking-wide">
+      DewList
+      <Droplet className="w-5 h-5 ml-1 text-[#4C6CA8]" />
+    </div>
+  </div>
 
-        <h1 className="text-xl font-bold truncate max-w-[60%]">
-  {activeTaskList ? activeTaskList.name : "Task Drip"}
-</h1>
+  {/* Right: Active task list name */}
+  <h1 className="text-2xl font-bold text-right text-[#4F5962] truncate max-w-[60%]">
+    {activeTaskList ? activeTaskList.name : ''}
+  </h1>
+</div>
+</div>
 
-        <div className="w-10" /> {/* placeholder to balance flex space */}
-      </div>
 
       <div className="flex-grow flex flex-col items-center justify-center px-4">
         {loading ? (
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
         ) : !activeTaskList || tasks.length === 0 ? (
-            <p className="text-lg text-[#91989E]">
-              { !activeTaskList ? "No task list yet. Add one to get started." : "No tasks in this list yet. Try adding one." }
-            </p>
+          <p className="text-lg text-[#91989E] text-center">
+          {!activeTaskList
+            ? "No lists yet. Tap the menu to create one."
+            : "No tasks here yet. Tap Add Task to add your first."}
+        </p>
+        
         ) : nextTask ? (
           <div className="w-full max-w-md text-center space-y-6">
             <div className="bg-white rounded-3xl shadow-lg p-6 text-xl font-semibold">
@@ -105,37 +125,60 @@ export default function HomePage() {
             </div>
 
             <div className="flex gap-4 justify-center">
-              <button
-                onClick={() => handleComplete(nextTask._id)}
-                className="bg-[#6DBF67] text-white px-6 py-3 rounded-xl hover:bg-[#58a754] transition"
-              >
-                ✅ Done
-              </button>
+            <button
+            onClick={() => handleComplete(nextTask._id)}
+            className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+          >
+            <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+            Done
+          </button>
+
               <button
                 onClick={() => handleSkip(nextTask._id)}
-                className="bg-[#4E81AF] text-white px-6 py-3 rounded-xl hover:bg-[#3A6892] transition"
+                className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
               >
-                🔁 Skip
+                <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
+                Skip
               </button>
+
             </div>
 
-            <p className="text-sm text-[#91989E]">
-              {completedCount} of {tasks.length} completed
-            </p>
+            <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>
-        ) : (
-          <div className="text-center text-[#6DBF67] text-lg font-medium">
-            🎉 All tasks complete! Chill time.
+        ) : (<div>
+
+              <div className="flex flex-col items-center justify-center mt-6 space-y-4">
+                <TaskDripBadge />
+
+                <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide">
+  All tasks complete! Chill Time.
+</div>
+
+
+
+              </div>
+
+
+          <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>
         )}
       </div>
 
       <button
-  className="fixed bottom-6 right-6 bg-[#874B9E] text-white px-6 py-4 rounded-full text-lg shadow-lg hover:bg-[#723d85] transition"
-  onClick={() => setShowAddModal(true)}
+  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group fixed bottom-6 right-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  onClick={() => {
+    if (tasks.length >= 5 && !user.isPro) {
+      console.log(JSON.stringify(user));
+      setShowUpgradeModal(true);
+      return;
+    }
+    setShowAddModal(true);
+  }}
 >
-  ➕ Add Task
+  <Plus className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
+  Add Task
 </button>
+
 
 <AddTaskModal
   isOpen={showAddModal}
@@ -173,6 +216,16 @@ export default function HomePage() {
   }}
   
 />
+<UpgradePromptModal
+  isOpen={showUpgradeModal}
+  onClose={() => setShowUpgradeModal(false)}
+  onUpgrade={() => {
+    setShowUpgradeModal(false);
+    // 🔁 send to Stripe Checkout
+    window.location.href = '/subscribe'; // or whatever your route is
+  }}
+/>
+
 <Sidebar
 token={token}
   isOpen={showSidebar}
@@ -196,6 +249,11 @@ token={token}
     setTasks(taskData);
   }}
   onAddTaskList={async (name) => {
+    if (!user.isPro && taskLists.length >= 3) {
+      setShowUpgradeModal(true)
+      setShowSidebar(false)
+      return;
+    }
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
       method: "POST",
       headers: {
