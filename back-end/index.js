@@ -92,7 +92,7 @@ const verifyToken = (req, res, next) => {
       user.magicToken = token;
       await user.save();
   
-      const url = `https://taskdrip.dev/unlock?token=${token}`;
+      const url = `https://dewlist.app/unlock?token=${token}`;
   
       const sent = await sendMagicLinkEmail(email, url);
       if (!sent) return res.status(500).json({ error: "Failed to send email." });
