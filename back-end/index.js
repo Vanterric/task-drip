@@ -6,8 +6,8 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const TaskList = require('./models/TaskList');
 const Task = require('./models/Task');
-const nodemailer = require('nodemailer');
 const app = express();
+const { OpenAI } = require('openai');
 app.use(cors());
 
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
@@ -78,10 +78,10 @@ const verifyToken = (req, res, next) => {
   
   app.post('/auth/request-link', async (req, res) => {
     const { email } = req.body;
-  
+    const lowerCaseEmail = email.toLowerCase().trim();
     try {
-      let user = await User.findOne({ email });
-      if (!user) user = await User.create({ email });
+      let user = await User.findOne({ email: lowerCaseEmail });
+      if (!user) user = await User.create({ email: lowerCaseEmail });
   
       const token = jwt.sign(
         { email: user.email, id: user._id },
@@ -279,4 +279,56 @@ const verifyToken = (req, res, next) => {
   });
 
   
+  // AI endpoints
+  const openai = new OpenAI({
+    apiKey: process.env.OPENAI_API_KEY,
+  });
+
+  app.post('/ai/breakdown', verifyToken, async (req, res) => {
+    console.log('AI breakdown request:', req.body);
+    const { goal } = req.body;
   
+    if (!goal || goal.length < 5) {
+      return res.status(400).json({ error: 'Invalid goal' });
+    }
+  
+    try {
+      const prompt = `
+You're an intelligent productivity assistant.
+
+Break down the following goal into 5–10 clear, actionable tasks. Then, suggest a short, descriptive title for this task list.
+
+Respond with a JSON object in the following format:
+
+{
+  "title": "Short, helpful title",
+  "tasks": [
+    { "content": "First task" },
+    { "content": "Second task" }
+    ...
+  ]
+}
+
+Goal: "${goal}"
+`;
+
+  console.log('sending prompt to OpenAI:');
+  const response = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [
+      { role: 'system', content: 'You are a helpful productivity assistant.' },
+      { role: 'user', content: prompt },
+    ],
+    temperature: 0.5,
+  });
+  
+  console.log('response recieved from OpenAI:', response);
+      const raw = response.choices?.[0]?.message?.content;
+      const taskList = JSON.parse(raw); // try-catch optional
+      console.log('AI tasks:', taskList);
+      res.json({ taskList });
+    } catch (err) {
+      console.error('OpenAI error:', err);
+      res.status(500).json({ error: 'AI breakdown failed.' });
+    }
+  });

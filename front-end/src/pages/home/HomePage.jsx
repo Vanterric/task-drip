@@ -7,6 +7,7 @@ import { CheckCircle, Droplet, Menu, Plus, RefreshCw, Sparkles } from "lucide-re
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
+import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
 
 export default function HomePage() {
   const { token, user } = useAuth();
@@ -17,7 +18,7 @@ export default function HomePage() {
   const [showSidebar, setShowSidebar] = useState(false);
   const [taskLists, setTaskLists] = useState([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
-
+  const [showAIModal, setShowAIModal] = useState(false);
   
 
   useEffect(() => {
@@ -168,7 +169,6 @@ export default function HomePage() {
   className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group fixed bottom-6 right-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
   onClick={() => {
     if (tasks.length >= 5 && !user.isPro) {
-      console.log(JSON.stringify(user));
       setShowUpgradeModal(true);
       return;
     }
@@ -180,7 +180,7 @@ export default function HomePage() {
 </button>
 {user?.isPro ? <button
   className= {`cursor-pointer group fixed bottom-6 left-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
-  
+  onClick={() => setShowAIModal(true)}
 >
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button> : null}
@@ -231,7 +231,7 @@ export default function HomePage() {
     window.location.href = '/subscribe'; // or whatever your route is
   }}
 />
-
+<AITaskBreakdownModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 token={token}
   isOpen={showSidebar}

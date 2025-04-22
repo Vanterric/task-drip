@@ -161,7 +161,6 @@ useEffect(() => {
       pointerEvents: isOpen ? 'auto' : 'none',
     }}
     onClick={(e) => {
-      console.log('ghost click');
       onClose();
       setActiveKebab(null);
     }}

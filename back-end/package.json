@@ -17,6 +17,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.13.2",
     "nodemailer": "^6.10.1",
+    "openai": "^4.95.1",
     "resend": "^4.3.0",
     "stripe": "^18.0.0"
   },
