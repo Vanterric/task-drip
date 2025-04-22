@@ -13,13 +13,12 @@ export function AuthProvider({ children }) {
 
 
   useEffect(() => {
-    console.log("User:", user);
+    
     if (!user?.isPro || !user?.proExpiresAt) return;
   
     const now = new Date();
     const expiry = new Date(user.proExpiresAt);
-    console.log('now:', now);
-    console.log('expiry:', expiry);
+    
     if (expiry < now) {
       
       // Membership has lapsed

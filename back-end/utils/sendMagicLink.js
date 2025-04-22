@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendMagicLinkEmail(toEmail, magicLink) {
   try {
     const { error } = await resend.emails.send({
-      from: 'DewList <login@resend.dev>',
+      from: 'DewList <magiclink@dewlist.app>',
       to: toEmail,
       subject: 'Your Magic Login Link',
       html: `

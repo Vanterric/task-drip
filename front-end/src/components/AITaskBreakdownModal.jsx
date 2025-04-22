@@ -15,7 +15,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
         body: JSON.stringify({ goal }),
       });
@@ -27,7 +27,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
+          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
         body: JSON.stringify({ name: taskList.title }),
       });
@@ -44,7 +44,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
           },
           body: JSON.stringify({
             tasklistId: newTaskList._id,
@@ -60,7 +60,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${newTaskList._id}`,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`,
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
           },
         }
       );
