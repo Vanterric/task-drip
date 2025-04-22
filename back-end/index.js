@@ -8,7 +8,9 @@ const TaskList = require('./models/TaskList');
 const Task = require('./models/Task');
 const app = express();
 const { OpenAI } = require('openai');
-app.use(cors());
+app.use(cors({
+  origin: ['https://dewlist.app', 'http://localhost:5173'], // add your live and dev origins
+}));
 
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
 
