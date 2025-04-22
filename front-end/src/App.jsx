@@ -2,7 +2,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import LoginPage from "./pages/login/LoginPage";
 import UnlockPage from "./pages/unlock/Unlock";
 import PrivateRoute from "./components/PrivateRoute";
-import HomePage from "./pages/home/homePage";
+import HomePage from "./pages/home/HomePage";
 import SubscribePage from "./pages/subscribe/SubscribePage";
 
 function App() {
