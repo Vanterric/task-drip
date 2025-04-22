@@ -23,11 +23,4 @@ dist-ssr
 *.sln
 *.sw?
 
-# Ignore .env files in both frontend and backend
-/front-end/.env
-/back-end/.env
-
-# (Optional) also ignore example placeholders if you don’t want them tracked
-/front-end/.env.local
-/back-end/.env.local
 
