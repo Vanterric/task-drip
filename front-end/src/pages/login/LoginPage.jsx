@@ -80,6 +80,9 @@ export default function LoginPage() {
         )}
 
         <div className="mt-10 text-xs text-[#91989E] text-center max-w-md mx-auto">
+          By continuing, you agree to our <a style={{textDecoration:'underline', color: '#4C6CA8'}} target="_blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing">Privacy Policy</a> and <a style={{textDecoration:'underline', color: '#4C6CA8'}} target="_blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing">Terms & Conditions</a>.
+          <br/>
+          <br/>
           You’ll stay logged in on this device after clicking your email link.
         </div>
       </div>
