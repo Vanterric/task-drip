@@ -282,6 +282,10 @@ useEffect(() => {
             <LogOut className="w-4 h-4" />
             Logout
           </button>
+          <div className="mt-4 text-xs text-[#91989E] flex justify-center space-x-2 ">
+            <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962]  cursor-pointer">Privacy Policy</a>
+            <a target="blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing" className="ml-4 hover:text-[#4F5962]  cursor-pointer">Terms and Conditions</a>
+          </div>
         </div>
       </div>
 
