@@ -8,7 +8,7 @@ export default function DeleteTaskListModal({ isOpen, onClose, onConfirm, listNa
         <div className="bg-white rounded-2xl shadow-xl max-w-sm w-full p-6 text-center dark:bg-[#4F5962]">
           <h2 className="text-lg font-semibold text-[#4F5962] dark:text-white">Delete this list?</h2>
           <p className="text-sm text-[#91989E] mt-2">
-            This will delete <span className="font-medium text-white">"{listName}"</span> and all its tasks.
+            This will delete <span className="font-medium text-[#4F5962] dark:text-white">"{listName}"</span> and all its tasks.
           </p>
           <p className="text-sm text-[#D66565] mt-1 font-semibold">
             This cannot be undone.
