@@ -1,4 +1,5 @@
 import React from 'react';
+import { vibration } from '../utilities/vibration';
 
 export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
   if (!isOpen) return null;
@@ -19,13 +20,13 @@ export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             className="cursor-pointer bg-[#4C6CA8] text-white py-2 px-4 rounded-xl hover:bg-opacity-90 transition hover:bg-[#3A5D91]"
-            onClick={onUpgrade}
+            onClick={()=>{vibration('button-press'); onUpgrade()}}
           >
             Upgrade Now
           </button>
           <button
             className="text-[#91989E] hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer"
-            onClick={onClose}
+            onClick={()=>{vibration('button-press'); onClose()}}
           >
             Maybe Later
           </button>

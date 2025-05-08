@@ -5,6 +5,7 @@ import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
 import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
+import { vibration } from "../utilities/vibration";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
@@ -100,6 +101,7 @@ useEffect(() => {
 
   const handleAdd = async () => {
     if (!newListName.trim()) return;
+    vibration('button-press')
     await onAddTaskList(newListName);
     setNewListName("");
     setShowInput(false);
@@ -183,7 +185,7 @@ useEffect(() => {
         <div className={`p-4 border-b text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
           Task Lists
 
-          <button onClick={() => {setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
+          <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (
               <Sun className="w-5 h-5 text-white" />
             ) : (
@@ -207,7 +209,7 @@ useEffect(() => {
             </button>
           
             <button
-              onClick={(e) => {e.stopPropagation();setActiveKebab(list._id)}}
+              onClick={(e) => {e.stopPropagation();vibration('button-press');setActiveKebab(list._id)}}
               className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition"
             >
               ⋮
@@ -218,6 +220,7 @@ useEffect(() => {
                   <button
                     className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
+                      vibration('button-press');
                       setShowEditModal(true);
                       setListToEdit(list);
                       setActiveKebab(null);
@@ -230,6 +233,7 @@ useEffect(() => {
                 <button
                   className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 text-[#D66565] hover:bg-[rgba(214,101,101,0.15)] transition rounded"
                   onClick={() => {
+                    vibration('button-press');
                     setListToDelete(list);
                     setShowDeleteModal(true);
                     setActiveKebab(null);
@@ -262,6 +266,7 @@ useEffect(() => {
                 </button>
                 <button
                   onClick={() => {
+                    vibration('button-press');
                     setShowInput(false);
                     setNewListName("");
                   }}
@@ -273,7 +278,7 @@ useEffect(() => {
             </div>
           ) : (
             <button
-              onClick={() => setShowInput(true)}
+              onClick={() => {vibration('button-press'); setShowInput(true)}}
               className="mt-4 flex items-center gap-2 text-sm text-[#4C6CA8] dark:text-[#90A9D6] hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] font-medium px-3 py-2 rounded-full  transition cursor-pointer"
             >
               <Plus className="w-4 h-4 " />
@@ -287,7 +292,7 @@ useEffect(() => {
         <div className="p-4 border-t">
           <button
             className="cursor-pointer w-full flex justify-center items-center gap-2 text-[#D66565] hover:text-[#B94E4E] text-sm font-medium py-2 rounded transition"
-            onClick={logout}
+            onClick={()=>{vibration('button-press'); logout()}}
           >
             <LogOut className="w-4 h-4" />
             Logout

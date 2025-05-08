@@ -3,6 +3,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { vibration } from '../../utilities/vibration';
 
 const plans = {
   monthly: { label: 'Monthly', price: '$5/mo', stripePriceId: 'monthly' },
@@ -40,12 +41,14 @@ export default function SubscribePage() {
       };
     await pollUntilPro();
     setLoading(false);
+    vibration('button-press')
     setSubscribed(true);
   };
   
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    vibration('button-press')
     setLoading(true);
     setError(null);
 
@@ -87,7 +90,7 @@ export default function SubscribePage() {
               {Object.entries(plans).map(([key, plan]) => (
                 <button
                   key={key}
-                  onClick={() => setSelectedPlan(key)}
+                  onClick={() => {vibration('button-press'); setSelectedPlan(key)}}
                   className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border transition cursor-pointer
                     ${selectedPlan === key
                       ? 'bg-[#4C6CA8] text-white'
@@ -125,7 +128,7 @@ export default function SubscribePage() {
               Your upgrade was successful. You can now enjoy all premium features.
             </p>
             <button
-              onClick={() => navigate('/app')}
+              onClick={() => {vibration('button-press'); navigate('/app')}}
               className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition"
             >
               Go back to DewList

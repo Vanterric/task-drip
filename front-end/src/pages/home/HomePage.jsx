@@ -8,6 +8,7 @@ import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
 import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
+import { vibration } from "../../utilities/vibration";
 
 export default function HomePage() {
   const { token, user, wasDowngraded, setWasDowngraded } = useAuth();
@@ -65,13 +66,14 @@ export default function HomePage() {
       headers,
       body: JSON.stringify({ isComplete: true }),
     });
-
+    vibration('task-completion')
     setTasks((prev) =>
       prev.map((t) => (t._id === taskId ? { ...t, isComplete: true } : t))
     );
   };
 
   const handleSkip = (taskId) => {
+    vibration('button-press')
     const index = tasks.findIndex((t) => t._id === taskId);
     const reordered = [...tasks];
     const [skipped] = reordered.splice(index, 1);
@@ -103,7 +105,7 @@ export default function HomePage() {
   <div className="flex items-center space-x-2">
     <button
       className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-white dark:bg-[#4F5962] shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6] transition cursor-pointer`}
-      onClick={() => setShowSidebar(true)}
+      onClick={() => {vibration('button-press'); setShowSidebar(true)}}
     >
       <Menu size={24}  />
     </button>
@@ -180,6 +182,7 @@ export default function HomePage() {
       <button
   className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group fixed bottom-6 right-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
   onClick={() => {
+    vibration('button-press');
     if (tasks.length >= 5 && !user.isPro) {
       setShowUpgradeModal(true);
       return;
@@ -192,7 +195,7 @@ export default function HomePage() {
 </button>
 {user?.isPro ? <button
   className= {`cursor-pointer group fixed bottom-6 left-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
-  onClick={() => setShowAIModal(true)}
+  onClick={() => {vibration('button-press'); setShowAIModal(true)}}
 >
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button> : null}

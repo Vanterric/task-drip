@@ -1,5 +1,6 @@
 import { CheckCircle } from "lucide-react";
 import { useState } from "react";
+import { vibration } from "../../utilities/vibration";
 
 export default function LoginPage() {
   const [email, setEmail] = useState("");
@@ -11,6 +12,7 @@ export default function LoginPage() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus("loading");
+    vibration('button-press')
 
     try {
       const res = await fetch(`${BACKEND_URL}/auth/request-link`, {

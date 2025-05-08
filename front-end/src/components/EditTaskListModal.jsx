@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { vibration } from "../utilities/vibration";
 
 export default function EditTaskListModal({
   isOpen,
@@ -42,6 +43,7 @@ export default function EditTaskListModal({
 
   const handleSave = async () => {
     // 1. Update list name
+    vibration('button-press')
 await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
     method: "PUT",
     headers: {
@@ -116,7 +118,7 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
                     />
                     <button
                     className="text-[#DF7C52] hover:text-red-600 font-bold text-lg cursor-pointer"
-                    onClick={() => handleDeleteTask(task._id)}
+                    onClick={() => {vibration('button-press'); handleDeleteTask(task._id)}}
                     title="Delete task"
                     >
                     &minus;
@@ -129,7 +131,7 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
 
         <div className="flex justify-end gap-4 mt-6">
           <button
-            onClick={ ()=>{onClose(); setDeletedTaskIds([])}}
+            onClick={ ()=>{vibration('button-press'); onClose(); setDeletedTaskIds([])}}
             className="text-[#91989E] px-4 py-2 rounded-lg  cursor-pointer dark:hover:text-white hover:text-[#4F5962] transition"
           >
             Cancel

@@ -1,3 +1,5 @@
+import { vibration } from "../utilities/vibration";
+
 export default function DeleteTaskListModal({ isOpen, onClose, onConfirm, listName }) {
     if (!isOpen) return null;
   
@@ -14,13 +16,13 @@ export default function DeleteTaskListModal({ isOpen, onClose, onConfirm, listNa
   
           <div className="flex justify-center gap-4 mt-6">
             <button
-              onClick={onClose}
+              onClick={()=>{vibration('button-press'); onClose()}}
               className="cursor-pointer text-[#91989E] hover:border-[#4F5962] hover:text-[#4F5962] dark:hover:text-white dark:hover:border-white px-4 py-2 rounded-lg border border-[#91989E] transition"
             >
               Cancel
             </button>
             <button
-              onClick={onConfirm}
+              onClick={()=>{vibration('button-press'); onConfirm()}}
               className="cursor-pointer bg-[#D66565] text-white px-4 py-2 rounded-lg hover:bg-[#B94E4E] transition"
             >
               Delete

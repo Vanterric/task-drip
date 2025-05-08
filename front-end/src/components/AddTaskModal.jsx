@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { vibration } from "../utilities/vibration";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
   const [taskText, setTaskText] = useState("");
@@ -7,7 +8,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskText.trim()) return;
-
+    vibration('button-press')
     setSubmitting(true);
     await onSubmit(taskText);
     setTaskText("");
@@ -33,7 +34,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
           <div className="flex gap-4 justify-end">
             <button
               type="button"
-              onClick={onClose}
+              onClick={()=>{vibration('button-press'); onClose()}}
               className="text-sm text-[#91989E] dark:hover:text-white hover:text-[#4F5962] transition cursor-pointer"
             >
               Cancel

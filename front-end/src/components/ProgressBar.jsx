@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { vibration } from '../utilities/vibration';
+
 
 export default function ProgressBar({ completedCount, tasks }) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -24,14 +26,15 @@ export default function ProgressBar({ completedCount, tasks }) {
   
       // Trigger explosion exactly when bar *visually* fills
       if (progress === 100) {
+        vibration('task-list-completion')
         setTimeout(() => {
-          setShowScale(true);             // 🌟 SCALE UP
-          setTriggeredExplosion(true);    // 💥 SPARKLES
+          setShowScale(true);             
+          setTriggeredExplosion(true);    
           generateSparkles();
       
           // Let scale ease back down after 1s
           setTimeout(() => {
-            setShowScale(false);          // 🔻 SCALE DOWN
+            setShowScale(false);          
           }, 1000);
       
           // Let sparkles disappear after 1.5s

@@ -1,5 +1,6 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
+import { vibration } from '../utilities/vibration';
 
 export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists }) {
   if (!isOpen) return null;
@@ -8,6 +9,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
 
   const handleSubmit = async () => {
     if (!goal.trim()) return;
+    vibration('button-press')
     setLoading(true);
     try {
       // 1. Send goal to AI
@@ -88,7 +90,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       >
         {/* Close button */}
         <button
-          onClick={onClose}
+          onClick={()=>{vibration('button-press'); onClose()}}
           className="absolute top-4 right-4 text-[#4F5962] dark:text-white hover:text-black transition"
         >
           <X className="w-5 h-5 cursor-pointer" />
