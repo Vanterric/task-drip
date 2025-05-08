@@ -45,11 +45,28 @@ function App() {
       </Routes>
     </Router>
     {showInstallButton && (
-        <div className="fixed bottom-4 right-4 bg-[#4C6CA8] text-white px-4 py-2 rounded shadow-lg cursor-pointer z-50"
-             onClick={handleInstallClick}>
-          Install DewList
-        </div>
-      )}
+  <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
+    <div className="flex-1">
+      <p className="font-semibold text-base">Install DewList</p>
+      <p className="text-sm opacity-90">
+        Install DewList for instant access — no tabs, no distractions. Just one task at a time, right from your home screen.
+      </p>
+      <button
+        onClick={handleInstallClick}
+        className="mt-2 text-sm bg-white text-[#4C6CA8] hover:bg-[#E0ECFC] transition px-3 py-1 rounded cursor-pointer"
+      >
+        Install App
+      </button>
+    </div>
+    <button
+      onClick={() => setShowInstallButton(false)}
+      className="text-white hover:text-gray-200 text-xl leading-none cursor-pointer"
+      aria-label="Close install banner"
+    >
+      &times;
+    </button>
+  </div>
+)}
     </>
   );
 }
