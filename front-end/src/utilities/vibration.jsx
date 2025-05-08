@@ -1,6 +1,8 @@
 export const vibration = (type) => {
-  if (!('vibrate' in navigator)) return
-
+  if (!('vibrate' in navigator)) {
+    console.log('Vibration API not supported on this device')
+    return
+  }
   switch (type) {
     case 'button-press':
       navigator.vibrate(10)

@@ -98,7 +98,7 @@ export default function HomePage() {
         </div>
       )}
       {/* Masthead */}
-      <div className="flex items-center justify-between px-4 py-4">
+      <div className="flex items-center justify-between px-4 py-4 absolute top-0 left-0 right-0 z-10 ">
   {/* TaskDrip branding + hamburger */}
   <div className="flex items-center justify-between px-4 py-4 w-full">
   {/* Left: Branding */}
