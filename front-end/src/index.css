@@ -113,4 +113,26 @@ body {
   animation: pulse-glow 1.5s ease-in-out infinite;
 }
 
+/* index.css */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #4C6CA8; /* DewList blue */
+  border-radius: 10px;
+  border: 1px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #3A5D91;
+}
+
+
 
