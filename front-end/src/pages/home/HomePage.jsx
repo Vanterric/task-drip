@@ -88,7 +88,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
       {wasDowngraded && (
-        <div className="bg-[#D4E3FF] text-[#4F5962] px-4 py-2 text-sm text-center relative">
+        <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11">
           Your Pro subscription has ended. You’ve been downgraded to Free.
           <button
             onClick={() => setWasDowngraded(!wasDowngraded)}
@@ -99,7 +99,7 @@ export default function HomePage() {
         </div>
       )}
       {/* Masthead */}
-      <div className="flex items-center justify-between px-4 py-4 absolute top-0 left-0 right-0 z-10 ">
+      <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 ">
   {/* TaskDrip branding + hamburger */}
   <div className="flex items-center justify-between px-4 py-4 w-full">
   {/* Left: Branding */}
