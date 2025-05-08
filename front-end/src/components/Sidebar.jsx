@@ -1,9 +1,10 @@
 import { useAuth } from "../context/AuthContext";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
-import { LogOut, Pencil, Plus, Trash2 } from "lucide-react";
+import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
+import { ThemeContext } from "../context/ThemeContext";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
@@ -16,6 +17,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [listToDelete, setListToDelete] = useState(null);
   const [listToEdit, setListToEdit] = useState(null);
   const panelRef = useRef(null);
+  const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
 let startX = 0;
 let currentX = 0;
 let touchingSidebar = false;
@@ -178,8 +180,16 @@ useEffect(() => {
     }`}
     style={{ pointerEvents: 'auto', touchAction: "none"  }}
   >
-        <div className="p-4 border-b text-xl font-bold text-[#4F5962]">
+        <div className="p-4 border-b text-xl font-bold text-[#4F5962] flex items-center justify-between">
           Task Lists
+
+          <button onClick={() => {setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+            {isDarkMode ? (
+              <Sun className="w-5 h-5 text-[#4F5962]" />
+            ) : (
+              <Moon className="w-5 h-5 text-[#4F5962]" />
+            )}
+          </button>
         </div>
 
         {/* Scrollable task list */}

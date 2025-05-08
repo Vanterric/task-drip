@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
   });
+  const [wasDowngraded, setWasDowngraded] = useState(false); 
 
   const isAuthenticated = !!token;
 
@@ -21,10 +22,8 @@ export function AuthProvider({ children }) {
     
     if (expiry < now) {
       
-      // Membership has lapsed
       const downgradedUser = { ...user, isPro: false };
   
-      // Optional: hit your backend to update DB
       fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/downgrade`, {
         method: 'POST',
         headers: {
@@ -35,7 +34,8 @@ export function AuthProvider({ children }) {
       });
       
       setUser(downgradedUser);
-      localStorage.setItem('user', JSON.stringify(downgradedUser)); // if you're caching that
+      localStorage.setItem('user', JSON.stringify(downgradedUser)); 
+      setWasDowngraded(true);
     }
   }, [user]);
   
@@ -78,7 +78,7 @@ export function AuthProvider({ children }) {
   };
   verifyToken();
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded }}>
       {children}
     </AuthContext.Provider>
   );

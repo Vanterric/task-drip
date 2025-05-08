@@ -88,10 +88,11 @@ export default function SubscribePage() {
                 <button
                   key={key}
                   onClick={() => setSelectedPlan(key)}
-                  className={`px-4 py-2 rounded-full border text-sm transition 
+                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border transition 
                     ${selectedPlan === key
                       ? 'bg-[#4C6CA8] text-white'
                       : 'bg-white border-[#4C6CA8] text-[#4C6CA8] hover:bg-[#F6F8FA]'}`}
+
                 >
                   {plan.label}
                   <span className="ml-1 text-xs text-[#91989E]">{plan.price}</span>

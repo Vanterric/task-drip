@@ -13,7 +13,7 @@ function App() {
         <Route path="/unlock" element={<UnlockPage />} />
         <Route path="/app" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/subscribe" element={<PrivateRoute><SubscribePage /></PrivateRoute>} />
-        <Route path="/" element={<Navigate to="/login" />} />
+        <Route path="/" element={<Navigate to="/app" />} />
       </Routes>
     </Router>
   );

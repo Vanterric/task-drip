@@ -2,15 +2,15 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
-
-import { CheckCircle, Droplet, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import DewListIcon from "../../assets/DewList_Icon.png";
+import { CheckCircle, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
 import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
 
 export default function HomePage() {
-  const { token, user } = useAuth();
+  const { token, user, wasDowngraded, setWasDowngraded } = useAuth();
   const [activeTaskList, setActiveTaskList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,6 +19,7 @@ export default function HomePage() {
   const [taskLists, setTaskLists] = useState([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
+
   
 
   useEffect(() => {
@@ -83,6 +84,17 @@ export default function HomePage() {
 
   return (
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962]">
+      {wasDowngraded && (
+        <div className="bg-[#D4E3FF] text-[#4F5962] px-4 py-2 text-sm text-center relative">
+          Your Pro subscription has ended. You’ve been downgraded to Free.
+          <button
+            onClick={() => setWasDowngraded(!wasDowngraded)}
+            className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
+          >
+            ×
+          </button>
+        </div>
+      )}
       {/* Masthead */}
       <div className="flex items-center justify-between px-4 py-4">
   {/* TaskDrip branding + hamburger */}
@@ -96,8 +108,8 @@ export default function HomePage() {
       <Menu size={24} className="text-[#4F5962]" />
     </button>
     <div className="flex items-center text-[#4F5962] font-semibold text-base tracking-wide">
-      DewList
-      <Droplet className="w-5 h-5 ml-1 text-[#4C6CA8]" />
+      <div className="max-[400px]:hidden">DewList</div>
+      <img className="h-5 w-5 ml-2 max-[400px]:ml-0" alt="DewList Logo" src={DewListIcon}/>
     </div>
   </div>
 
@@ -204,7 +216,7 @@ export default function HomePage() {
       });
   
       activeList = await listRes.json();
-      setTaskList(activeList);
+      setActiveTaskList(activeList);
     }
   
     // Step 2: Create the task using the newly created or existing list

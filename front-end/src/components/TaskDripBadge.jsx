@@ -1,4 +1,4 @@
-import { Droplet } from 'lucide-react';
+import DewListIcon from "../assets/DewList_Icon.png";
 
 export default function TaskDripBadge() {
   return (
@@ -6,7 +6,7 @@ export default function TaskDripBadge() {
   
       {/* Droplet center */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <Droplet className="w-10 h-10 text-[#4C6CA8] drop-shadow-lg" />
+        <img src={DewListIcon} alt="DewList Logo" className="w-10 h-10"  />
       </div>
 
       {/* Sparkle flare */}
