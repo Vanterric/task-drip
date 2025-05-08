@@ -57,6 +57,7 @@ export default function HomePage() {
   
 
   const handleComplete = async (taskId) => {
+    vibration('button-press')
     const headers = {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
