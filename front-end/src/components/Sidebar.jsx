@@ -6,6 +6,7 @@ import { useRef, useEffect } from "react";
 import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
+import dewListIcon from "../assets/DewList_icon.png";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
@@ -182,8 +183,8 @@ useEffect(() => {
     }`}
     style={{ pointerEvents: 'auto', touchAction: "none"  }}
   >
-        <div className={`p-4 border-b text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
-          Task Lists
+        <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
+          <div className="flex gap-2 items-center"><img alt='DewList Logo' src = {dewListIcon} className="h-8 w-8"/>Task Lists</div>
 
           <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (
@@ -289,7 +290,7 @@ useEffect(() => {
         </div>
 
         {/* Sticky logout */}
-        <div className="p-4 border-t">
+        <div className="p-4 border-t border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)]">
           <button
             className="cursor-pointer w-full flex justify-center items-center gap-2 text-[#D66565] hover:text-[#B94E4E] text-sm font-medium py-2 rounded transition"
             onClick={()=>{vibration('button-press'); logout()}}
