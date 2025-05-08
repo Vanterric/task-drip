@@ -156,7 +156,7 @@ useEffect(() => {
     <div className="fixed inset-0 z-50 flex pointer-events-none">
      <div
     className={`fixed inset-0 transition-opacity duration-300 ${
-      isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+      isOpen ? 'opacity-100 backdrop-blur-sm' : 'opacity-0 pointer-events-none'
     }`}
     style={{
       backgroundColor: 'rgba(0, 0, 0, 0.3)',
@@ -175,17 +175,17 @@ useEffect(() => {
       e.stopPropagation(); // 💥 prevents backdrop click
       setActiveKebab(null);
     }}
-    className={`relative z-50 w-72 bg-white h-full shadow-lg flex flex-col transform transition-transform duration-300 ease-in-out ${
+    className={`relative z-50 w-72 bg-white dark:bg-[#4F5962] h-full shadow-lg flex flex-col transform transition duration-300 ease-in-out ${
       isOpen ? 'translate-x-0' : '-translate-x-full'
     }`}
     style={{ pointerEvents: 'auto', touchAction: "none"  }}
   >
-        <div className="p-4 border-b text-xl font-bold text-[#4F5962] flex items-center justify-between">
+        <div className={`p-4 border-b text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
           Task Lists
 
-          <button onClick={() => {setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-100 dark:hover:bg-gray-800 transition">
+          <button onClick={() => {setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (
-              <Sun className="w-5 h-5 text-[#4F5962]" />
+              <Sun className="w-5 h-5 text-white" />
             ) : (
               <Moon className="w-5 h-5 text-[#4F5962]" />
             )}
@@ -201,29 +201,29 @@ useEffect(() => {
                 onSelectList(list);
                 onClose();
               }}
-              className="cursor-pointer text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.15)] text-[#4F5962]"
+              className="cursor-pointer text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.25)] text-[#4F5962] dark:text-white transition"
             >
               {list.name}
             </button>
           
             <button
               onClick={(e) => {e.stopPropagation();setActiveKebab(list._id)}}
-              className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962]"
+              className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition"
             >
               ⋮
             </button>
           
             {activeKebab === list._id && (
-              <div className="absolute right-4 mt-10 w-32 bg-white shadow-lg rounded-xl text-sm text-[#4F5962] z-50">
+              <div className="absolute right-4 mt-10 w-36 bg-white shadow-lg rounded-xl text-sm dark:bg-[#4F5962] z-50">
                   <button
-                    className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] text-[#4C6CA8] transition rounded"
+                    className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
                       setShowEditModal(true);
                       setListToEdit(list);
                       setActiveKebab(null);
                     }}
                   >
-                    <Pencil className="w-4 h-4 text-[#4C6CA8]" />
+                    <Pencil className="w-4 h-4 text-[#4C6CA8] dark:text-[#90A9D6]" />
                     Edit List
                   </button>
 
@@ -251,7 +251,7 @@ useEffect(() => {
                 value={newListName}
                 onChange={(e) => setNewListName(e.target.value)}
                 placeholder="New list name"
-                className="w-full px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+                className="w-full px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] dark:border-white"
               />
               <div className="flex gap-2">
                 <button
@@ -265,7 +265,7 @@ useEffect(() => {
                     setShowInput(false);
                     setNewListName("");
                   }}
-                  className="text-sm text-[#91989E] hover:text-[#4F5962] cursor-pointer"
+                  className="text-sm text-[#91989E] hover:text-[#4F5962] cursor-pointer transition dark:hover:text-white"
                 >
                   Cancel
                 </button>
@@ -274,9 +274,9 @@ useEffect(() => {
           ) : (
             <button
               onClick={() => setShowInput(true)}
-              className="mt-4 flex items-center gap-2 text-sm text-[#4C6CA8] font-medium px-3 py-2 rounded-full hover:bg-[#F6F8FA] transition cursor-pointer"
+              className="mt-4 flex items-center gap-2 text-sm text-[#4C6CA8] dark:text-[#90A9D6] hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] font-medium px-3 py-2 rounded-full  transition cursor-pointer"
             >
-              <Plus className="w-4 h-4 text-[#4C6CA8]" />
+              <Plus className="w-4 h-4 " />
               Add New Task List
             </button>
 
@@ -293,8 +293,8 @@ useEffect(() => {
             Logout
           </button>
           <div className="mt-4 text-xs text-[#91989E] flex justify-center space-x-2 ">
-            <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962]  cursor-pointer">Privacy Policy</a>
-            <a target="blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing" className="ml-4 hover:text-[#4F5962]  cursor-pointer">Terms and Conditions</a>
+            <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Privacy Policy</a>
+            <a target="blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing" className="ml-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Terms and Conditions</a>
           </div>
         </div>
       </div>

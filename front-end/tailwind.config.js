@@ -1,15 +1,12 @@
 export default {
-    content: [
-      "./index.html",
-      "./src/**/*.{js,ts,jsx,tsx}",
-    ],
-    theme: {
-      extend: {
-        fontFamily: {
-          sans: ["Inter", "sans-serif"],
-        },
+  theme: {
+    extend: {
+      fontFamily: {
+        sans: ['Lexend'], // exact quotes here matter
       },
     },
-    plugins: [],
-  }
-  
+  },
+  content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
+  darkMode: 'class',
+  plugins: [],
+};

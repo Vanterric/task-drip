@@ -83,7 +83,7 @@ export default function HomePage() {
   const completedCount = tasks.filter((t) => t.isComplete).length;
 
   return (
-    <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962]">
+    <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
       {wasDowngraded && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-4 py-2 text-sm text-center relative">
           Your Pro subscription has ended. You’ve been downgraded to Free.
@@ -102,19 +102,19 @@ export default function HomePage() {
   {/* Left: Branding */}
   <div className="flex items-center space-x-2">
     <button
-      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-white shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6] transition cursor-pointer`}
+      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-white dark:bg-[#4F5962] shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6] transition cursor-pointer`}
       onClick={() => setShowSidebar(true)}
     >
-      <Menu size={24} className="text-[#4F5962]" />
+      <Menu size={24}  />
     </button>
-    <div className="flex items-center text-[#4F5962] font-semibold text-base tracking-wide">
+    <div className="flex items-center  font-semibold text-base tracking-wide">
       <div className="max-[400px]:hidden">DewList</div>
       <img className="h-5 w-5 ml-2 max-[400px]:ml-0" alt="DewList Logo" src={DewListIcon}/>
     </div>
   </div>
 
   {/* Right: Active task list name */}
-  <h1 className="text-2xl font-bold text-right text-[#4F5962] truncate max-w-[60%]">
+  <h1 className="text-2xl font-bold text-right truncate max-w-[60%]">
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
 </div>
@@ -133,7 +133,7 @@ export default function HomePage() {
         
         ) : nextTask ? (
           <div className="w-full max-w-md text-center space-y-6">
-            <div className="bg-white rounded-3xl shadow-lg p-6 text-xl font-semibold">
+            <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 text-xl font-semibold transition">
               {nextTask.content}
             </div>
 

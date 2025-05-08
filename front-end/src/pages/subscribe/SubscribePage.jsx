@@ -74,11 +74,11 @@ export default function SubscribePage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] px-4">
-      <div className="w-full max-w-md bg-white shadow-xl rounded-xl p-6 space-y-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4">
+      <div className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
         {!subscribed ? (
           <>
-            <h1 className="text-2xl font-bold text-center text-[#4F5962]">Upgrade to DewList Pro</h1>
+            <h1 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white">Upgrade to DewList Pro</h1>
             <p className="text-sm text-center text-[#91989E]">
               Get unlimited tasks, lists, and AI-powered breakdowns.
             </p>
@@ -88,10 +88,10 @@ export default function SubscribePage() {
                 <button
                   key={key}
                   onClick={() => setSelectedPlan(key)}
-                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border transition 
+                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border transition cursor-pointer
                     ${selectedPlan === key
                       ? 'bg-[#4C6CA8] text-white'
-                      : 'bg-white border-[#4C6CA8] text-[#4C6CA8] hover:bg-[#F6F8FA]'}`}
+                      : 'bg-white dark:bg-[#4F5962] border-[#4C6CA8] text-[#90A9D6]'}`}
 
                 >
                   {plan.label}
@@ -107,7 +107,7 @@ export default function SubscribePage() {
               <button
                 type="submit"
                 disabled={!stripe || loading}
-                className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition"
+                className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer"
               >
                 {loading ? 'Processing...' : `Subscribe (${plans[selectedPlan].price})`}
               </button>

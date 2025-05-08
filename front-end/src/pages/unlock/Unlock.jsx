@@ -45,7 +45,7 @@ export default function UnlockPage() {
   }, [navigate]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-6 bg-[#F6F8FA] text-[#4F5962]">
+    <div className="min-h-screen flex items-center justify-center px-6 bg-[#F6F8FA] text-[#4F5962] dark:bg-[#212732] dark:text-white">
       <div className="max-w-md text-center">
         {status === "loading" && <p className="text-xl font-semibold">Validating your link...</p>}
         {status === "success" && <p className="flex items-center justify-center gap-2 text-xl text-[#4BAF8E] font-semibold"> <CheckCircle className="w-5 h-5" /> You're in! Redirecting...</p>}

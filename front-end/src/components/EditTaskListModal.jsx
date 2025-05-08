@@ -92,12 +92,12 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4 backdrop-blur-sm">
-      <div className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6">
-        <h2 className="text-lg font-bold text-[#4F5962] mb-4">Edit Task List</h2>
+      <div className="bg-white dark:bg-[#4F5962] rounded-2xl shadow-xl max-w-lg w-full p-6">
+        <h2 className="text-lg font-bold text-[#4F5962] dark:text-white mb-4">Edit Task List</h2>
 
         <label className="text-sm text-[#91989E] block mb-1">List Name</label>
         <input
-          className="w-full px-4 py-2 mb-4 border border-[#4F596240] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+          className="w-full px-4 py-2 mb-4 border border-[#4F596240] dark:border-white rounded-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
           value={listName}
           onChange={(e) => setListName(e.target.value)}
         />
@@ -115,7 +115,7 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
                     onChange={(e) => updateTaskContent(task._id, e.target.value)}
                     />
                     <button
-                    className="text-[#DF7C52] hover:text-red-600 font-bold text-lg"
+                    className="text-[#DF7C52] hover:text-red-600 font-bold text-lg cursor-pointer"
                     onClick={() => handleDeleteTask(task._id)}
                     title="Delete task"
                     >
@@ -130,13 +130,13 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
         <div className="flex justify-end gap-4 mt-6">
           <button
             onClick={ ()=>{onClose(); setDeletedTaskIds([])}}
-            className="text-[#4F5962] px-4 py-2 rounded-lg hover:bg-[#F6F8FA] cursor-pointer"
+            className="text-[#91989E] px-4 py-2 rounded-lg  cursor-pointer dark:hover:text-white hover:text-[#4F5962] transition"
           >
             Cancel
           </button>
           <button
             onClick={handleSave}
-            className="bg-[#4C6CA8] text-white px-4 py-2 rounded-lg hover:bg-[#3A5D91] cursor-pointer"
+            className="bg-[#4C6CA8] text-white px-4 py-2 rounded-lg hover:bg-[#3A5D91] cursor-pointer transition"
           >
             Save Changes
           </button>

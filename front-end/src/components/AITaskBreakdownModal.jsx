@@ -83,25 +83,25 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4"
+        className="bg-white dark:bg-[#4F5962] w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-[#4F5962] hover:text-black transition"
+          className="absolute top-4 right-4 text-[#4F5962] dark:text-white hover:text-black transition"
         >
           <X className="w-5 h-5 cursor-pointer" />
         </button>
 
-        <h2 className="text-xl font-bold text-[#4F5962] mb-1">AI Task Breakdown</h2>
-        <p className="text-sm text-[#4F5962] mb-4">
+        <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1">AI Task Breakdown</h2>
+        <p className="text-sm text-[#4F5962] dark:text-white mb-4">
           Describe your goals and have AI break it down into a task list.
         </p>
 
         <textarea
         disabled={loading}
-        className="w-full border border-[#E0ECFC] rounded-lg p-3 text-sm text-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#4C6CA8] resize-none min-h-[100px] disabled:opacity-50"
+        className="w-full border border-[#4F596254] dark:border-white rounded-lg p-3 text-sm text-[#4F5962] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4C6CA8] resize-none min-h-[100px] disabled:opacity-50"
         value={goal}
         onChange={(e) => setGoal(e.target.value)}
         placeholder="e.g. Plan my startup launch"

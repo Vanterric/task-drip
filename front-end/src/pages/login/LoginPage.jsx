@@ -35,9 +35,9 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAECE5] px-4 py-10 md:px-10">
-      <div className="w-full h-full max-w-4xl bg-white rounded-3xl shadow-lg p-6 md:p-16 flex flex-col justify-center">
-        <h1 className="text-3xl md:text-5xl font-bold text-[#4F5962] mb-4 text-center">
+    <div className="min-h-screen w-full flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4 py-10 md:px-10">
+      <div className="w-full h-full max-w-4xl bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 md:p-16 flex flex-col justify-center">
+        <h1 className="text-3xl md:text-5xl font-bold text-[#4F5962] dark:text-white mb-4 text-center">
           Welcome to DewList
         </h1>
         <p className="text-base md:text-lg text-[#91989E] mb-10 leading-relaxed text-center max-w-2xl mx-auto">
@@ -55,7 +55,7 @@ export default function LoginPage() {
             <div className="w-full flex justify-center">
             <input
               type="email"
-              className="w-full max-w-lg rounded-2xl border border-[#4F596254] px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition"
+              className="w-full max-w-lg rounded-2xl border border-[#4F596254] dark:border-white dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition"
               placeholder="you@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -80,7 +80,7 @@ export default function LoginPage() {
         )}
 
         <div className="mt-10 text-xs text-[#91989E] text-center max-w-md mx-auto">
-          By continuing, you agree to our <a style={{textDecoration:'underline', color: '#4C6CA8'}} target="_blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing">Privacy Policy</a> and <a style={{textDecoration:'underline', color: '#4C6CA8'}} target="_blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing">Terms & Conditions</a>.
+          By continuing, you agree to our <a className="underline text-[#4C6CA8] transition hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF]" target="_blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing">Privacy Policy</a> and <a className="underline text-[#4C6CA8] transition hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF]" target="_blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing">Terms & Conditions</a>.
           <br/>
           <br/>
           You’ll stay logged in on this device after clicking your email link.
