@@ -55,7 +55,7 @@ export default function LoginPage() {
             <div className="w-full flex justify-center">
             <input
               type="email"
-              className="w-full max-w-lg rounded-2xl border border-[#4F596254] dark:border-white dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition"
+              className="w-full max-w-lg rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition"
               placeholder="you@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
