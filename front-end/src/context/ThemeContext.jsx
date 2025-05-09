@@ -4,8 +4,15 @@ export const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [isDarkMode, setIsDarkMode] = useState(() => {
-    return localStorage.getItem('theme') === 'dark';
-  });
+  const storedTheme = localStorage.getItem('theme');
+  if (storedTheme === 'dark') return true;
+  if (storedTheme === 'light') return false;
+
+  // No stored theme — fallback to system preference
+  return window.matchMedia &&
+         window.matchMedia('(prefers-color-scheme: dark)').matches;
+});
+
 
   useEffect(() => {
     document.documentElement.classList.toggle('dark', isDarkMode);
