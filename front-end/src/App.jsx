@@ -47,8 +47,8 @@ function App() {
     {showInstallButton && (
   <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
     <div className="flex-1">
-      <p className="font-semibold text-base">Install DewList</p>
-      <p className="text-sm opacity-90">
+      <p className="font-semibold text-base cursor-default">Install DewList</p>
+      <p className="text-sm opacity-90 cursor-default">
         Install DewList for instant access — no tabs, no distractions. Just one task at a time, right from your home screen.
       </p>
       <button

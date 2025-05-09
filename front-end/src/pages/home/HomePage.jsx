@@ -88,8 +88,8 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
       {wasDowngraded && (
-        <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11">
-          Your Pro subscription has ended. You’ve been downgraded to Free.
+        <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
+          Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>setShowUpgradeModal(true)}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
           <button
             onClick={() => setWasDowngraded(!wasDowngraded)}
             className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
@@ -111,13 +111,13 @@ export default function HomePage() {
       <Menu size={24}  />
     </button>
     <div className="flex items-center  font-semibold text-base tracking-wide">
-      <div className="max-[400px]:hidden">DewList</div>
+      <div className="max-[400px]:hidden cursor-default">DewList</div>
       <img className="h-5 w-5 ml-2 max-[400px]:ml-0" alt="DewList Logo" src={DewListIcon}/>
     </div>
   </div>
 
   {/* Right: Active task list name */}
-  <h1 className="text-2xl font-bold text-right truncate max-w-[60%]">
+  <h1 className="text-2xl font-bold text-right truncate max-w-[60%] cursor-default">
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
 </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
         {loading ? (
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
         ) : !activeTaskList || tasks.length === 0 ? (
-          <p className="text-lg text-[#91989E] text-center">
+          <p className="text-lg text-[#91989E] text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
             : "No tasks here yet. Tap Add Task to add your first."}
@@ -136,7 +136,7 @@ export default function HomePage() {
         
         ) : nextTask ? (
           <div className="w-full max-w-md text-center space-y-6">
-            <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 text-xl font-semibold transition">
+            <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 text-xl font-semibold transition cursor-default">
               {nextTask.content}
             </div>
 
@@ -166,7 +166,7 @@ export default function HomePage() {
               <div className="flex flex-col items-center justify-center mt-6 space-y-4">
                 <TaskDripBadge />
 
-                <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide">
+                <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
   All tasks complete! Chill Time.
 </div>
 
@@ -249,6 +249,7 @@ export default function HomePage() {
 />
 <AITaskBreakdownModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
+setShowUpgradeModal={setShowUpgradeModal}
 token={token}
   isOpen={showSidebar}
   onClose={() => setShowSidebar(false)}

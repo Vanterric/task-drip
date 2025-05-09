@@ -96,8 +96,8 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           <X className="w-5 h-5 cursor-pointer" />
         </button>
 
-        <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1">AI Task Breakdown</h2>
-        <p className="text-sm text-[#4F5962] dark:text-white mb-4">
+        <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1 cursor-default">AI Task Breakdown</h2>
+        <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
           Describe your goals and have AI break it down into a task list.
         </p>
 

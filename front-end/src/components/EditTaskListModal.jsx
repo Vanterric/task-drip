@@ -95,7 +95,7 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4 backdrop-blur-sm">
       <div className="bg-white dark:bg-[#4F5962] rounded-2xl shadow-xl max-w-lg w-full p-6">
-        <h2 className="text-lg font-bold text-[#4F5962] dark:text-white mb-4">Edit Task List</h2>
+        <h2 className="text-lg font-bold text-[#4F5962] dark:text-white mb-4 cursor-default">Edit Task List</h2>
 
         <label className="text-sm text-[#91989E] block mb-1">List Name</label>
         <input
@@ -117,7 +117,7 @@ await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
                     onChange={(e) => updateTaskContent(task._id, e.target.value)}
                     />
                     <button
-                    className="text-[#DF7C52] hover:text-red-600 font-bold text-lg cursor-pointer"
+                    className="text-[#DF7C52] hover:text-red-600 font-bold text-lg cursor-pointer transition"
                     onClick={() => {vibration('button-press'); handleDeleteTask(task._id)}}
                     title="Delete task"
                     >

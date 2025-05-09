@@ -81,8 +81,8 @@ export default function SubscribePage() {
       <div className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
         {!subscribed ? (
           <>
-            <h1 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white">Upgrade to DewList Pro</h1>
-            <p className="text-sm text-center text-[#91989E]">
+            <h1 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white cursor-default">Upgrade to DewList Pro</h1>
+            <p className="text-sm text-center text-[#91989E] cursor-default">
               Get unlimited tasks, lists, and AI-powered breakdowns.
             </p>
 
@@ -116,20 +116,20 @@ export default function SubscribePage() {
               </button>
             </form>
 
-            <p className="text-center text-xs text-[#91989E]">
+            <p className="text-center text-xs text-[#91989E] cursor-default">
               Secure checkout powered by Stripe.
             </p>
           </>
         ) : (
           <div className="text-center space-y-6">
             <CheckCircle className="w-12 h-12 mx-auto text-[#6DBF67]" />
-            <h2 className="text-xl font-semibold text-[#4F5962]">You’re now a Pro!</h2>
-            <p className="text-sm text-[#91989E]">
+            <h2 className="text-xl font-semibold text-[#4F5962] cursor-default">You’re now a Pro!</h2>
+            <p className="text-sm text-[#91989E] cursor-default">
               Your upgrade was successful. You can now enjoy all premium features.
             </p>
             <button
               onClick={() => {vibration('button-press'); navigate('/app')}}
-              className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition"
+              className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition cursor-pointer transition"
             >
               Go back to DewList
             </button>

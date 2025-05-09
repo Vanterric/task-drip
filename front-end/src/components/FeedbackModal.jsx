@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { vibration } from "../utilities/vibration";
+import { ChevronDown } from "lucide-react";
 
 export default function FeedbackModal({ onClose }) {
   const [feedbackText, setFeedbackText] = useState("");
@@ -35,14 +36,15 @@ export default function FeedbackModal({ onClose }) {
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
-        <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white">
+        <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default">
           Got something to share?
         </h2>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative">
+          <ChevronDown className="absolute right-4 top-3 text-[#4F5962] dark:text-white pointer-events-none" />
           <select
             value={feedbackType}
             onChange={(e) => setFeedbackType(e.target.value)}
-            className="w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] bg-white dark:bg-[#4F5962] text-[#4F5962] dark:text-white"
+            className="appearance-none w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] bg-white dark:bg-[#4F5962] text-[#4F5962] dark:text-white cursor-pointer"
           >
             <option>Feature Request</option>
             <option>Bug Report</option>
@@ -50,7 +52,7 @@ export default function FeedbackModal({ onClose }) {
             <option>Press</option>
             <option>Other</option>
           </select>
-
+          
           <textarea
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}

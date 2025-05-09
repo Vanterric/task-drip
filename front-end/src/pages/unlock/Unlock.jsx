@@ -47,12 +47,12 @@ export default function UnlockPage() {
   return (
     <div className="min-h-screen flex items-center justify-center px-6 bg-[#F6F8FA] text-[#4F5962] dark:bg-[#212732] dark:text-white">
       <div className="max-w-md text-center">
-        {status === "loading" && <p className="text-xl font-semibold">Validating your link...</p>}
-        {status === "success" && <p className="flex items-center justify-center gap-2 text-xl text-[#4BAF8E] font-semibold"> <CheckCircle className="w-5 h-5" /> You're in! Redirecting...</p>}
+        {status === "loading" && <p className="text-xl font-semibold cursor-default">Validating your link...</p>}
+        {status === "success" && <p className="flex items-center justify-center gap-2 text-xl text-[#4BAF8E] font-semibold cursor-default"> <CheckCircle className="w-5 h-5" /> You're in! Redirecting...</p>}
         {status === "error" && (
           <>
-            <p className="text-xl text-[#DF7C52] font-semibold">⚠️ Link invalid or expired.</p>
-            <p className="text-sm mt-2 text-[#91989E]">Try requesting a new login link.</p>
+            <p className="text-xl text-[#DF7C52] font-semibold cursor-default">⚠️ Link invalid or expired.</p>
+            <p className="text-sm mt-2 text-[#91989E] cursor-default">Try requesting a new login link.</p>
           </>     
         )}
       </div>

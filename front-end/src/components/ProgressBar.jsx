@@ -87,10 +87,10 @@ export default function ProgressBar({ completedCount, tasks }) {
   return (
     <div className="w-full mt-4">
       <div className="flex justify-between items-center mb-1">
-        <p className="text-sm text-[#91989E]">
+        <p className="text-sm text-[#91989E] cursor-default">
           {completedCount} of {totalTasks} completed
         </p>
-        <p className="text-sm text-[#91989E]">{Math.round(progress)}%</p>
+        <p className="text-sm text-[#91989E] cursor-default">{Math.round(progress)}%</p>
       </div>
 
       <div className="relative w-full h-2 bg-[#E0ECFC] rounded-full overflow-visible">
