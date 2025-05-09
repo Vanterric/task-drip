@@ -6,7 +6,7 @@ import { useRef, useEffect } from "react";
 import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
-import dewListIcon from "../assets/DewList_icon.png";
+import dewListIcon from "../assets/DewList_Icon.png";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
