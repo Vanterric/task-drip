@@ -7,6 +7,7 @@ const User = require('./models/User');
 const TaskList = require('./models/TaskList');
 const Task = require('./models/Task');
 const app = express();
+const {Resend} = require('resend');
 const { OpenAI } = require('openai');
 app.use(cors({
   origin: ['https://dewlist.app', 'http://localhost:5173'], // add your live and dev origins
@@ -334,3 +335,44 @@ Goal: "${goal}"
       res.status(500).json({ error: 'AI breakdown failed.' });
     }
   });
+
+
+  // send feedback endpoint
+  const resend = new Resend(process.env.RESEND_API_KEY);
+  app.post("/sendFeedback", verifyToken, async (req, res) => {
+  const { type, message } = req.body;
+
+  if (!message || !type) {
+    return res.status(400).json({ error: "Missing feedback type or message." });
+  }
+
+  try {
+    await resend.emails.send({
+      from: "DewList Feedback <feedback@dewlist.app>",
+      to: ["derrick@gallegoslabs.com"],
+      subject: `New DewList Feedback: ${type}`,
+      html: `
+        <div style="font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 24px; background-color: #F6F8FA; color: #4F5962; border-radius: 16px;">
+          <h2 style="color: #4C6CA8; margin-bottom: 12px;">New Feedback Submitted for DewList</h2>
+
+          <div style="background: white; border-radius: 12px; padding: 16px; border: 1px solid #E0ECFC;">
+            <p style="margin: 0 0 8px;"><strong>Type:</strong> ${type}</p>
+            <p style="margin: 0;"><strong>Message:</strong></p>
+            <div style="margin-top: 6px; padding-left: 8px; border-left: 3px solid #4C6CA8; color: #333;">
+              ${message.replace(/\n/g, "<br/>")}
+            </div>
+          </div>
+
+          <p style="margin-top: 24px; font-size: 0.85rem; color: #91989E;">
+            Submitted via the DewList feedback modal.
+          </p>
+        </div>
+      `,
+    });
+
+    res.status(200).json({ success: true });
+  } catch (err) {
+    console.error("Failed to send feedback email:", err);
+    res.status(500).json({ error: "Failed to send feedback." });
+  }
+});

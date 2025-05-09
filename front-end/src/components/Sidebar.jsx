@@ -7,6 +7,7 @@ import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
+import FeedbackModal from "./FeedbackModal";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks }) {
@@ -18,6 +19,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [showEditModal, setShowEditModal] = useState(false);
   const [listToDelete, setListToDelete] = useState(null);
   const [listToEdit, setListToEdit] = useState(null);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const panelRef = useRef(null);
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
 let startX = 0;
@@ -302,6 +304,7 @@ useEffect(() => {
             <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Privacy Policy</a>
             <a target="blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing" className="ml-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Terms and Conditions</a>
           </div>
+          <div onClick={()=>setIsFeedbackModalOpen(true)} className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer mt-4 text-xs text-[#91989E] flex justify-center space-x-2 text-center">Got thoughts? We want to hear them! DewList only adds what real people ask for.</div>
         </div>
       </div>
 
@@ -356,6 +359,8 @@ if (activeTaskList?._id === listToDelete._id) {
   token={token}
   onSave={refetchTaskListsOrUpdateUI}
 />
+
+{isFeedbackModalOpen ? <FeedbackModal onClose={()=>setIsFeedbackModalOpen(false)}/>:null}
     </div>
   );
 }
