@@ -215,34 +215,34 @@ export default function LoginPage() {
   <div className="max-w-5xl mx-auto grid gap-8 md:grid-cols-3">
     {[
   {
-    name: "Jess, 29",
-    role: "Freelance Designer",
-    quote: "DewList doesn’t yell at me. It just shows me one thing and lets me vibe. Honestly? More apps should mind their business like this."
+    name: "Davie, 21",
+    role: "CS Master's Student",
+    quote: "Overall, it's clean. I love it. I love the glowing hover, amazing animations - small details like that make a difference."
   },
+  /* {
+    name: "Ruthie, 60",
+    role: "Real Estate Agent",
+    quote: "I asked for dark mode. I got dark mode (And it looks soooooo good). Talk about excellent customer service!"
+  }, */
   {
     name: "Brandon, 25",
     role: "Marketing at DewList",
     quote: "Been Pro for months. Never used the AI. I’m too stubborn. But one task at a time? That’s the kind of micromanagement I can handle."
   },
-  {
-    name: "Andre, 35",
-    role: "ADHD Coach",
-    quote: "Everything about DewList feels like it was designed by someone who’s had a meltdown in front of a planner before. In a good way."
-  },
-  {
-    name: "Maya, 22",
-    role: "College Student",
-    quote: "I opened it to check a task and accidentally got my life together. 10/10 would be productive again."
-  },
-  {
-    name: "Liam, 31",
-    role: "Content Creator",
-    quote: "DewList makes my to-do list feel like I’m playing a cozy little game instead of trying to rebuild my executive function from scratch."
-  },
+  /* {
+    name: "David, 57",
+    role: "Healthcare Executive",
+    quote: "For home-based tasks on mobile, DewList is the best. Very easy to use, and completing tasks feels rewarding. Keep it up!"
+  }, */
+  /* {
+    name: "Sara, 28",
+    role: "Designer",
+    quote: "I love the simplicity. I can focus on one task at a time without getting overwhelmed. The design is clean and easy to use."
+  }, */
   {
     name: "Derrick, 30",
     role: "Founder of DewList",
-    quote: "I used DewList to build DewList. My favorite feature? The haptics for sure. I’m a sucker for a good buzz."
+    quote: "I used DewList to build DewList! Super helpful. And my favorite feature? The haptics for sure. I’m a sucker for a good buzz."
   }     
     ].map(({ name, role, quote }, i) => (
       <div
