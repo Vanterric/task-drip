@@ -183,8 +183,10 @@ const verifyToken = (req, res, next) => {
     const user = await User.findById(req.user.id);
   
     if (!user.isPro && count >= 3) return res.status(403).json({ error: 'Free tier limit reached' });
+
+    const { name, icon = "clipboard-check" } = req.body;
   
-    const list = await TaskList.create({ userId: req.user.id, name: req.body.name });
+    const list = await TaskList.create({ userId: req.user.id, name, icon });
     res.json(list);
   });
 
@@ -195,17 +197,21 @@ const verifyToken = (req, res, next) => {
   });
   
   app.put('/tasklists/:id', verifyToken, async (req, res) => {
-    const { name } = req.body;
+    const { name, icon } = req.body;
   
-    if (!name || name.trim() === "") {
-      return res.status(400).json({ error: "Name is required" });
+    if (name && name.trim() === "") {
+      return res.status(400).json({ error: "Name cannot be empty" });
     }
   
     try {
-      const updated = await TaskList.findByIdAndUpdate(
-        req.params.id,
-        { name },
-        { new: true }
+      const updateFields = {};
+        if (name) updateFields.name = name;
+        if (icon) updateFields.icon = icon;
+
+        const updated = await TaskList.findByIdAndUpdate(
+          req.params.id,
+          updateFields,
+          { new: true }
       );
   
       if (!updated) return res.status(404).json({ error: "Task list not found" });

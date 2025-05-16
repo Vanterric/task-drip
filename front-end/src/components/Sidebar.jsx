@@ -8,6 +8,8 @@ import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
 import FeedbackModal from "./FeedbackModal";
+import LucideIcon from "./LucideIcon";
+import IconPickerModal from "./IconPickerModal";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal }) {
@@ -23,9 +25,8 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const panelRef = useRef(null);
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
   const { user } = useAuth();
-let startX = 0;
-let currentX = 0;
-let touchingSidebar = false;
+  const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
+
 
 useEffect(() => {
   const panel = panelRef.current;
@@ -110,6 +111,32 @@ useEffect(() => {
     setNewListName("");
     setShowInput(false);
   };
+  
+const handleUpdateIcon = async (listId, icon) => {
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+
+  try {
+    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${listId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({ icon }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error?.error || "Failed to update icon");
+    }
+
+    const updatedList = await response.json();
+    return updatedList;
+  } catch (err) {
+    console.error("Icon update failed:", err.message);
+    throw err;
+  }
+};
 
   const refetchTaskListsOrUpdateUI = async () => {
     try {
@@ -202,6 +229,9 @@ useEffect(() => {
         <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
           {taskLists.map((list) => (
             <div key={list._id} className="flex justify-between items-center w-full">
+              <div className="cursor-pointer" onClick={() => {setListToEdit(list);setIsIconPickerModalOpen(true); vibration('button-press')}}>
+                <LucideIcon icon = {list.icon} size={30} />
+                </div>
             <button
               onClick={() => {
                 onSelectList(list);
@@ -360,6 +390,7 @@ if (activeTaskList?._id === listToDelete._id) {
   token={token}
   onSave={refetchTaskListsOrUpdateUI}
 />
+{isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon); setTaskLists((prev ) => prev.map((list => list._id === listId ? {...list, icon:icon}: list)));}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
 
 {isFeedbackModalOpen ? <FeedbackModal onClose={()=>setIsFeedbackModalOpen(false)}/>:null}
     </div>

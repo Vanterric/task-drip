@@ -1,0 +1,8364 @@
+{
+  "accessibility": {
+    "tags": [
+      "accessibility"
+    ]
+  },
+  "activity": {
+    "tags": [
+      "activity"
+    ]
+  },
+  "activity-square": {
+    "tags": [
+      "activity",
+      "square"
+    ]
+  },
+  "air-vent": {
+    "tags": [
+      "air",
+      "vent"
+    ]
+  },
+  "airplay": {
+    "tags": [
+      "airplay"
+    ]
+  },
+  "alarm-clock": {
+    "tags": [
+      "alarm",
+      "clock"
+    ]
+  },
+  "alarm-clock-check": {
+    "tags": [
+      "alarm",
+      "check",
+      "clock"
+    ]
+  },
+  "alarm-clock-off": {
+    "tags": [
+      "alarm",
+      "clock",
+      "off"
+    ]
+  },
+  "alarm-minus": {
+    "tags": [
+      "alarm",
+      "minus"
+    ]
+  },
+  "alarm-plus": {
+    "tags": [
+      "alarm",
+      "plus"
+    ]
+  },
+  "album": {
+    "tags": [
+      "album"
+    ]
+  },
+  "alert-circle": {
+    "tags": [
+      "alert",
+      "circle"
+    ]
+  },
+  "alert-octagon": {
+    "tags": [
+      "alert",
+      "octagon"
+    ]
+  },
+  "alert-triangle": {
+    "tags": [
+      "alert",
+      "triangle"
+    ]
+  },
+  "align-center": {
+    "tags": [
+      "align",
+      "center"
+    ]
+  },
+  "align-center-horizontal": {
+    "tags": [
+      "align",
+      "center",
+      "horizontal"
+    ]
+  },
+  "align-center-vertical": {
+    "tags": [
+      "align",
+      "center",
+      "vertical"
+    ]
+  },
+  "align-end-horizontal": {
+    "tags": [
+      "align",
+      "end",
+      "horizontal"
+    ]
+  },
+  "align-end-vertical": {
+    "tags": [
+      "align",
+      "end",
+      "vertical"
+    ]
+  },
+  "align-horizontal-distribute-center": {
+    "tags": [
+      "align",
+      "center",
+      "distribute",
+      "horizontal"
+    ]
+  },
+  "align-horizontal-distribute-end": {
+    "tags": [
+      "align",
+      "distribute",
+      "end",
+      "horizontal"
+    ]
+  },
+  "align-horizontal-distribute-start": {
+    "tags": [
+      "align",
+      "distribute",
+      "horizontal",
+      "start"
+    ]
+  },
+  "align-horizontal-justify-center": {
+    "tags": [
+      "align",
+      "center",
+      "horizontal",
+      "justify"
+    ]
+  },
+  "align-horizontal-justify-end": {
+    "tags": [
+      "align",
+      "end",
+      "horizontal",
+      "justify"
+    ]
+  },
+  "align-horizontal-justify-start": {
+    "tags": [
+      "align",
+      "horizontal",
+      "justify",
+      "start"
+    ]
+  },
+  "align-horizontal-space-around": {
+    "tags": [
+      "align",
+      "around",
+      "horizontal",
+      "space"
+    ]
+  },
+  "align-horizontal-space-between": {
+    "tags": [
+      "align",
+      "between",
+      "horizontal",
+      "space"
+    ]
+  },
+  "align-justify": {
+    "tags": [
+      "align",
+      "justify"
+    ]
+  },
+  "align-left": {
+    "tags": [
+      "align",
+      "left"
+    ]
+  },
+  "align-right": {
+    "tags": [
+      "align",
+      "right"
+    ]
+  },
+  "align-start-horizontal": {
+    "tags": [
+      "align",
+      "horizontal",
+      "start"
+    ]
+  },
+  "align-start-vertical": {
+    "tags": [
+      "align",
+      "start",
+      "vertical"
+    ]
+  },
+  "align-vertical-distribute-center": {
+    "tags": [
+      "align",
+      "center",
+      "distribute",
+      "vertical"
+    ]
+  },
+  "align-vertical-distribute-end": {
+    "tags": [
+      "align",
+      "distribute",
+      "end",
+      "vertical"
+    ]
+  },
+  "align-vertical-distribute-start": {
+    "tags": [
+      "align",
+      "distribute",
+      "start",
+      "vertical"
+    ]
+  },
+  "align-vertical-justify-center": {
+    "tags": [
+      "align",
+      "center",
+      "justify",
+      "vertical"
+    ]
+  },
+  "align-vertical-justify-end": {
+    "tags": [
+      "align",
+      "end",
+      "justify",
+      "vertical"
+    ]
+  },
+  "align-vertical-justify-start": {
+    "tags": [
+      "align",
+      "justify",
+      "start",
+      "vertical"
+    ]
+  },
+  "align-vertical-space-around": {
+    "tags": [
+      "align",
+      "around",
+      "space",
+      "vertical"
+    ]
+  },
+  "align-vertical-space-between": {
+    "tags": [
+      "align",
+      "between",
+      "space",
+      "vertical"
+    ]
+  },
+  "ampersand": {
+    "tags": [
+      "ampersand"
+    ]
+  },
+  "ampersands": {
+    "tags": [
+      "ampersands"
+    ]
+  },
+  "anchor": {
+    "tags": [
+      "anchor"
+    ]
+  },
+  "angry": {
+    "tags": [
+      "angry"
+    ]
+  },
+  "annoyed": {
+    "tags": [
+      "annoyed"
+    ]
+  },
+  "antenna": {
+    "tags": [
+      "antenna"
+    ]
+  },
+  "aperture": {
+    "tags": [
+      "aperture"
+    ]
+  },
+  "app-window": {
+    "tags": [
+      "app",
+      "window"
+    ]
+  },
+  "apple": {
+    "tags": [
+      "apple"
+    ]
+  },
+  "archive": {
+    "tags": [
+      "archive"
+    ]
+  },
+  "archive-restore": {
+    "tags": [
+      "archive",
+      "restore"
+    ]
+  },
+  "archive-x": {
+    "tags": [
+      "archive",
+      "x"
+    ]
+  },
+  "area-chart": {
+    "tags": [
+      "area",
+      "chart"
+    ]
+  },
+  "armchair": {
+    "tags": [
+      "armchair"
+    ]
+  },
+  "arrow-big-down": {
+    "tags": [
+      "arrow",
+      "big",
+      "down"
+    ]
+  },
+  "arrow-big-down-dash": {
+    "tags": [
+      "arrow",
+      "big",
+      "dash",
+      "down"
+    ]
+  },
+  "arrow-big-left": {
+    "tags": [
+      "arrow",
+      "big",
+      "left"
+    ]
+  },
+  "arrow-big-left-dash": {
+    "tags": [
+      "arrow",
+      "big",
+      "dash",
+      "left"
+    ]
+  },
+  "arrow-big-right": {
+    "tags": [
+      "arrow",
+      "big",
+      "right"
+    ]
+  },
+  "arrow-big-right-dash": {
+    "tags": [
+      "arrow",
+      "big",
+      "dash",
+      "right"
+    ]
+  },
+  "arrow-big-up": {
+    "tags": [
+      "arrow",
+      "big",
+      "up"
+    ]
+  },
+  "arrow-big-up-dash": {
+    "tags": [
+      "arrow",
+      "big",
+      "dash",
+      "up"
+    ]
+  },
+  "arrow-down": {
+    "tags": [
+      "arrow",
+      "down"
+    ]
+  },
+  "arrow-down-0-1": {
+    "tags": [
+      "0",
+      "1",
+      "arrow",
+      "down"
+    ]
+  },
+  "arrow-down-1-0": {
+    "tags": [
+      "0",
+      "1",
+      "arrow",
+      "down"
+    ]
+  },
+  "arrow-down-a-z": {
+    "tags": [
+      "a",
+      "arrow",
+      "down",
+      "z"
+    ]
+  },
+  "arrow-down-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "down"
+    ]
+  },
+  "arrow-down-from-line": {
+    "tags": [
+      "arrow",
+      "down",
+      "from",
+      "line"
+    ]
+  },
+  "arrow-down-left": {
+    "tags": [
+      "arrow",
+      "down",
+      "left"
+    ]
+  },
+  "arrow-down-left-from-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "down",
+      "from",
+      "left"
+    ]
+  },
+  "arrow-down-left-square": {
+    "tags": [
+      "arrow",
+      "down",
+      "left",
+      "square"
+    ]
+  },
+  "arrow-down-narrow-wide": {
+    "tags": [
+      "arrow",
+      "down",
+      "narrow",
+      "wide"
+    ]
+  },
+  "arrow-down-right": {
+    "tags": [
+      "arrow",
+      "down",
+      "right"
+    ]
+  },
+  "arrow-down-right-from-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "down",
+      "from",
+      "right"
+    ]
+  },
+  "arrow-down-right-square": {
+    "tags": [
+      "arrow",
+      "down",
+      "right",
+      "square"
+    ]
+  },
+  "arrow-down-square": {
+    "tags": [
+      "arrow",
+      "down",
+      "square"
+    ]
+  },
+  "arrow-down-to-dot": {
+    "tags": [
+      "arrow",
+      "dot",
+      "down",
+      "to"
+    ]
+  },
+  "arrow-down-to-line": {
+    "tags": [
+      "arrow",
+      "down",
+      "line",
+      "to"
+    ]
+  },
+  "arrow-down-up": {
+    "tags": [
+      "arrow",
+      "down",
+      "up"
+    ]
+  },
+  "arrow-down-wide-narrow": {
+    "tags": [
+      "arrow",
+      "down",
+      "narrow",
+      "wide"
+    ]
+  },
+  "arrow-down-z-a": {
+    "tags": [
+      "a",
+      "arrow",
+      "down",
+      "z"
+    ]
+  },
+  "arrow-left": {
+    "tags": [
+      "arrow",
+      "left"
+    ]
+  },
+  "arrow-left-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "left"
+    ]
+  },
+  "arrow-left-from-line": {
+    "tags": [
+      "arrow",
+      "from",
+      "left",
+      "line"
+    ]
+  },
+  "arrow-left-right": {
+    "tags": [
+      "arrow",
+      "left",
+      "right"
+    ]
+  },
+  "arrow-left-square": {
+    "tags": [
+      "arrow",
+      "left",
+      "square"
+    ]
+  },
+  "arrow-left-to-line": {
+    "tags": [
+      "arrow",
+      "left",
+      "line",
+      "to"
+    ]
+  },
+  "arrow-right": {
+    "tags": [
+      "arrow",
+      "right"
+    ]
+  },
+  "arrow-right-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "right"
+    ]
+  },
+  "arrow-right-from-line": {
+    "tags": [
+      "arrow",
+      "from",
+      "line",
+      "right"
+    ]
+  },
+  "arrow-right-left": {
+    "tags": [
+      "arrow",
+      "left",
+      "right"
+    ]
+  },
+  "arrow-right-square": {
+    "tags": [
+      "arrow",
+      "right",
+      "square"
+    ]
+  },
+  "arrow-right-to-line": {
+    "tags": [
+      "arrow",
+      "line",
+      "right",
+      "to"
+    ]
+  },
+  "arrow-up": {
+    "tags": [
+      "arrow",
+      "up"
+    ]
+  },
+  "arrow-up-0-1": {
+    "tags": [
+      "0",
+      "1",
+      "arrow",
+      "up"
+    ]
+  },
+  "arrow-up-1-0": {
+    "tags": [
+      "0",
+      "1",
+      "arrow",
+      "up"
+    ]
+  },
+  "arrow-up-a-z": {
+    "tags": [
+      "a",
+      "arrow",
+      "up",
+      "z"
+    ]
+  },
+  "arrow-up-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "up"
+    ]
+  },
+  "arrow-up-down": {
+    "tags": [
+      "arrow",
+      "down",
+      "up"
+    ]
+  },
+  "arrow-up-from-dot": {
+    "tags": [
+      "arrow",
+      "dot",
+      "from",
+      "up"
+    ]
+  },
+  "arrow-up-from-line": {
+    "tags": [
+      "arrow",
+      "from",
+      "line",
+      "up"
+    ]
+  },
+  "arrow-up-left": {
+    "tags": [
+      "arrow",
+      "left",
+      "up"
+    ]
+  },
+  "arrow-up-left-from-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "from",
+      "left",
+      "up"
+    ]
+  },
+  "arrow-up-left-square": {
+    "tags": [
+      "arrow",
+      "left",
+      "square",
+      "up"
+    ]
+  },
+  "arrow-up-narrow-wide": {
+    "tags": [
+      "arrow",
+      "narrow",
+      "up",
+      "wide"
+    ]
+  },
+  "arrow-up-right": {
+    "tags": [
+      "arrow",
+      "right",
+      "up"
+    ]
+  },
+  "arrow-up-right-from-circle": {
+    "tags": [
+      "arrow",
+      "circle",
+      "from",
+      "right",
+      "up"
+    ]
+  },
+  "arrow-up-right-square": {
+    "tags": [
+      "arrow",
+      "right",
+      "square",
+      "up"
+    ]
+  },
+  "arrow-up-square": {
+    "tags": [
+      "arrow",
+      "square",
+      "up"
+    ]
+  },
+  "arrow-up-to-line": {
+    "tags": [
+      "arrow",
+      "line",
+      "to",
+      "up"
+    ]
+  },
+  "arrow-up-wide-narrow": {
+    "tags": [
+      "arrow",
+      "narrow",
+      "up",
+      "wide"
+    ]
+  },
+  "arrow-up-z-a": {
+    "tags": [
+      "a",
+      "arrow",
+      "up",
+      "z"
+    ]
+  },
+  "arrows-up-from-line": {
+    "tags": [
+      "arrows",
+      "from",
+      "line",
+      "up"
+    ]
+  },
+  "asterisk": {
+    "tags": [
+      "asterisk"
+    ]
+  },
+  "at-sign": {
+    "tags": [
+      "at",
+      "sign"
+    ]
+  },
+  "atom": {
+    "tags": [
+      "atom"
+    ]
+  },
+  "audio-lines": {
+    "tags": [
+      "audio",
+      "lines"
+    ]
+  },
+  "audio-waveform": {
+    "tags": [
+      "audio",
+      "waveform"
+    ]
+  },
+  "award": {
+    "tags": [
+      "award"
+    ]
+  },
+  "axe": {
+    "tags": [
+      "axe"
+    ]
+  },
+  "axis-3d": {
+    "tags": [
+      "3d",
+      "axis"
+    ]
+  },
+  "baby": {
+    "tags": [
+      "baby"
+    ]
+  },
+  "backpack": {
+    "tags": [
+      "backpack"
+    ]
+  },
+  "badge": {
+    "tags": [
+      "badge"
+    ]
+  },
+  "badge-alert": {
+    "tags": [
+      "alert",
+      "badge"
+    ]
+  },
+  "badge-cent": {
+    "tags": [
+      "badge",
+      "cent"
+    ]
+  },
+  "badge-check": {
+    "tags": [
+      "badge",
+      "check"
+    ]
+  },
+  "badge-dollar-sign": {
+    "tags": [
+      "badge",
+      "dollar",
+      "sign"
+    ]
+  },
+  "badge-euro": {
+    "tags": [
+      "badge",
+      "euro"
+    ]
+  },
+  "badge-help": {
+    "tags": [
+      "badge",
+      "help"
+    ]
+  },
+  "badge-indian-rupee": {
+    "tags": [
+      "badge",
+      "indian",
+      "rupee"
+    ]
+  },
+  "badge-info": {
+    "tags": [
+      "badge",
+      "info"
+    ]
+  },
+  "badge-japanese-yen": {
+    "tags": [
+      "badge",
+      "japanese",
+      "yen"
+    ]
+  },
+  "badge-minus": {
+    "tags": [
+      "badge",
+      "minus"
+    ]
+  },
+  "badge-percent": {
+    "tags": [
+      "badge",
+      "percent"
+    ]
+  },
+  "badge-plus": {
+    "tags": [
+      "badge",
+      "plus"
+    ]
+  },
+  "badge-pound-sterling": {
+    "tags": [
+      "badge",
+      "pound",
+      "sterling"
+    ]
+  },
+  "badge-russian-ruble": {
+    "tags": [
+      "badge",
+      "ruble",
+      "russian"
+    ]
+  },
+  "badge-swiss-franc": {
+    "tags": [
+      "badge",
+      "franc",
+      "swiss"
+    ]
+  },
+  "badge-x": {
+    "tags": [
+      "badge",
+      "x"
+    ]
+  },
+  "baggage-claim": {
+    "tags": [
+      "baggage",
+      "claim"
+    ]
+  },
+  "ban": {
+    "tags": [
+      "ban"
+    ]
+  },
+  "banana": {
+    "tags": [
+      "banana"
+    ]
+  },
+  "banknote": {
+    "tags": [
+      "banknote"
+    ]
+  },
+  "bar-chart": {
+    "tags": [
+      "bar",
+      "chart"
+    ]
+  },
+  "bar-chart-2": {
+    "tags": [
+      "2",
+      "bar",
+      "chart"
+    ]
+  },
+  "bar-chart-3": {
+    "tags": [
+      "3",
+      "bar",
+      "chart"
+    ]
+  },
+  "bar-chart-4": {
+    "tags": [
+      "4",
+      "bar",
+      "chart"
+    ]
+  },
+  "bar-chart-big": {
+    "tags": [
+      "bar",
+      "big",
+      "chart"
+    ]
+  },
+  "bar-chart-horizontal": {
+    "tags": [
+      "bar",
+      "chart",
+      "horizontal"
+    ]
+  },
+  "bar-chart-horizontal-big": {
+    "tags": [
+      "bar",
+      "big",
+      "chart",
+      "horizontal"
+    ]
+  },
+  "barcode": {
+    "tags": [
+      "barcode"
+    ]
+  },
+  "baseline": {
+    "tags": [
+      "baseline"
+    ]
+  },
+  "bath": {
+    "tags": [
+      "bath"
+    ]
+  },
+  "battery": {
+    "tags": [
+      "battery"
+    ]
+  },
+  "battery-charging": {
+    "tags": [
+      "battery",
+      "charging"
+    ]
+  },
+  "battery-full": {
+    "tags": [
+      "battery",
+      "full"
+    ]
+  },
+  "battery-low": {
+    "tags": [
+      "battery",
+      "low"
+    ]
+  },
+  "battery-medium": {
+    "tags": [
+      "battery",
+      "medium"
+    ]
+  },
+  "battery-warning": {
+    "tags": [
+      "battery",
+      "warning"
+    ]
+  },
+  "beaker": {
+    "tags": [
+      "beaker"
+    ]
+  },
+  "bean": {
+    "tags": [
+      "bean"
+    ]
+  },
+  "bean-off": {
+    "tags": [
+      "bean",
+      "off"
+    ]
+  },
+  "bed": {
+    "tags": [
+      "bed"
+    ]
+  },
+  "bed-double": {
+    "tags": [
+      "bed",
+      "double"
+    ]
+  },
+  "bed-single": {
+    "tags": [
+      "bed",
+      "single"
+    ]
+  },
+  "beef": {
+    "tags": [
+      "beef"
+    ]
+  },
+  "beer": {
+    "tags": [
+      "beer"
+    ]
+  },
+  "bell": {
+    "tags": [
+      "bell"
+    ]
+  },
+  "bell-dot": {
+    "tags": [
+      "bell",
+      "dot"
+    ]
+  },
+  "bell-minus": {
+    "tags": [
+      "bell",
+      "minus"
+    ]
+  },
+  "bell-off": {
+    "tags": [
+      "bell",
+      "off"
+    ]
+  },
+  "bell-plus": {
+    "tags": [
+      "bell",
+      "plus"
+    ]
+  },
+  "bell-ring": {
+    "tags": [
+      "bell",
+      "ring"
+    ]
+  },
+  "bike": {
+    "tags": [
+      "bike"
+    ]
+  },
+  "binary": {
+    "tags": [
+      "binary"
+    ]
+  },
+  "biohazard": {
+    "tags": [
+      "biohazard"
+    ]
+  },
+  "bird": {
+    "tags": [
+      "bird"
+    ]
+  },
+  "bitcoin": {
+    "tags": [
+      "bitcoin"
+    ]
+  },
+  "blinds": {
+    "tags": [
+      "blinds"
+    ]
+  },
+  "blocks": {
+    "tags": [
+      "blocks"
+    ]
+  },
+  "bluetooth": {
+    "tags": [
+      "bluetooth"
+    ]
+  },
+  "bluetooth-connected": {
+    "tags": [
+      "bluetooth",
+      "connected"
+    ]
+  },
+  "bluetooth-off": {
+    "tags": [
+      "bluetooth",
+      "off"
+    ]
+  },
+  "bluetooth-searching": {
+    "tags": [
+      "bluetooth",
+      "searching"
+    ]
+  },
+  "bold": {
+    "tags": [
+      "bold"
+    ]
+  },
+  "bomb": {
+    "tags": [
+      "bomb"
+    ]
+  },
+  "bone": {
+    "tags": [
+      "bone"
+    ]
+  },
+  "book": {
+    "tags": [
+      "book"
+    ]
+  },
+  "book-a": {
+    "tags": [
+      "a",
+      "book"
+    ]
+  },
+  "book-audio": {
+    "tags": [
+      "audio",
+      "book"
+    ]
+  },
+  "book-check": {
+    "tags": [
+      "book",
+      "check"
+    ]
+  },
+  "book-copy": {
+    "tags": [
+      "book",
+      "copy"
+    ]
+  },
+  "book-dashed": {
+    "tags": [
+      "book",
+      "dashed"
+    ]
+  },
+  "book-down": {
+    "tags": [
+      "book",
+      "down"
+    ]
+  },
+  "book-headphones": {
+    "tags": [
+      "book",
+      "headphones"
+    ]
+  },
+  "book-heart": {
+    "tags": [
+      "book",
+      "heart"
+    ]
+  },
+  "book-image": {
+    "tags": [
+      "book",
+      "image"
+    ]
+  },
+  "book-key": {
+    "tags": [
+      "book",
+      "key"
+    ]
+  },
+  "book-lock": {
+    "tags": [
+      "book",
+      "lock"
+    ]
+  },
+  "book-marked": {
+    "tags": [
+      "book",
+      "marked"
+    ]
+  },
+  "book-minus": {
+    "tags": [
+      "book",
+      "minus"
+    ]
+  },
+  "book-open": {
+    "tags": [
+      "book",
+      "open"
+    ]
+  },
+  "book-open-check": {
+    "tags": [
+      "book",
+      "check",
+      "open"
+    ]
+  },
+  "book-open-text": {
+    "tags": [
+      "book",
+      "open",
+      "text"
+    ]
+  },
+  "book-plus": {
+    "tags": [
+      "book",
+      "plus"
+    ]
+  },
+  "book-text": {
+    "tags": [
+      "book",
+      "text"
+    ]
+  },
+  "book-type": {
+    "tags": [
+      "book",
+      "type"
+    ]
+  },
+  "book-up": {
+    "tags": [
+      "book",
+      "up"
+    ]
+  },
+  "book-up-2": {
+    "tags": [
+      "2",
+      "book",
+      "up"
+    ]
+  },
+  "book-user": {
+    "tags": [
+      "account",
+      "avatar",
+      "book",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "book-x": {
+    "tags": [
+      "book",
+      "x"
+    ]
+  },
+  "bookmark": {
+    "tags": [
+      "bookmark"
+    ]
+  },
+  "bookmark-check": {
+    "tags": [
+      "bookmark",
+      "check"
+    ]
+  },
+  "bookmark-minus": {
+    "tags": [
+      "bookmark",
+      "minus"
+    ]
+  },
+  "bookmark-plus": {
+    "tags": [
+      "bookmark",
+      "plus"
+    ]
+  },
+  "bookmark-x": {
+    "tags": [
+      "bookmark",
+      "x"
+    ]
+  },
+  "boom-box": {
+    "tags": [
+      "boom",
+      "box"
+    ]
+  },
+  "bot": {
+    "tags": [
+      "bot"
+    ]
+  },
+  "box": {
+    "tags": [
+      "box"
+    ]
+  },
+  "box-select": {
+    "tags": [
+      "box",
+      "select"
+    ]
+  },
+  "boxes": {
+    "tags": [
+      "boxes"
+    ]
+  },
+  "braces": {
+    "tags": [
+      "braces"
+    ]
+  },
+  "brackets": {
+    "tags": [
+      "brackets"
+    ]
+  },
+  "brain": {
+    "tags": [
+      "brain"
+    ]
+  },
+  "brain-circuit": {
+    "tags": [
+      "brain",
+      "circuit"
+    ]
+  },
+  "brain-cog": {
+    "tags": [
+      "brain",
+      "cog"
+    ]
+  },
+  "briefcase": {
+    "tags": [
+      "briefcase"
+    ]
+  },
+  "bring-to-front": {
+    "tags": [
+      "bring",
+      "front",
+      "to"
+    ]
+  },
+  "brush": {
+    "tags": [
+      "brush"
+    ]
+  },
+  "bug": {
+    "tags": [
+      "bug"
+    ]
+  },
+  "bug-off": {
+    "tags": [
+      "bug",
+      "off"
+    ]
+  },
+  "bug-play": {
+    "tags": [
+      "bug",
+      "play"
+    ]
+  },
+  "building": {
+    "tags": [
+      "building"
+    ]
+  },
+  "building-2": {
+    "tags": [
+      "2",
+      "building"
+    ]
+  },
+  "bus": {
+    "tags": [
+      "bus"
+    ]
+  },
+  "bus-front": {
+    "tags": [
+      "bus",
+      "front"
+    ]
+  },
+  "cable": {
+    "tags": [
+      "cable"
+    ]
+  },
+  "cable-car": {
+    "tags": [
+      "cable",
+      "car"
+    ]
+  },
+  "cake": {
+    "tags": [
+      "cake"
+    ]
+  },
+  "cake-slice": {
+    "tags": [
+      "cake",
+      "slice"
+    ]
+  },
+  "calculator": {
+    "tags": [
+      "calculator"
+    ]
+  },
+  "calendar": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-check": {
+    "tags": [
+      "calendar",
+      "check",
+      "date",
+      "event",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-check-2": {
+    "tags": [
+      "2",
+      "calendar",
+      "check",
+      "date",
+      "event",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-clock": {
+    "tags": [
+      "calendar",
+      "clock",
+      "date",
+      "event",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-days": {
+    "tags": [
+      "calendar",
+      "date",
+      "days",
+      "event",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-heart": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "heart",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-minus": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "minus",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-off": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "off",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-plus": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "plus",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-range": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "range",
+      "schedule",
+      "time"
+    ]
+  },
+  "calendar-search": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "find",
+      "lookup",
+      "magnify",
+      "schedule",
+      "search",
+      "time"
+    ]
+  },
+  "calendar-x": {
+    "tags": [
+      "calendar",
+      "date",
+      "event",
+      "schedule",
+      "time",
+      "x"
+    ]
+  },
+  "calendar-x-2": {
+    "tags": [
+      "2",
+      "calendar",
+      "date",
+      "event",
+      "schedule",
+      "time",
+      "x"
+    ]
+  },
+  "camera": {
+    "tags": [
+      "camera",
+      "image",
+      "lens",
+      "photo",
+      "picture"
+    ]
+  },
+  "camera-off": {
+    "tags": [
+      "camera",
+      "image",
+      "lens",
+      "off",
+      "photo",
+      "picture"
+    ]
+  },
+  "candlestick-chart": {
+    "tags": [
+      "candlestick",
+      "chart"
+    ]
+  },
+  "candy": {
+    "tags": [
+      "candy"
+    ]
+  },
+  "candy-cane": {
+    "tags": [
+      "candy",
+      "cane"
+    ]
+  },
+  "candy-off": {
+    "tags": [
+      "candy",
+      "off"
+    ]
+  },
+  "car": {
+    "tags": [
+      "car"
+    ]
+  },
+  "car-front": {
+    "tags": [
+      "car",
+      "front"
+    ]
+  },
+  "car-taxi-front": {
+    "tags": [
+      "car",
+      "front",
+      "taxi"
+    ]
+  },
+  "caravan": {
+    "tags": [
+      "caravan"
+    ]
+  },
+  "carrot": {
+    "tags": [
+      "carrot"
+    ]
+  },
+  "case-lower": {
+    "tags": [
+      "case",
+      "lower"
+    ]
+  },
+  "case-sensitive": {
+    "tags": [
+      "case",
+      "sensitive"
+    ]
+  },
+  "case-upper": {
+    "tags": [
+      "case",
+      "upper"
+    ]
+  },
+  "cassette-tape": {
+    "tags": [
+      "cassette",
+      "tape"
+    ]
+  },
+  "cast": {
+    "tags": [
+      "cast"
+    ]
+  },
+  "castle": {
+    "tags": [
+      "castle"
+    ]
+  },
+  "cat": {
+    "tags": [
+      "cat"
+    ]
+  },
+  "check": {
+    "tags": [
+      "check"
+    ]
+  },
+  "check-check": {
+    "tags": [
+      "check"
+    ]
+  },
+  "check-circle": {
+    "tags": [
+      "check",
+      "circle"
+    ]
+  },
+  "check-circle-2": {
+    "tags": [
+      "2",
+      "check",
+      "circle"
+    ]
+  },
+  "check-square": {
+    "tags": [
+      "check",
+      "square"
+    ]
+  },
+  "check-square-2": {
+    "tags": [
+      "2",
+      "check",
+      "square"
+    ]
+  },
+  "chef-hat": {
+    "tags": [
+      "chef",
+      "hat"
+    ]
+  },
+  "cherry": {
+    "tags": [
+      "cherry"
+    ]
+  },
+  "chevron-down": {
+    "tags": [
+      "chevron",
+      "down"
+    ]
+  },
+  "chevron-down-circle": {
+    "tags": [
+      "chevron",
+      "circle",
+      "down"
+    ]
+  },
+  "chevron-down-square": {
+    "tags": [
+      "chevron",
+      "down",
+      "square"
+    ]
+  },
+  "chevron-first": {
+    "tags": [
+      "chevron",
+      "first"
+    ]
+  },
+  "chevron-last": {
+    "tags": [
+      "chevron",
+      "last"
+    ]
+  },
+  "chevron-left": {
+    "tags": [
+      "chevron",
+      "left"
+    ]
+  },
+  "chevron-left-circle": {
+    "tags": [
+      "chevron",
+      "circle",
+      "left"
+    ]
+  },
+  "chevron-left-square": {
+    "tags": [
+      "chevron",
+      "left",
+      "square"
+    ]
+  },
+  "chevron-right": {
+    "tags": [
+      "chevron",
+      "right"
+    ]
+  },
+  "chevron-right-circle": {
+    "tags": [
+      "chevron",
+      "circle",
+      "right"
+    ]
+  },
+  "chevron-right-square": {
+    "tags": [
+      "chevron",
+      "right",
+      "square"
+    ]
+  },
+  "chevron-up": {
+    "tags": [
+      "chevron",
+      "up"
+    ]
+  },
+  "chevron-up-circle": {
+    "tags": [
+      "chevron",
+      "circle",
+      "up"
+    ]
+  },
+  "chevron-up-square": {
+    "tags": [
+      "chevron",
+      "square",
+      "up"
+    ]
+  },
+  "chevrons-down": {
+    "tags": [
+      "chevrons",
+      "down"
+    ]
+  },
+  "chevrons-down-up": {
+    "tags": [
+      "chevrons",
+      "down",
+      "up"
+    ]
+  },
+  "chevrons-left": {
+    "tags": [
+      "chevrons",
+      "left"
+    ]
+  },
+  "chevrons-left-right": {
+    "tags": [
+      "chevrons",
+      "left",
+      "right"
+    ]
+  },
+  "chevrons-right": {
+    "tags": [
+      "chevrons",
+      "right"
+    ]
+  },
+  "chevrons-right-left": {
+    "tags": [
+      "chevrons",
+      "left",
+      "right"
+    ]
+  },
+  "chevrons-up": {
+    "tags": [
+      "chevrons",
+      "up"
+    ]
+  },
+  "chevrons-up-down": {
+    "tags": [
+      "chevrons",
+      "down",
+      "up"
+    ]
+  },
+  "chrome": {
+    "tags": [
+      "chrome"
+    ]
+  },
+  "church": {
+    "tags": [
+      "church"
+    ]
+  },
+  "cigarette": {
+    "tags": [
+      "cigarette"
+    ]
+  },
+  "cigarette-off": {
+    "tags": [
+      "cigarette",
+      "off"
+    ]
+  },
+  "circle": {
+    "tags": [
+      "circle"
+    ]
+  },
+  "circle-dashed": {
+    "tags": [
+      "circle",
+      "dashed"
+    ]
+  },
+  "circle-dollar-sign": {
+    "tags": [
+      "circle",
+      "dollar",
+      "sign"
+    ]
+  },
+  "circle-dot": {
+    "tags": [
+      "circle",
+      "dot"
+    ]
+  },
+  "circle-dot-dashed": {
+    "tags": [
+      "circle",
+      "dashed",
+      "dot"
+    ]
+  },
+  "circle-ellipsis": {
+    "tags": [
+      "circle",
+      "ellipsis"
+    ]
+  },
+  "circle-equal": {
+    "tags": [
+      "circle",
+      "equal"
+    ]
+  },
+  "circle-off": {
+    "tags": [
+      "circle",
+      "off"
+    ]
+  },
+  "circle-slash": {
+    "tags": [
+      "circle",
+      "slash"
+    ]
+  },
+  "circle-slash-2": {
+    "tags": [
+      "2",
+      "circle",
+      "slash"
+    ]
+  },
+  "circle-user": {
+    "tags": [
+      "account",
+      "avatar",
+      "circle",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "circle-user-round": {
+    "tags": [
+      "account",
+      "avatar",
+      "circle",
+      "person",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "circuit-board": {
+    "tags": [
+      "board",
+      "circuit"
+    ]
+  },
+  "citrus": {
+    "tags": [
+      "citrus"
+    ]
+  },
+  "clapperboard": {
+    "tags": [
+      "clapperboard"
+    ]
+  },
+  "clipboard": {
+    "tags": [
+      "clipboard"
+    ]
+  },
+  "clipboard-check": {
+    "tags": [
+      "check",
+      "clipboard"
+    ]
+  },
+  "clipboard-copy": {
+    "tags": [
+      "clipboard",
+      "copy"
+    ]
+  },
+  "clipboard-edit": {
+    "tags": [
+      "clipboard",
+      "edit"
+    ]
+  },
+  "clipboard-list": {
+    "tags": [
+      "clipboard",
+      "list"
+    ]
+  },
+  "clipboard-paste": {
+    "tags": [
+      "clipboard",
+      "paste"
+    ]
+  },
+  "clipboard-signature": {
+    "tags": [
+      "clipboard",
+      "signature"
+    ]
+  },
+  "clipboard-type": {
+    "tags": [
+      "clipboard",
+      "type"
+    ]
+  },
+  "clipboard-x": {
+    "tags": [
+      "clipboard",
+      "x"
+    ]
+  },
+  "clock": {
+    "tags": [
+      "clock"
+    ]
+  },
+  "clock-1": {
+    "tags": [
+      "1",
+      "clock"
+    ]
+  },
+  "clock-10": {
+    "tags": [
+      "10",
+      "clock"
+    ]
+  },
+  "clock-11": {
+    "tags": [
+      "11",
+      "clock"
+    ]
+  },
+  "clock-12": {
+    "tags": [
+      "12",
+      "clock"
+    ]
+  },
+  "clock-2": {
+    "tags": [
+      "2",
+      "clock"
+    ]
+  },
+  "clock-3": {
+    "tags": [
+      "3",
+      "clock"
+    ]
+  },
+  "clock-4": {
+    "tags": [
+      "4",
+      "clock"
+    ]
+  },
+  "clock-5": {
+    "tags": [
+      "5",
+      "clock"
+    ]
+  },
+  "clock-6": {
+    "tags": [
+      "6",
+      "clock"
+    ]
+  },
+  "clock-7": {
+    "tags": [
+      "7",
+      "clock"
+    ]
+  },
+  "clock-8": {
+    "tags": [
+      "8",
+      "clock"
+    ]
+  },
+  "clock-9": {
+    "tags": [
+      "9",
+      "clock"
+    ]
+  },
+  "cloud": {
+    "tags": [
+      "cloud"
+    ]
+  },
+  "cloud-cog": {
+    "tags": [
+      "cloud",
+      "cog"
+    ]
+  },
+  "cloud-drizzle": {
+    "tags": [
+      "cloud",
+      "drizzle"
+    ]
+  },
+  "cloud-fog": {
+    "tags": [
+      "cloud",
+      "fog"
+    ]
+  },
+  "cloud-hail": {
+    "tags": [
+      "cloud",
+      "hail"
+    ]
+  },
+  "cloud-lightning": {
+    "tags": [
+      "cloud",
+      "lightning"
+    ]
+  },
+  "cloud-moon": {
+    "tags": [
+      "cloud",
+      "moon"
+    ]
+  },
+  "cloud-moon-rain": {
+    "tags": [
+      "cloud",
+      "moon",
+      "rain"
+    ]
+  },
+  "cloud-off": {
+    "tags": [
+      "cloud",
+      "off"
+    ]
+  },
+  "cloud-rain": {
+    "tags": [
+      "cloud",
+      "rain"
+    ]
+  },
+  "cloud-rain-wind": {
+    "tags": [
+      "cloud",
+      "rain",
+      "wind"
+    ]
+  },
+  "cloud-snow": {
+    "tags": [
+      "cloud",
+      "snow"
+    ]
+  },
+  "cloud-sun": {
+    "tags": [
+      "cloud",
+      "sun"
+    ]
+  },
+  "cloud-sun-rain": {
+    "tags": [
+      "cloud",
+      "rain",
+      "sun"
+    ]
+  },
+  "cloudy": {
+    "tags": [
+      "cloudy"
+    ]
+  },
+  "clover": {
+    "tags": [
+      "clover"
+    ]
+  },
+  "club": {
+    "tags": [
+      "club"
+    ]
+  },
+  "code": {
+    "tags": [
+      "code"
+    ]
+  },
+  "code-2": {
+    "tags": [
+      "2",
+      "code"
+    ]
+  },
+  "codepen": {
+    "tags": [
+      "codepen"
+    ]
+  },
+  "codesandbox": {
+    "tags": [
+      "codesandbox"
+    ]
+  },
+  "coffee": {
+    "tags": [
+      "coffee"
+    ]
+  },
+  "cog": {
+    "tags": [
+      "cog"
+    ]
+  },
+  "coins": {
+    "tags": [
+      "coins"
+    ]
+  },
+  "columns": {
+    "tags": [
+      "columns"
+    ]
+  },
+  "combine": {
+    "tags": [
+      "combine"
+    ]
+  },
+  "command": {
+    "tags": [
+      "command"
+    ]
+  },
+  "compass": {
+    "tags": [
+      "compass"
+    ]
+  },
+  "component": {
+    "tags": [
+      "component"
+    ]
+  },
+  "computer": {
+    "tags": [
+      "computer"
+    ]
+  },
+  "concierge-bell": {
+    "tags": [
+      "bell",
+      "concierge"
+    ]
+  },
+  "cone": {
+    "tags": [
+      "cone"
+    ]
+  },
+  "construction": {
+    "tags": [
+      "construction"
+    ]
+  },
+  "contact": {
+    "tags": [
+      "contact"
+    ]
+  },
+  "contact-2": {
+    "tags": [
+      "2",
+      "contact"
+    ]
+  },
+  "container": {
+    "tags": [
+      "container"
+    ]
+  },
+  "contrast": {
+    "tags": [
+      "contrast"
+    ]
+  },
+  "cookie": {
+    "tags": [
+      "cookie"
+    ]
+  },
+  "copy": {
+    "tags": [
+      "copy"
+    ]
+  },
+  "copy-check": {
+    "tags": [
+      "check",
+      "copy"
+    ]
+  },
+  "copy-minus": {
+    "tags": [
+      "copy",
+      "minus"
+    ]
+  },
+  "copy-plus": {
+    "tags": [
+      "copy",
+      "plus"
+    ]
+  },
+  "copy-slash": {
+    "tags": [
+      "copy",
+      "slash"
+    ]
+  },
+  "copy-x": {
+    "tags": [
+      "copy",
+      "x"
+    ]
+  },
+  "copyleft": {
+    "tags": [
+      "copyleft"
+    ]
+  },
+  "copyright": {
+    "tags": [
+      "copyright"
+    ]
+  },
+  "corner-down-left": {
+    "tags": [
+      "corner",
+      "down",
+      "left"
+    ]
+  },
+  "corner-down-right": {
+    "tags": [
+      "corner",
+      "down",
+      "right"
+    ]
+  },
+  "corner-left-down": {
+    "tags": [
+      "corner",
+      "down",
+      "left"
+    ]
+  },
+  "corner-left-up": {
+    "tags": [
+      "corner",
+      "left",
+      "up"
+    ]
+  },
+  "corner-right-down": {
+    "tags": [
+      "corner",
+      "down",
+      "right"
+    ]
+  },
+  "corner-right-up": {
+    "tags": [
+      "corner",
+      "right",
+      "up"
+    ]
+  },
+  "corner-up-left": {
+    "tags": [
+      "corner",
+      "left",
+      "up"
+    ]
+  },
+  "corner-up-right": {
+    "tags": [
+      "corner",
+      "right",
+      "up"
+    ]
+  },
+  "cpu": {
+    "tags": [
+      "cpu"
+    ]
+  },
+  "creative-commons": {
+    "tags": [
+      "commons",
+      "creative"
+    ]
+  },
+  "credit-card": {
+    "tags": [
+      "card",
+      "credit"
+    ]
+  },
+  "croissant": {
+    "tags": [
+      "croissant"
+    ]
+  },
+  "crop": {
+    "tags": [
+      "crop"
+    ]
+  },
+  "cross": {
+    "tags": [
+      "cross"
+    ]
+  },
+  "crosshair": {
+    "tags": [
+      "crosshair"
+    ]
+  },
+  "crown": {
+    "tags": [
+      "crown"
+    ]
+  },
+  "cuboid": {
+    "tags": [
+      "cuboid"
+    ]
+  },
+  "cup-soda": {
+    "tags": [
+      "cup",
+      "soda"
+    ]
+  },
+  "currency": {
+    "tags": [
+      "currency"
+    ]
+  },
+  "cylinder": {
+    "tags": [
+      "cylinder"
+    ]
+  },
+  "database": {
+    "tags": [
+      "database"
+    ]
+  },
+  "database-backup": {
+    "tags": [
+      "backup",
+      "database"
+    ]
+  },
+  "database-zap": {
+    "tags": [
+      "database",
+      "zap"
+    ]
+  },
+  "delete": {
+    "tags": [
+      "delete"
+    ]
+  },
+  "dessert": {
+    "tags": [
+      "dessert"
+    ]
+  },
+  "diameter": {
+    "tags": [
+      "diameter"
+    ]
+  },
+  "diamond": {
+    "tags": [
+      "diamond"
+    ]
+  },
+  "dice-1": {
+    "tags": [
+      "1",
+      "dice"
+    ]
+  },
+  "dice-2": {
+    "tags": [
+      "2",
+      "dice"
+    ]
+  },
+  "dice-3": {
+    "tags": [
+      "3",
+      "dice"
+    ]
+  },
+  "dice-4": {
+    "tags": [
+      "4",
+      "dice"
+    ]
+  },
+  "dice-5": {
+    "tags": [
+      "5",
+      "dice"
+    ]
+  },
+  "dice-6": {
+    "tags": [
+      "6",
+      "dice"
+    ]
+  },
+  "dices": {
+    "tags": [
+      "dices"
+    ]
+  },
+  "diff": {
+    "tags": [
+      "diff"
+    ]
+  },
+  "disc": {
+    "tags": [
+      "disc"
+    ]
+  },
+  "disc-2": {
+    "tags": [
+      "2",
+      "disc"
+    ]
+  },
+  "disc-3": {
+    "tags": [
+      "3",
+      "disc"
+    ]
+  },
+  "disc-album": {
+    "tags": [
+      "album",
+      "disc"
+    ]
+  },
+  "divide": {
+    "tags": [
+      "divide"
+    ]
+  },
+  "divide-circle": {
+    "tags": [
+      "circle",
+      "divide"
+    ]
+  },
+  "divide-square": {
+    "tags": [
+      "divide",
+      "square"
+    ]
+  },
+  "dna": {
+    "tags": [
+      "dna"
+    ]
+  },
+  "dna-off": {
+    "tags": [
+      "dna",
+      "off"
+    ]
+  },
+  "dog": {
+    "tags": [
+      "dog"
+    ]
+  },
+  "dollar-sign": {
+    "tags": [
+      "dollar",
+      "sign"
+    ]
+  },
+  "donut": {
+    "tags": [
+      "donut"
+    ]
+  },
+  "door-closed": {
+    "tags": [
+      "closed",
+      "door"
+    ]
+  },
+  "door-open": {
+    "tags": [
+      "door",
+      "open"
+    ]
+  },
+  "dot": {
+    "tags": [
+      "dot"
+    ]
+  },
+  "download": {
+    "tags": [
+      "download"
+    ]
+  },
+  "download-cloud": {
+    "tags": [
+      "cloud",
+      "download"
+    ]
+  },
+  "drafting-compass": {
+    "tags": [
+      "compass",
+      "drafting"
+    ]
+  },
+  "drama": {
+    "tags": [
+      "drama"
+    ]
+  },
+  "dribbble": {
+    "tags": [
+      "dribbble"
+    ]
+  },
+  "droplet": {
+    "tags": [
+      "droplet"
+    ]
+  },
+  "droplets": {
+    "tags": [
+      "droplets"
+    ]
+  },
+  "drum": {
+    "tags": [
+      "drum"
+    ]
+  },
+  "drumstick": {
+    "tags": [
+      "drumstick"
+    ]
+  },
+  "dumbbell": {
+    "tags": [
+      "dumbbell"
+    ]
+  },
+  "ear": {
+    "tags": [
+      "ear"
+    ]
+  },
+  "ear-off": {
+    "tags": [
+      "ear",
+      "off"
+    ]
+  },
+  "edit": {
+    "tags": [
+      "edit"
+    ]
+  },
+  "edit-2": {
+    "tags": [
+      "2",
+      "edit"
+    ]
+  },
+  "edit-3": {
+    "tags": [
+      "3",
+      "edit"
+    ]
+  },
+  "egg": {
+    "tags": [
+      "egg"
+    ]
+  },
+  "egg-fried": {
+    "tags": [
+      "egg",
+      "fried"
+    ]
+  },
+  "egg-off": {
+    "tags": [
+      "egg",
+      "off"
+    ]
+  },
+  "equal": {
+    "tags": [
+      "equal"
+    ]
+  },
+  "equal-not": {
+    "tags": [
+      "equal",
+      "not"
+    ]
+  },
+  "eraser": {
+    "tags": [
+      "eraser"
+    ]
+  },
+  "euro": {
+    "tags": [
+      "euro"
+    ]
+  },
+  "expand": {
+    "tags": [
+      "expand"
+    ]
+  },
+  "external-link": {
+    "tags": [
+      "external",
+      "link"
+    ]
+  },
+  "eye": {
+    "tags": [
+      "eye"
+    ]
+  },
+  "eye-off": {
+    "tags": [
+      "eye",
+      "off"
+    ]
+  },
+  "facebook": {
+    "tags": [
+      "facebook"
+    ]
+  },
+  "factory": {
+    "tags": [
+      "factory"
+    ]
+  },
+  "fan": {
+    "tags": [
+      "fan"
+    ]
+  },
+  "fast-forward": {
+    "tags": [
+      "fast",
+      "forward"
+    ]
+  },
+  "feather": {
+    "tags": [
+      "feather"
+    ]
+  },
+  "ferris-wheel": {
+    "tags": [
+      "ferris",
+      "wheel"
+    ]
+  },
+  "figma": {
+    "tags": [
+      "figma"
+    ]
+  },
+  "file": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-archive": {
+    "tags": [
+      "archive",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-audio": {
+    "tags": [
+      "audio",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-audio-2": {
+    "tags": [
+      "2",
+      "audio",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-axis-3d": {
+    "tags": [
+      "3d",
+      "axis",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-badge": {
+    "tags": [
+      "badge",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-badge-2": {
+    "tags": [
+      "2",
+      "badge",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-bar-chart": {
+    "tags": [
+      "bar",
+      "chart",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-bar-chart-2": {
+    "tags": [
+      "2",
+      "bar",
+      "chart",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-box": {
+    "tags": [
+      "box",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-check": {
+    "tags": [
+      "check",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-check-2": {
+    "tags": [
+      "2",
+      "check",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-clock": {
+    "tags": [
+      "clock",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-code": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-code-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-cog": {
+    "tags": [
+      "code",
+      "cog",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-cog-2": {
+    "tags": [
+      "2",
+      "code",
+      "cog",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-diff": {
+    "tags": [
+      "code",
+      "diff",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-digit": {
+    "tags": [
+      "code",
+      "digit",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-down": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "down",
+      "file",
+      "text"
+    ]
+  },
+  "file-edit": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "edit",
+      "file",
+      "text"
+    ]
+  },
+  "file-heart": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "heart",
+      "text"
+    ]
+  },
+  "file-image": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "image",
+      "text"
+    ]
+  },
+  "file-input": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "input",
+      "text"
+    ]
+  },
+  "file-json": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "json",
+      "text"
+    ]
+  },
+  "file-json-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "json",
+      "text"
+    ]
+  },
+  "file-key": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "key",
+      "text"
+    ]
+  },
+  "file-key-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "key",
+      "text"
+    ]
+  },
+  "file-line-chart": {
+    "tags": [
+      "chart",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "line",
+      "text"
+    ]
+  },
+  "file-lock": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "lock",
+      "text"
+    ]
+  },
+  "file-lock-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "lock",
+      "text"
+    ]
+  },
+  "file-minus": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "minus",
+      "text"
+    ]
+  },
+  "file-minus-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "minus",
+      "text"
+    ]
+  },
+  "file-music": {
+    "tags": [
+      "audio",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "headphones",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "text",
+      "volume"
+    ]
+  },
+  "file-output": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "output",
+      "text"
+    ]
+  },
+  "file-pie-chart": {
+    "tags": [
+      "chart",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "pie",
+      "text"
+    ]
+  },
+  "file-plus": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "plus",
+      "text"
+    ]
+  },
+  "file-plus-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "plus",
+      "text"
+    ]
+  },
+  "file-question": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "question",
+      "text"
+    ]
+  },
+  "file-scan": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "scan",
+      "text"
+    ]
+  },
+  "file-search": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "find",
+      "lookup",
+      "magnify",
+      "search",
+      "text"
+    ]
+  },
+  "file-search-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "find",
+      "lookup",
+      "magnify",
+      "search",
+      "text"
+    ]
+  },
+  "file-signature": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "signature",
+      "text"
+    ]
+  },
+  "file-spreadsheet": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "spreadsheet",
+      "text"
+    ]
+  },
+  "file-stack": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "stack",
+      "text"
+    ]
+  },
+  "file-symlink": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "symlink",
+      "text"
+    ]
+  },
+  "file-terminal": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "terminal",
+      "text"
+    ]
+  },
+  "file-text": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text"
+    ]
+  },
+  "file-type": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "type"
+    ]
+  },
+  "file-type-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "type"
+    ]
+  },
+  "file-up": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "up"
+    ]
+  },
+  "file-video": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "video"
+    ]
+  },
+  "file-video-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "video"
+    ]
+  },
+  "file-volume": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "volume"
+    ]
+  },
+  "file-volume-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "volume"
+    ]
+  },
+  "file-warning": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "warning"
+    ]
+  },
+  "file-x": {
+    "tags": [
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "x"
+    ]
+  },
+  "file-x-2": {
+    "tags": [
+      "2",
+      "code",
+      "doc",
+      "document",
+      "file",
+      "text",
+      "x"
+    ]
+  },
+  "files": {
+    "tags": [
+      "files"
+    ]
+  },
+  "film": {
+    "tags": [
+      "film"
+    ]
+  },
+  "filter": {
+    "tags": [
+      "filter"
+    ]
+  },
+  "filter-x": {
+    "tags": [
+      "filter",
+      "x"
+    ]
+  },
+  "fingerprint": {
+    "tags": [
+      "fingerprint"
+    ]
+  },
+  "fish": {
+    "tags": [
+      "fish"
+    ]
+  },
+  "fish-off": {
+    "tags": [
+      "fish",
+      "off"
+    ]
+  },
+  "fish-symbol": {
+    "tags": [
+      "fish",
+      "symbol"
+    ]
+  },
+  "flag": {
+    "tags": [
+      "flag"
+    ]
+  },
+  "flag-off": {
+    "tags": [
+      "flag",
+      "off"
+    ]
+  },
+  "flag-triangle-left": {
+    "tags": [
+      "flag",
+      "left",
+      "triangle"
+    ]
+  },
+  "flag-triangle-right": {
+    "tags": [
+      "flag",
+      "right",
+      "triangle"
+    ]
+  },
+  "flame": {
+    "tags": [
+      "flame"
+    ]
+  },
+  "flame-kindling": {
+    "tags": [
+      "flame",
+      "kindling"
+    ]
+  },
+  "flashlight": {
+    "tags": [
+      "flashlight"
+    ]
+  },
+  "flashlight-off": {
+    "tags": [
+      "flashlight",
+      "off"
+    ]
+  },
+  "flask-conical": {
+    "tags": [
+      "conical",
+      "flask"
+    ]
+  },
+  "flask-conical-off": {
+    "tags": [
+      "conical",
+      "flask",
+      "off"
+    ]
+  },
+  "flask-round": {
+    "tags": [
+      "flask",
+      "round"
+    ]
+  },
+  "flip-horizontal": {
+    "tags": [
+      "flip",
+      "horizontal"
+    ]
+  },
+  "flip-horizontal-2": {
+    "tags": [
+      "2",
+      "flip",
+      "horizontal"
+    ]
+  },
+  "flip-vertical": {
+    "tags": [
+      "flip",
+      "vertical"
+    ]
+  },
+  "flip-vertical-2": {
+    "tags": [
+      "2",
+      "flip",
+      "vertical"
+    ]
+  },
+  "flower": {
+    "tags": [
+      "flower"
+    ]
+  },
+  "flower-2": {
+    "tags": [
+      "2",
+      "flower"
+    ]
+  },
+  "focus": {
+    "tags": [
+      "focus"
+    ]
+  },
+  "fold-horizontal": {
+    "tags": [
+      "fold",
+      "horizontal"
+    ]
+  },
+  "fold-vertical": {
+    "tags": [
+      "fold",
+      "vertical"
+    ]
+  },
+  "folder": {
+    "tags": [
+      "folder"
+    ]
+  },
+  "folder-archive": {
+    "tags": [
+      "archive",
+      "folder"
+    ]
+  },
+  "folder-check": {
+    "tags": [
+      "check",
+      "folder"
+    ]
+  },
+  "folder-clock": {
+    "tags": [
+      "clock",
+      "folder"
+    ]
+  },
+  "folder-closed": {
+    "tags": [
+      "closed",
+      "folder"
+    ]
+  },
+  "folder-cog": {
+    "tags": [
+      "cog",
+      "folder"
+    ]
+  },
+  "folder-cog-2": {
+    "tags": [
+      "2",
+      "cog",
+      "folder"
+    ]
+  },
+  "folder-dot": {
+    "tags": [
+      "dot",
+      "folder"
+    ]
+  },
+  "folder-down": {
+    "tags": [
+      "down",
+      "folder"
+    ]
+  },
+  "folder-edit": {
+    "tags": [
+      "edit",
+      "folder"
+    ]
+  },
+  "folder-git": {
+    "tags": [
+      "folder",
+      "git"
+    ]
+  },
+  "folder-git-2": {
+    "tags": [
+      "2",
+      "folder",
+      "git"
+    ]
+  },
+  "folder-heart": {
+    "tags": [
+      "folder",
+      "heart"
+    ]
+  },
+  "folder-input": {
+    "tags": [
+      "folder",
+      "input"
+    ]
+  },
+  "folder-kanban": {
+    "tags": [
+      "folder",
+      "kanban"
+    ]
+  },
+  "folder-key": {
+    "tags": [
+      "folder",
+      "key"
+    ]
+  },
+  "folder-lock": {
+    "tags": [
+      "folder",
+      "lock"
+    ]
+  },
+  "folder-minus": {
+    "tags": [
+      "folder",
+      "minus"
+    ]
+  },
+  "folder-open": {
+    "tags": [
+      "folder",
+      "open"
+    ]
+  },
+  "folder-open-dot": {
+    "tags": [
+      "dot",
+      "folder",
+      "open"
+    ]
+  },
+  "folder-output": {
+    "tags": [
+      "folder",
+      "output"
+    ]
+  },
+  "folder-plus": {
+    "tags": [
+      "folder",
+      "plus"
+    ]
+  },
+  "folder-root": {
+    "tags": [
+      "folder",
+      "root"
+    ]
+  },
+  "folder-search": {
+    "tags": [
+      "find",
+      "folder",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "folder-search-2": {
+    "tags": [
+      "2",
+      "find",
+      "folder",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "folder-symlink": {
+    "tags": [
+      "folder",
+      "symlink"
+    ]
+  },
+  "folder-sync": {
+    "tags": [
+      "folder",
+      "sync"
+    ]
+  },
+  "folder-tree": {
+    "tags": [
+      "folder",
+      "tree"
+    ]
+  },
+  "folder-up": {
+    "tags": [
+      "folder",
+      "up"
+    ]
+  },
+  "folder-x": {
+    "tags": [
+      "folder",
+      "x"
+    ]
+  },
+  "folders": {
+    "tags": [
+      "folders"
+    ]
+  },
+  "footprints": {
+    "tags": [
+      "footprints"
+    ]
+  },
+  "forklift": {
+    "tags": [
+      "forklift"
+    ]
+  },
+  "form-input": {
+    "tags": [
+      "form",
+      "input"
+    ]
+  },
+  "forward": {
+    "tags": [
+      "forward"
+    ]
+  },
+  "frame": {
+    "tags": [
+      "frame"
+    ]
+  },
+  "framer": {
+    "tags": [
+      "framer"
+    ]
+  },
+  "frown": {
+    "tags": [
+      "frown"
+    ]
+  },
+  "fuel": {
+    "tags": [
+      "fuel"
+    ]
+  },
+  "fullscreen": {
+    "tags": [
+      "fullscreen"
+    ]
+  },
+  "function-square": {
+    "tags": [
+      "function",
+      "square"
+    ]
+  },
+  "gallery-horizontal": {
+    "tags": [
+      "gallery",
+      "horizontal"
+    ]
+  },
+  "gallery-horizontal-end": {
+    "tags": [
+      "end",
+      "gallery",
+      "horizontal"
+    ]
+  },
+  "gallery-thumbnails": {
+    "tags": [
+      "gallery",
+      "thumbnails"
+    ]
+  },
+  "gallery-vertical": {
+    "tags": [
+      "gallery",
+      "vertical"
+    ]
+  },
+  "gallery-vertical-end": {
+    "tags": [
+      "end",
+      "gallery",
+      "vertical"
+    ]
+  },
+  "gamepad": {
+    "tags": [
+      "gamepad"
+    ]
+  },
+  "gamepad-2": {
+    "tags": [
+      "2",
+      "gamepad"
+    ]
+  },
+  "gantt-chart": {
+    "tags": [
+      "chart",
+      "gantt"
+    ]
+  },
+  "gantt-chart-square": {
+    "tags": [
+      "chart",
+      "gantt",
+      "square"
+    ]
+  },
+  "gauge": {
+    "tags": [
+      "gauge"
+    ]
+  },
+  "gauge-circle": {
+    "tags": [
+      "circle",
+      "gauge"
+    ]
+  },
+  "gavel": {
+    "tags": [
+      "gavel"
+    ]
+  },
+  "gem": {
+    "tags": [
+      "gem"
+    ]
+  },
+  "ghost": {
+    "tags": [
+      "ghost"
+    ]
+  },
+  "gift": {
+    "tags": [
+      "gift"
+    ]
+  },
+  "git-branch": {
+    "tags": [
+      "branch",
+      "git"
+    ]
+  },
+  "git-branch-plus": {
+    "tags": [
+      "branch",
+      "git",
+      "plus"
+    ]
+  },
+  "git-commit-horizontal": {
+    "tags": [
+      "commit",
+      "git",
+      "horizontal"
+    ]
+  },
+  "git-commit-vertical": {
+    "tags": [
+      "commit",
+      "git",
+      "vertical"
+    ]
+  },
+  "git-compare": {
+    "tags": [
+      "compare",
+      "git"
+    ]
+  },
+  "git-compare-arrows": {
+    "tags": [
+      "arrows",
+      "compare",
+      "git"
+    ]
+  },
+  "git-fork": {
+    "tags": [
+      "fork",
+      "git"
+    ]
+  },
+  "git-graph": {
+    "tags": [
+      "git",
+      "graph"
+    ]
+  },
+  "git-merge": {
+    "tags": [
+      "git",
+      "merge"
+    ]
+  },
+  "git-pull-request": {
+    "tags": [
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "git-pull-request-arrow": {
+    "tags": [
+      "arrow",
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "git-pull-request-closed": {
+    "tags": [
+      "closed",
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "git-pull-request-create": {
+    "tags": [
+      "create",
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "git-pull-request-create-arrow": {
+    "tags": [
+      "arrow",
+      "create",
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "git-pull-request-draft": {
+    "tags": [
+      "draft",
+      "git",
+      "pull",
+      "request"
+    ]
+  },
+  "github": {
+    "tags": [
+      "github"
+    ]
+  },
+  "gitlab": {
+    "tags": [
+      "gitlab"
+    ]
+  },
+  "glass-water": {
+    "tags": [
+      "glass",
+      "water"
+    ]
+  },
+  "glasses": {
+    "tags": [
+      "glasses"
+    ]
+  },
+  "globe": {
+    "tags": [
+      "globe"
+    ]
+  },
+  "globe-2": {
+    "tags": [
+      "2",
+      "globe"
+    ]
+  },
+  "goal": {
+    "tags": [
+      "goal"
+    ]
+  },
+  "grab": {
+    "tags": [
+      "grab"
+    ]
+  },
+  "graduation-cap": {
+    "tags": [
+      "cap",
+      "graduation"
+    ]
+  },
+  "grape": {
+    "tags": [
+      "grape"
+    ]
+  },
+  "grid": {
+    "tags": [
+      "grid"
+    ]
+  },
+  "grid-2x2": {
+    "tags": [
+      "2x2",
+      "grid"
+    ]
+  },
+  "grid-3x3": {
+    "tags": [
+      "3x3",
+      "grid"
+    ]
+  },
+  "grip": {
+    "tags": [
+      "grip"
+    ]
+  },
+  "grip-horizontal": {
+    "tags": [
+      "grip",
+      "horizontal"
+    ]
+  },
+  "grip-vertical": {
+    "tags": [
+      "grip",
+      "vertical"
+    ]
+  },
+  "group": {
+    "tags": [
+      "group"
+    ]
+  },
+  "guitar": {
+    "tags": [
+      "guitar"
+    ]
+  },
+  "hammer": {
+    "tags": [
+      "hammer"
+    ]
+  },
+  "hand": {
+    "tags": [
+      "hand"
+    ]
+  },
+  "hand-metal": {
+    "tags": [
+      "hand",
+      "metal"
+    ]
+  },
+  "hard-drive": {
+    "tags": [
+      "drive",
+      "hard"
+    ]
+  },
+  "hard-drive-download": {
+    "tags": [
+      "download",
+      "drive",
+      "hard"
+    ]
+  },
+  "hard-drive-upload": {
+    "tags": [
+      "drive",
+      "hard",
+      "upload"
+    ]
+  },
+  "hard-hat": {
+    "tags": [
+      "hard",
+      "hat"
+    ]
+  },
+  "hash": {
+    "tags": [
+      "hash"
+    ]
+  },
+  "haze": {
+    "tags": [
+      "haze"
+    ]
+  },
+  "hdmi-port": {
+    "tags": [
+      "hdmi",
+      "port"
+    ]
+  },
+  "heading": {
+    "tags": [
+      "heading"
+    ]
+  },
+  "heading-1": {
+    "tags": [
+      "1",
+      "heading"
+    ]
+  },
+  "heading-2": {
+    "tags": [
+      "2",
+      "heading"
+    ]
+  },
+  "heading-3": {
+    "tags": [
+      "3",
+      "heading"
+    ]
+  },
+  "heading-4": {
+    "tags": [
+      "4",
+      "heading"
+    ]
+  },
+  "heading-5": {
+    "tags": [
+      "5",
+      "heading"
+    ]
+  },
+  "heading-6": {
+    "tags": [
+      "6",
+      "heading"
+    ]
+  },
+  "headphones": {
+    "tags": [
+      "headphones"
+    ]
+  },
+  "heart": {
+    "tags": [
+      "heart"
+    ]
+  },
+  "heart-crack": {
+    "tags": [
+      "crack",
+      "heart"
+    ]
+  },
+  "heart-handshake": {
+    "tags": [
+      "handshake",
+      "heart"
+    ]
+  },
+  "heart-off": {
+    "tags": [
+      "heart",
+      "off"
+    ]
+  },
+  "heart-pulse": {
+    "tags": [
+      "heart",
+      "pulse"
+    ]
+  },
+  "help-circle": {
+    "tags": [
+      "circle",
+      "help"
+    ]
+  },
+  "helping-hand": {
+    "tags": [
+      "hand",
+      "helping"
+    ]
+  },
+  "hexagon": {
+    "tags": [
+      "hexagon"
+    ]
+  },
+  "highlighter": {
+    "tags": [
+      "highlighter"
+    ]
+  },
+  "history": {
+    "tags": [
+      "history"
+    ]
+  },
+  "home": {
+    "tags": [
+      "home"
+    ]
+  },
+  "hop": {
+    "tags": [
+      "hop"
+    ]
+  },
+  "hop-off": {
+    "tags": [
+      "hop",
+      "off"
+    ]
+  },
+  "hotel": {
+    "tags": [
+      "hotel"
+    ]
+  },
+  "hourglass": {
+    "tags": [
+      "hourglass"
+    ]
+  },
+  "ice-cream": {
+    "tags": [
+      "cream",
+      "ice"
+    ]
+  },
+  "ice-cream-2": {
+    "tags": [
+      "2",
+      "cream",
+      "ice"
+    ]
+  },
+  "image": {
+    "tags": [
+      "image"
+    ]
+  },
+  "image-down": {
+    "tags": [
+      "down",
+      "image"
+    ]
+  },
+  "image-minus": {
+    "tags": [
+      "image",
+      "minus"
+    ]
+  },
+  "image-off": {
+    "tags": [
+      "image",
+      "off"
+    ]
+  },
+  "image-plus": {
+    "tags": [
+      "image",
+      "plus"
+    ]
+  },
+  "import": {
+    "tags": [
+      "import"
+    ]
+  },
+  "inbox": {
+    "tags": [
+      "inbox"
+    ]
+  },
+  "indent": {
+    "tags": [
+      "indent"
+    ]
+  },
+  "indian-rupee": {
+    "tags": [
+      "indian",
+      "rupee"
+    ]
+  },
+  "infinity": {
+    "tags": [
+      "infinity"
+    ]
+  },
+  "info": {
+    "tags": [
+      "info"
+    ]
+  },
+  "instagram": {
+    "tags": [
+      "instagram"
+    ]
+  },
+  "italic": {
+    "tags": [
+      "italic"
+    ]
+  },
+  "iteration-ccw": {
+    "tags": [
+      "ccw",
+      "iteration"
+    ]
+  },
+  "iteration-cw": {
+    "tags": [
+      "cw",
+      "iteration"
+    ]
+  },
+  "japanese-yen": {
+    "tags": [
+      "japanese",
+      "yen"
+    ]
+  },
+  "joystick": {
+    "tags": [
+      "joystick"
+    ]
+  },
+  "kanban": {
+    "tags": [
+      "kanban"
+    ]
+  },
+  "kanban-square": {
+    "tags": [
+      "kanban",
+      "square"
+    ]
+  },
+  "kanban-square-dashed": {
+    "tags": [
+      "dashed",
+      "kanban",
+      "square"
+    ]
+  },
+  "key": {
+    "tags": [
+      "key"
+    ]
+  },
+  "key-round": {
+    "tags": [
+      "key",
+      "round"
+    ]
+  },
+  "key-square": {
+    "tags": [
+      "key",
+      "square"
+    ]
+  },
+  "keyboard": {
+    "tags": [
+      "keyboard"
+    ]
+  },
+  "keyboard-music": {
+    "tags": [
+      "audio",
+      "headphones",
+      "keyboard",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "lamp": {
+    "tags": [
+      "lamp"
+    ]
+  },
+  "lamp-ceiling": {
+    "tags": [
+      "ceiling",
+      "lamp"
+    ]
+  },
+  "lamp-desk": {
+    "tags": [
+      "desk",
+      "lamp"
+    ]
+  },
+  "lamp-floor": {
+    "tags": [
+      "floor",
+      "lamp"
+    ]
+  },
+  "lamp-wall-down": {
+    "tags": [
+      "down",
+      "lamp",
+      "wall"
+    ]
+  },
+  "lamp-wall-up": {
+    "tags": [
+      "lamp",
+      "up",
+      "wall"
+    ]
+  },
+  "land-plot": {
+    "tags": [
+      "land",
+      "plot"
+    ]
+  },
+  "landmark": {
+    "tags": [
+      "landmark"
+    ]
+  },
+  "languages": {
+    "tags": [
+      "languages"
+    ]
+  },
+  "laptop": {
+    "tags": [
+      "laptop"
+    ]
+  },
+  "laptop-2": {
+    "tags": [
+      "2",
+      "laptop"
+    ]
+  },
+  "lasso": {
+    "tags": [
+      "lasso"
+    ]
+  },
+  "lasso-select": {
+    "tags": [
+      "lasso",
+      "select"
+    ]
+  },
+  "laugh": {
+    "tags": [
+      "laugh"
+    ]
+  },
+  "layers": {
+    "tags": [
+      "layers"
+    ]
+  },
+  "layers-2": {
+    "tags": [
+      "2",
+      "layers"
+    ]
+  },
+  "layers-3": {
+    "tags": [
+      "3",
+      "layers"
+    ]
+  },
+  "layout": {
+    "tags": [
+      "layout"
+    ]
+  },
+  "layout-dashboard": {
+    "tags": [
+      "dashboard",
+      "layout"
+    ]
+  },
+  "layout-grid": {
+    "tags": [
+      "grid",
+      "layout"
+    ]
+  },
+  "layout-list": {
+    "tags": [
+      "layout",
+      "list"
+    ]
+  },
+  "layout-panel-left": {
+    "tags": [
+      "layout",
+      "left",
+      "panel"
+    ]
+  },
+  "layout-panel-top": {
+    "tags": [
+      "layout",
+      "panel",
+      "top"
+    ]
+  },
+  "layout-template": {
+    "tags": [
+      "layout",
+      "template"
+    ]
+  },
+  "leaf": {
+    "tags": [
+      "leaf"
+    ]
+  },
+  "leafy-green": {
+    "tags": [
+      "green",
+      "leafy"
+    ]
+  },
+  "library": {
+    "tags": [
+      "library"
+    ]
+  },
+  "library-big": {
+    "tags": [
+      "big",
+      "library"
+    ]
+  },
+  "library-square": {
+    "tags": [
+      "library",
+      "square"
+    ]
+  },
+  "life-buoy": {
+    "tags": [
+      "buoy",
+      "life"
+    ]
+  },
+  "ligature": {
+    "tags": [
+      "ligature"
+    ]
+  },
+  "lightbulb": {
+    "tags": [
+      "lightbulb"
+    ]
+  },
+  "lightbulb-off": {
+    "tags": [
+      "lightbulb",
+      "off"
+    ]
+  },
+  "line-chart": {
+    "tags": [
+      "chart",
+      "line"
+    ]
+  },
+  "link": {
+    "tags": [
+      "link"
+    ]
+  },
+  "link-2": {
+    "tags": [
+      "2",
+      "link"
+    ]
+  },
+  "link-2-off": {
+    "tags": [
+      "2",
+      "link",
+      "off"
+    ]
+  },
+  "linkedin": {
+    "tags": [
+      "linkedin"
+    ]
+  },
+  "list": {
+    "tags": [
+      "list"
+    ]
+  },
+  "list-checks": {
+    "tags": [
+      "checks",
+      "list"
+    ]
+  },
+  "list-end": {
+    "tags": [
+      "end",
+      "list"
+    ]
+  },
+  "list-filter": {
+    "tags": [
+      "filter",
+      "list"
+    ]
+  },
+  "list-minus": {
+    "tags": [
+      "list",
+      "minus"
+    ]
+  },
+  "list-music": {
+    "tags": [
+      "audio",
+      "headphones",
+      "list",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "list-ordered": {
+    "tags": [
+      "list",
+      "ordered"
+    ]
+  },
+  "list-plus": {
+    "tags": [
+      "list",
+      "plus"
+    ]
+  },
+  "list-restart": {
+    "tags": [
+      "list",
+      "restart"
+    ]
+  },
+  "list-start": {
+    "tags": [
+      "list",
+      "start"
+    ]
+  },
+  "list-todo": {
+    "tags": [
+      "list",
+      "todo"
+    ]
+  },
+  "list-tree": {
+    "tags": [
+      "list",
+      "tree"
+    ]
+  },
+  "list-video": {
+    "tags": [
+      "list",
+      "video"
+    ]
+  },
+  "list-x": {
+    "tags": [
+      "list",
+      "x"
+    ]
+  },
+  "loader": {
+    "tags": [
+      "loader"
+    ]
+  },
+  "loader-2": {
+    "tags": [
+      "2",
+      "loader"
+    ]
+  },
+  "locate": {
+    "tags": [
+      "locate"
+    ]
+  },
+  "locate-fixed": {
+    "tags": [
+      "fixed",
+      "locate"
+    ]
+  },
+  "locate-off": {
+    "tags": [
+      "locate",
+      "off"
+    ]
+  },
+  "lock": {
+    "tags": [
+      "lock"
+    ]
+  },
+  "lock-keyhole": {
+    "tags": [
+      "keyhole",
+      "lock"
+    ]
+  },
+  "log-in": {
+    "tags": [
+      "in",
+      "log"
+    ]
+  },
+  "log-out": {
+    "tags": [
+      "log",
+      "out"
+    ]
+  },
+  "lollipop": {
+    "tags": [
+      "lollipop"
+    ]
+  },
+  "luggage": {
+    "tags": [
+      "luggage"
+    ]
+  },
+  "m-square": {
+    "tags": [
+      "m",
+      "square"
+    ]
+  },
+  "magnet": {
+    "tags": [
+      "magnet"
+    ]
+  },
+  "mail": {
+    "tags": [
+      "mail"
+    ]
+  },
+  "mail-check": {
+    "tags": [
+      "check",
+      "mail"
+    ]
+  },
+  "mail-minus": {
+    "tags": [
+      "mail",
+      "minus"
+    ]
+  },
+  "mail-open": {
+    "tags": [
+      "mail",
+      "open"
+    ]
+  },
+  "mail-plus": {
+    "tags": [
+      "mail",
+      "plus"
+    ]
+  },
+  "mail-question": {
+    "tags": [
+      "mail",
+      "question"
+    ]
+  },
+  "mail-search": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "mail",
+      "search"
+    ]
+  },
+  "mail-warning": {
+    "tags": [
+      "mail",
+      "warning"
+    ]
+  },
+  "mail-x": {
+    "tags": [
+      "mail",
+      "x"
+    ]
+  },
+  "mailbox": {
+    "tags": [
+      "mailbox"
+    ]
+  },
+  "mails": {
+    "tags": [
+      "mails"
+    ]
+  },
+  "map": {
+    "tags": [
+      "map"
+    ]
+  },
+  "map-pin": {
+    "tags": [
+      "map",
+      "pin"
+    ]
+  },
+  "map-pin-off": {
+    "tags": [
+      "map",
+      "off",
+      "pin"
+    ]
+  },
+  "map-pinned": {
+    "tags": [
+      "map",
+      "pinned"
+    ]
+  },
+  "martini": {
+    "tags": [
+      "martini"
+    ]
+  },
+  "maximize": {
+    "tags": [
+      "maximize"
+    ]
+  },
+  "maximize-2": {
+    "tags": [
+      "2",
+      "maximize"
+    ]
+  },
+  "medal": {
+    "tags": [
+      "medal"
+    ]
+  },
+  "megaphone": {
+    "tags": [
+      "megaphone"
+    ]
+  },
+  "megaphone-off": {
+    "tags": [
+      "megaphone",
+      "off"
+    ]
+  },
+  "meh": {
+    "tags": [
+      "meh"
+    ]
+  },
+  "memory-stick": {
+    "tags": [
+      "memory",
+      "stick"
+    ]
+  },
+  "menu": {
+    "tags": [
+      "menu"
+    ]
+  },
+  "menu-square": {
+    "tags": [
+      "menu",
+      "square"
+    ]
+  },
+  "merge": {
+    "tags": [
+      "merge"
+    ]
+  },
+  "message-circle": {
+    "tags": [
+      "circle",
+      "message"
+    ]
+  },
+  "message-square": {
+    "tags": [
+      "message",
+      "square"
+    ]
+  },
+  "message-square-dashed": {
+    "tags": [
+      "dashed",
+      "message",
+      "square"
+    ]
+  },
+  "message-square-plus": {
+    "tags": [
+      "message",
+      "plus",
+      "square"
+    ]
+  },
+  "messages-square": {
+    "tags": [
+      "messages",
+      "square"
+    ]
+  },
+  "mic": {
+    "tags": [
+      "mic"
+    ]
+  },
+  "mic-2": {
+    "tags": [
+      "2",
+      "mic"
+    ]
+  },
+  "mic-off": {
+    "tags": [
+      "mic",
+      "off"
+    ]
+  },
+  "microscope": {
+    "tags": [
+      "microscope"
+    ]
+  },
+  "microwave": {
+    "tags": [
+      "microwave"
+    ]
+  },
+  "milestone": {
+    "tags": [
+      "milestone"
+    ]
+  },
+  "milk": {
+    "tags": [
+      "milk"
+    ]
+  },
+  "milk-off": {
+    "tags": [
+      "milk",
+      "off"
+    ]
+  },
+  "minimize": {
+    "tags": [
+      "minimize"
+    ]
+  },
+  "minimize-2": {
+    "tags": [
+      "2",
+      "minimize"
+    ]
+  },
+  "minus": {
+    "tags": [
+      "minus"
+    ]
+  },
+  "minus-circle": {
+    "tags": [
+      "circle",
+      "minus"
+    ]
+  },
+  "minus-square": {
+    "tags": [
+      "minus",
+      "square"
+    ]
+  },
+  "monitor": {
+    "tags": [
+      "monitor"
+    ]
+  },
+  "monitor-check": {
+    "tags": [
+      "check",
+      "monitor"
+    ]
+  },
+  "monitor-dot": {
+    "tags": [
+      "dot",
+      "monitor"
+    ]
+  },
+  "monitor-down": {
+    "tags": [
+      "down",
+      "monitor"
+    ]
+  },
+  "monitor-off": {
+    "tags": [
+      "monitor",
+      "off"
+    ]
+  },
+  "monitor-pause": {
+    "tags": [
+      "monitor",
+      "pause"
+    ]
+  },
+  "monitor-play": {
+    "tags": [
+      "monitor",
+      "play"
+    ]
+  },
+  "monitor-smartphone": {
+    "tags": [
+      "monitor",
+      "smartphone"
+    ]
+  },
+  "monitor-speaker": {
+    "tags": [
+      "monitor",
+      "speaker"
+    ]
+  },
+  "monitor-stop": {
+    "tags": [
+      "monitor",
+      "stop"
+    ]
+  },
+  "monitor-up": {
+    "tags": [
+      "monitor",
+      "up"
+    ]
+  },
+  "monitor-x": {
+    "tags": [
+      "monitor",
+      "x"
+    ]
+  },
+  "moon": {
+    "tags": [
+      "moon"
+    ]
+  },
+  "moon-star": {
+    "tags": [
+      "moon",
+      "star"
+    ]
+  },
+  "more-horizontal": {
+    "tags": [
+      "horizontal",
+      "more"
+    ]
+  },
+  "more-vertical": {
+    "tags": [
+      "more",
+      "vertical"
+    ]
+  },
+  "mountain": {
+    "tags": [
+      "mountain"
+    ]
+  },
+  "mountain-snow": {
+    "tags": [
+      "mountain",
+      "snow"
+    ]
+  },
+  "mouse": {
+    "tags": [
+      "mouse"
+    ]
+  },
+  "mouse-pointer": {
+    "tags": [
+      "mouse",
+      "pointer"
+    ]
+  },
+  "mouse-pointer-2": {
+    "tags": [
+      "2",
+      "mouse",
+      "pointer"
+    ]
+  },
+  "mouse-pointer-click": {
+    "tags": [
+      "click",
+      "mouse",
+      "pointer"
+    ]
+  },
+  "mouse-pointer-square": {
+    "tags": [
+      "mouse",
+      "pointer",
+      "square"
+    ]
+  },
+  "mouse-pointer-square-dashed": {
+    "tags": [
+      "dashed",
+      "mouse",
+      "pointer",
+      "square"
+    ]
+  },
+  "move": {
+    "tags": [
+      "move"
+    ]
+  },
+  "move-3d": {
+    "tags": [
+      "3d",
+      "move"
+    ]
+  },
+  "move-diagonal": {
+    "tags": [
+      "diagonal",
+      "move"
+    ]
+  },
+  "move-diagonal-2": {
+    "tags": [
+      "2",
+      "diagonal",
+      "move"
+    ]
+  },
+  "move-down": {
+    "tags": [
+      "down",
+      "move"
+    ]
+  },
+  "move-down-left": {
+    "tags": [
+      "down",
+      "left",
+      "move"
+    ]
+  },
+  "move-down-right": {
+    "tags": [
+      "down",
+      "move",
+      "right"
+    ]
+  },
+  "move-horizontal": {
+    "tags": [
+      "horizontal",
+      "move"
+    ]
+  },
+  "move-left": {
+    "tags": [
+      "left",
+      "move"
+    ]
+  },
+  "move-right": {
+    "tags": [
+      "move",
+      "right"
+    ]
+  },
+  "move-up": {
+    "tags": [
+      "move",
+      "up"
+    ]
+  },
+  "move-up-left": {
+    "tags": [
+      "left",
+      "move",
+      "up"
+    ]
+  },
+  "move-up-right": {
+    "tags": [
+      "move",
+      "right",
+      "up"
+    ]
+  },
+  "move-vertical": {
+    "tags": [
+      "move",
+      "vertical"
+    ]
+  },
+  "music": {
+    "tags": [
+      "audio",
+      "headphones",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "music-2": {
+    "tags": [
+      "2",
+      "audio",
+      "headphones",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "music-3": {
+    "tags": [
+      "3",
+      "audio",
+      "headphones",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "music-4": {
+    "tags": [
+      "4",
+      "audio",
+      "headphones",
+      "mic",
+      "music",
+      "record",
+      "sound",
+      "volume"
+    ]
+  },
+  "navigation": {
+    "tags": [
+      "navigation"
+    ]
+  },
+  "navigation-2": {
+    "tags": [
+      "2",
+      "navigation"
+    ]
+  },
+  "navigation-2-off": {
+    "tags": [
+      "2",
+      "navigation",
+      "off"
+    ]
+  },
+  "navigation-off": {
+    "tags": [
+      "navigation",
+      "off"
+    ]
+  },
+  "network": {
+    "tags": [
+      "network"
+    ]
+  },
+  "newspaper": {
+    "tags": [
+      "newspaper"
+    ]
+  },
+  "nfc": {
+    "tags": [
+      "nfc"
+    ]
+  },
+  "nut": {
+    "tags": [
+      "nut"
+    ]
+  },
+  "nut-off": {
+    "tags": [
+      "nut",
+      "off"
+    ]
+  },
+  "octagon": {
+    "tags": [
+      "octagon"
+    ]
+  },
+  "option": {
+    "tags": [
+      "option"
+    ]
+  },
+  "orbit": {
+    "tags": [
+      "orbit"
+    ]
+  },
+  "outdent": {
+    "tags": [
+      "outdent"
+    ]
+  },
+  "package": {
+    "tags": [
+      "package"
+    ]
+  },
+  "package-2": {
+    "tags": [
+      "2",
+      "package"
+    ]
+  },
+  "package-check": {
+    "tags": [
+      "check",
+      "package"
+    ]
+  },
+  "package-minus": {
+    "tags": [
+      "minus",
+      "package"
+    ]
+  },
+  "package-open": {
+    "tags": [
+      "open",
+      "package"
+    ]
+  },
+  "package-plus": {
+    "tags": [
+      "package",
+      "plus"
+    ]
+  },
+  "package-search": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "package",
+      "search"
+    ]
+  },
+  "package-x": {
+    "tags": [
+      "package",
+      "x"
+    ]
+  },
+  "paint-bucket": {
+    "tags": [
+      "bucket",
+      "paint"
+    ]
+  },
+  "paintbrush": {
+    "tags": [
+      "paintbrush"
+    ]
+  },
+  "paintbrush-2": {
+    "tags": [
+      "2",
+      "paintbrush"
+    ]
+  },
+  "palette": {
+    "tags": [
+      "palette"
+    ]
+  },
+  "palmtree": {
+    "tags": [
+      "palmtree"
+    ]
+  },
+  "panel-bottom": {
+    "tags": [
+      "bottom",
+      "panel"
+    ]
+  },
+  "panel-bottom-close": {
+    "tags": [
+      "bottom",
+      "close",
+      "panel"
+    ]
+  },
+  "panel-bottom-inactive": {
+    "tags": [
+      "bottom",
+      "inactive",
+      "panel"
+    ]
+  },
+  "panel-bottom-open": {
+    "tags": [
+      "bottom",
+      "open",
+      "panel"
+    ]
+  },
+  "panel-left": {
+    "tags": [
+      "left",
+      "panel"
+    ]
+  },
+  "panel-left-close": {
+    "tags": [
+      "close",
+      "left",
+      "panel"
+    ]
+  },
+  "panel-left-inactive": {
+    "tags": [
+      "inactive",
+      "left",
+      "panel"
+    ]
+  },
+  "panel-left-open": {
+    "tags": [
+      "left",
+      "open",
+      "panel"
+    ]
+  },
+  "panel-right": {
+    "tags": [
+      "panel",
+      "right"
+    ]
+  },
+  "panel-right-close": {
+    "tags": [
+      "close",
+      "panel",
+      "right"
+    ]
+  },
+  "panel-right-inactive": {
+    "tags": [
+      "inactive",
+      "panel",
+      "right"
+    ]
+  },
+  "panel-right-open": {
+    "tags": [
+      "open",
+      "panel",
+      "right"
+    ]
+  },
+  "panel-top": {
+    "tags": [
+      "panel",
+      "top"
+    ]
+  },
+  "panel-top-close": {
+    "tags": [
+      "close",
+      "panel",
+      "top"
+    ]
+  },
+  "panel-top-inactive": {
+    "tags": [
+      "inactive",
+      "panel",
+      "top"
+    ]
+  },
+  "panel-top-open": {
+    "tags": [
+      "open",
+      "panel",
+      "top"
+    ]
+  },
+  "paperclip": {
+    "tags": [
+      "paperclip"
+    ]
+  },
+  "parentheses": {
+    "tags": [
+      "parentheses"
+    ]
+  },
+  "parking-circle": {
+    "tags": [
+      "circle",
+      "parking"
+    ]
+  },
+  "parking-circle-off": {
+    "tags": [
+      "circle",
+      "off",
+      "parking"
+    ]
+  },
+  "parking-meter": {
+    "tags": [
+      "meter",
+      "parking"
+    ]
+  },
+  "parking-square": {
+    "tags": [
+      "parking",
+      "square"
+    ]
+  },
+  "parking-square-off": {
+    "tags": [
+      "off",
+      "parking",
+      "square"
+    ]
+  },
+  "party-popper": {
+    "tags": [
+      "party",
+      "popper"
+    ]
+  },
+  "pause": {
+    "tags": [
+      "pause"
+    ]
+  },
+  "pause-circle": {
+    "tags": [
+      "circle",
+      "pause"
+    ]
+  },
+  "pause-octagon": {
+    "tags": [
+      "octagon",
+      "pause"
+    ]
+  },
+  "paw-print": {
+    "tags": [
+      "paw",
+      "print"
+    ]
+  },
+  "pc-case": {
+    "tags": [
+      "case",
+      "pc"
+    ]
+  },
+  "pen": {
+    "tags": [
+      "pen"
+    ]
+  },
+  "pen-line": {
+    "tags": [
+      "line",
+      "pen"
+    ]
+  },
+  "pen-square": {
+    "tags": [
+      "pen",
+      "square"
+    ]
+  },
+  "pen-tool": {
+    "tags": [
+      "pen",
+      "tool"
+    ]
+  },
+  "pencil": {
+    "tags": [
+      "pencil"
+    ]
+  },
+  "pencil-line": {
+    "tags": [
+      "line",
+      "pencil"
+    ]
+  },
+  "pencil-ruler": {
+    "tags": [
+      "pencil",
+      "ruler"
+    ]
+  },
+  "pentagon": {
+    "tags": [
+      "pentagon"
+    ]
+  },
+  "percent": {
+    "tags": [
+      "percent"
+    ]
+  },
+  "percent-circle": {
+    "tags": [
+      "circle",
+      "percent"
+    ]
+  },
+  "percent-diamond": {
+    "tags": [
+      "diamond",
+      "percent"
+    ]
+  },
+  "percent-square": {
+    "tags": [
+      "percent",
+      "square"
+    ]
+  },
+  "person-standing": {
+    "tags": [
+      "person",
+      "standing"
+    ]
+  },
+  "phone": {
+    "tags": [
+      "phone"
+    ]
+  },
+  "phone-call": {
+    "tags": [
+      "call",
+      "phone"
+    ]
+  },
+  "phone-forwarded": {
+    "tags": [
+      "forwarded",
+      "phone"
+    ]
+  },
+  "phone-incoming": {
+    "tags": [
+      "incoming",
+      "phone"
+    ]
+  },
+  "phone-missed": {
+    "tags": [
+      "missed",
+      "phone"
+    ]
+  },
+  "phone-off": {
+    "tags": [
+      "off",
+      "phone"
+    ]
+  },
+  "phone-outgoing": {
+    "tags": [
+      "outgoing",
+      "phone"
+    ]
+  },
+  "pi": {
+    "tags": [
+      "pi"
+    ]
+  },
+  "pi-square": {
+    "tags": [
+      "pi",
+      "square"
+    ]
+  },
+  "piano": {
+    "tags": [
+      "piano"
+    ]
+  },
+  "picture-in-picture": {
+    "tags": [
+      "in",
+      "picture"
+    ]
+  },
+  "picture-in-picture-2": {
+    "tags": [
+      "2",
+      "in",
+      "picture"
+    ]
+  },
+  "pie-chart": {
+    "tags": [
+      "chart",
+      "pie"
+    ]
+  },
+  "piggy-bank": {
+    "tags": [
+      "bank",
+      "piggy"
+    ]
+  },
+  "pilcrow": {
+    "tags": [
+      "pilcrow"
+    ]
+  },
+  "pilcrow-square": {
+    "tags": [
+      "pilcrow",
+      "square"
+    ]
+  },
+  "pill": {
+    "tags": [
+      "pill"
+    ]
+  },
+  "pin": {
+    "tags": [
+      "pin"
+    ]
+  },
+  "pin-off": {
+    "tags": [
+      "off",
+      "pin"
+    ]
+  },
+  "pipette": {
+    "tags": [
+      "pipette"
+    ]
+  },
+  "pizza": {
+    "tags": [
+      "pizza"
+    ]
+  },
+  "plane": {
+    "tags": [
+      "plane"
+    ]
+  },
+  "plane-landing": {
+    "tags": [
+      "landing",
+      "plane"
+    ]
+  },
+  "plane-takeoff": {
+    "tags": [
+      "plane",
+      "takeoff"
+    ]
+  },
+  "play": {
+    "tags": [
+      "play"
+    ]
+  },
+  "play-circle": {
+    "tags": [
+      "circle",
+      "play"
+    ]
+  },
+  "play-square": {
+    "tags": [
+      "play",
+      "square"
+    ]
+  },
+  "plug": {
+    "tags": [
+      "plug"
+    ]
+  },
+  "plug-2": {
+    "tags": [
+      "2",
+      "plug"
+    ]
+  },
+  "plug-zap": {
+    "tags": [
+      "plug",
+      "zap"
+    ]
+  },
+  "plug-zap-2": {
+    "tags": [
+      "2",
+      "plug",
+      "zap"
+    ]
+  },
+  "plus": {
+    "tags": [
+      "plus"
+    ]
+  },
+  "plus-circle": {
+    "tags": [
+      "circle",
+      "plus"
+    ]
+  },
+  "plus-square": {
+    "tags": [
+      "plus",
+      "square"
+    ]
+  },
+  "pocket": {
+    "tags": [
+      "pocket"
+    ]
+  },
+  "pocket-knife": {
+    "tags": [
+      "knife",
+      "pocket"
+    ]
+  },
+  "podcast": {
+    "tags": [
+      "podcast"
+    ]
+  },
+  "pointer": {
+    "tags": [
+      "pointer"
+    ]
+  },
+  "popcorn": {
+    "tags": [
+      "popcorn"
+    ]
+  },
+  "popsicle": {
+    "tags": [
+      "popsicle"
+    ]
+  },
+  "pound-sterling": {
+    "tags": [
+      "pound",
+      "sterling"
+    ]
+  },
+  "power": {
+    "tags": [
+      "power"
+    ]
+  },
+  "power-circle": {
+    "tags": [
+      "circle",
+      "power"
+    ]
+  },
+  "power-off": {
+    "tags": [
+      "off",
+      "power"
+    ]
+  },
+  "power-square": {
+    "tags": [
+      "power",
+      "square"
+    ]
+  },
+  "presentation": {
+    "tags": [
+      "presentation"
+    ]
+  },
+  "printer": {
+    "tags": [
+      "printer"
+    ]
+  },
+  "projector": {
+    "tags": [
+      "projector"
+    ]
+  },
+  "puzzle": {
+    "tags": [
+      "puzzle"
+    ]
+  },
+  "pyramid": {
+    "tags": [
+      "pyramid"
+    ]
+  },
+  "qr-code": {
+    "tags": [
+      "code",
+      "qr"
+    ]
+  },
+  "quote": {
+    "tags": [
+      "quote"
+    ]
+  },
+  "rabbit": {
+    "tags": [
+      "rabbit"
+    ]
+  },
+  "radar": {
+    "tags": [
+      "radar"
+    ]
+  },
+  "radiation": {
+    "tags": [
+      "radiation"
+    ]
+  },
+  "radio": {
+    "tags": [
+      "radio"
+    ]
+  },
+  "radio-receiver": {
+    "tags": [
+      "radio",
+      "receiver"
+    ]
+  },
+  "radio-tower": {
+    "tags": [
+      "radio",
+      "tower"
+    ]
+  },
+  "radius": {
+    "tags": [
+      "radius"
+    ]
+  },
+  "rail-symbol": {
+    "tags": [
+      "rail",
+      "symbol"
+    ]
+  },
+  "rainbow": {
+    "tags": [
+      "rainbow"
+    ]
+  },
+  "rat": {
+    "tags": [
+      "rat"
+    ]
+  },
+  "ratio": {
+    "tags": [
+      "ratio"
+    ]
+  },
+  "receipt": {
+    "tags": [
+      "receipt"
+    ]
+  },
+  "rectangle-horizontal": {
+    "tags": [
+      "horizontal",
+      "rectangle"
+    ]
+  },
+  "rectangle-vertical": {
+    "tags": [
+      "rectangle",
+      "vertical"
+    ]
+  },
+  "recycle": {
+    "tags": [
+      "recycle"
+    ]
+  },
+  "redo": {
+    "tags": [
+      "redo"
+    ]
+  },
+  "redo-2": {
+    "tags": [
+      "2",
+      "redo"
+    ]
+  },
+  "redo-dot": {
+    "tags": [
+      "dot",
+      "redo"
+    ]
+  },
+  "refresh-ccw": {
+    "tags": [
+      "ccw",
+      "refresh"
+    ]
+  },
+  "refresh-ccw-dot": {
+    "tags": [
+      "ccw",
+      "dot",
+      "refresh"
+    ]
+  },
+  "refresh-cw": {
+    "tags": [
+      "cw",
+      "refresh"
+    ]
+  },
+  "refresh-cw-off": {
+    "tags": [
+      "cw",
+      "off",
+      "refresh"
+    ]
+  },
+  "refrigerator": {
+    "tags": [
+      "refrigerator"
+    ]
+  },
+  "regex": {
+    "tags": [
+      "regex"
+    ]
+  },
+  "remove-formatting": {
+    "tags": [
+      "formatting",
+      "remove"
+    ]
+  },
+  "repeat": {
+    "tags": [
+      "repeat"
+    ]
+  },
+  "repeat-1": {
+    "tags": [
+      "1",
+      "repeat"
+    ]
+  },
+  "repeat-2": {
+    "tags": [
+      "2",
+      "repeat"
+    ]
+  },
+  "replace": {
+    "tags": [
+      "replace"
+    ]
+  },
+  "replace-all": {
+    "tags": [
+      "all",
+      "replace"
+    ]
+  },
+  "reply": {
+    "tags": [
+      "reply"
+    ]
+  },
+  "reply-all": {
+    "tags": [
+      "all",
+      "reply"
+    ]
+  },
+  "rewind": {
+    "tags": [
+      "rewind"
+    ]
+  },
+  "ribbon": {
+    "tags": [
+      "ribbon"
+    ]
+  },
+  "rocket": {
+    "tags": [
+      "rocket"
+    ]
+  },
+  "rocking-chair": {
+    "tags": [
+      "chair",
+      "rocking"
+    ]
+  },
+  "roller-coaster": {
+    "tags": [
+      "coaster",
+      "roller"
+    ]
+  },
+  "rotate-3d": {
+    "tags": [
+      "3d",
+      "rotate"
+    ]
+  },
+  "rotate-ccw": {
+    "tags": [
+      "ccw",
+      "rotate"
+    ]
+  },
+  "rotate-cw": {
+    "tags": [
+      "cw",
+      "rotate"
+    ]
+  },
+  "route": {
+    "tags": [
+      "route"
+    ]
+  },
+  "route-off": {
+    "tags": [
+      "off",
+      "route"
+    ]
+  },
+  "router": {
+    "tags": [
+      "router"
+    ]
+  },
+  "rows": {
+    "tags": [
+      "rows"
+    ]
+  },
+  "rss": {
+    "tags": [
+      "rss"
+    ]
+  },
+  "ruler": {
+    "tags": [
+      "ruler"
+    ]
+  },
+  "russian-ruble": {
+    "tags": [
+      "ruble",
+      "russian"
+    ]
+  },
+  "sailboat": {
+    "tags": [
+      "sailboat"
+    ]
+  },
+  "salad": {
+    "tags": [
+      "salad"
+    ]
+  },
+  "sandwich": {
+    "tags": [
+      "sandwich"
+    ]
+  },
+  "satellite": {
+    "tags": [
+      "satellite"
+    ]
+  },
+  "satellite-dish": {
+    "tags": [
+      "dish",
+      "satellite"
+    ]
+  },
+  "save": {
+    "tags": [
+      "save"
+    ]
+  },
+  "save-all": {
+    "tags": [
+      "all",
+      "save"
+    ]
+  },
+  "scale": {
+    "tags": [
+      "scale"
+    ]
+  },
+  "scale-3d": {
+    "tags": [
+      "3d",
+      "scale"
+    ]
+  },
+  "scaling": {
+    "tags": [
+      "scaling"
+    ]
+  },
+  "scan": {
+    "tags": [
+      "scan"
+    ]
+  },
+  "scan-barcode": {
+    "tags": [
+      "barcode",
+      "scan"
+    ]
+  },
+  "scan-eye": {
+    "tags": [
+      "eye",
+      "scan"
+    ]
+  },
+  "scan-face": {
+    "tags": [
+      "face",
+      "scan"
+    ]
+  },
+  "scan-line": {
+    "tags": [
+      "line",
+      "scan"
+    ]
+  },
+  "scan-search": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "scan",
+      "search"
+    ]
+  },
+  "scan-text": {
+    "tags": [
+      "scan",
+      "text"
+    ]
+  },
+  "scatter-chart": {
+    "tags": [
+      "chart",
+      "scatter"
+    ]
+  },
+  "school": {
+    "tags": [
+      "school"
+    ]
+  },
+  "school-2": {
+    "tags": [
+      "2",
+      "school"
+    ]
+  },
+  "scissors": {
+    "tags": [
+      "scissors"
+    ]
+  },
+  "scissors-line-dashed": {
+    "tags": [
+      "dashed",
+      "line",
+      "scissors"
+    ]
+  },
+  "scissors-square": {
+    "tags": [
+      "scissors",
+      "square"
+    ]
+  },
+  "scissors-square-dashed-bottom": {
+    "tags": [
+      "bottom",
+      "dashed",
+      "scissors",
+      "square"
+    ]
+  },
+  "screen-share": {
+    "tags": [
+      "screen",
+      "share"
+    ]
+  },
+  "screen-share-off": {
+    "tags": [
+      "off",
+      "screen",
+      "share"
+    ]
+  },
+  "scroll": {
+    "tags": [
+      "scroll"
+    ]
+  },
+  "scroll-text": {
+    "tags": [
+      "scroll",
+      "text"
+    ]
+  },
+  "search": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "search-check": {
+    "tags": [
+      "check",
+      "find",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "search-code": {
+    "tags": [
+      "code",
+      "find",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "search-large": {
+    "tags": [
+      "find",
+      "large",
+      "lookup",
+      "magnify",
+      "search"
+    ]
+  },
+  "search-slash": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "search",
+      "slash"
+    ]
+  },
+  "search-x": {
+    "tags": [
+      "find",
+      "lookup",
+      "magnify",
+      "search",
+      "x"
+    ]
+  },
+  "send": {
+    "tags": [
+      "send"
+    ]
+  },
+  "send-horizontal": {
+    "tags": [
+      "horizontal",
+      "send"
+    ]
+  },
+  "send-to-back": {
+    "tags": [
+      "back",
+      "send",
+      "to"
+    ]
+  },
+  "separator-horizontal": {
+    "tags": [
+      "horizontal",
+      "separator"
+    ]
+  },
+  "separator-vertical": {
+    "tags": [
+      "separator",
+      "vertical"
+    ]
+  },
+  "server": {
+    "tags": [
+      "server"
+    ]
+  },
+  "server-cog": {
+    "tags": [
+      "cog",
+      "server"
+    ]
+  },
+  "server-crash": {
+    "tags": [
+      "crash",
+      "server"
+    ]
+  },
+  "server-off": {
+    "tags": [
+      "off",
+      "server"
+    ]
+  },
+  "settings": {
+    "tags": [
+      "gear",
+      "settings",
+      "tools",
+      "wrench"
+    ]
+  },
+  "settings-2": {
+    "tags": [
+      "2",
+      "gear",
+      "settings",
+      "tools",
+      "wrench"
+    ]
+  },
+  "shapes": {
+    "tags": [
+      "shapes"
+    ]
+  },
+  "share": {
+    "tags": [
+      "share"
+    ]
+  },
+  "share-2": {
+    "tags": [
+      "2",
+      "share"
+    ]
+  },
+  "sheet": {
+    "tags": [
+      "sheet"
+    ]
+  },
+  "shell": {
+    "tags": [
+      "shell"
+    ]
+  },
+  "shield": {
+    "tags": [
+      "shield"
+    ]
+  },
+  "shield-alert": {
+    "tags": [
+      "alert",
+      "shield"
+    ]
+  },
+  "shield-ban": {
+    "tags": [
+      "ban",
+      "shield"
+    ]
+  },
+  "shield-check": {
+    "tags": [
+      "check",
+      "shield"
+    ]
+  },
+  "shield-close": {
+    "tags": [
+      "close",
+      "shield"
+    ]
+  },
+  "shield-ellipsis": {
+    "tags": [
+      "ellipsis",
+      "shield"
+    ]
+  },
+  "shield-half": {
+    "tags": [
+      "half",
+      "shield"
+    ]
+  },
+  "shield-minus": {
+    "tags": [
+      "minus",
+      "shield"
+    ]
+  },
+  "shield-off": {
+    "tags": [
+      "off",
+      "shield"
+    ]
+  },
+  "shield-plus": {
+    "tags": [
+      "plus",
+      "shield"
+    ]
+  },
+  "shield-question": {
+    "tags": [
+      "question",
+      "shield"
+    ]
+  },
+  "shield-x": {
+    "tags": [
+      "shield",
+      "x"
+    ]
+  },
+  "ship": {
+    "tags": [
+      "ship"
+    ]
+  },
+  "ship-wheel": {
+    "tags": [
+      "ship",
+      "wheel"
+    ]
+  },
+  "shirt": {
+    "tags": [
+      "shirt"
+    ]
+  },
+  "shopping-bag": {
+    "tags": [
+      "bag",
+      "shopping"
+    ]
+  },
+  "shopping-basket": {
+    "tags": [
+      "basket",
+      "shopping"
+    ]
+  },
+  "shopping-cart": {
+    "tags": [
+      "cart",
+      "shopping"
+    ]
+  },
+  "shovel": {
+    "tags": [
+      "shovel"
+    ]
+  },
+  "shower-head": {
+    "tags": [
+      "head",
+      "shower"
+    ]
+  },
+  "shrink": {
+    "tags": [
+      "shrink"
+    ]
+  },
+  "shrub": {
+    "tags": [
+      "shrub"
+    ]
+  },
+  "shuffle": {
+    "tags": [
+      "shuffle"
+    ]
+  },
+  "sigma": {
+    "tags": [
+      "sigma"
+    ]
+  },
+  "sigma-square": {
+    "tags": [
+      "sigma",
+      "square"
+    ]
+  },
+  "signal": {
+    "tags": [
+      "signal"
+    ]
+  },
+  "signal-high": {
+    "tags": [
+      "high",
+      "signal"
+    ]
+  },
+  "signal-low": {
+    "tags": [
+      "low",
+      "signal"
+    ]
+  },
+  "signal-medium": {
+    "tags": [
+      "medium",
+      "signal"
+    ]
+  },
+  "signal-zero": {
+    "tags": [
+      "signal",
+      "zero"
+    ]
+  },
+  "signpost": {
+    "tags": [
+      "signpost"
+    ]
+  },
+  "signpost-big": {
+    "tags": [
+      "big",
+      "signpost"
+    ]
+  },
+  "siren": {
+    "tags": [
+      "siren"
+    ]
+  },
+  "skip-back": {
+    "tags": [
+      "back",
+      "skip"
+    ]
+  },
+  "skip-forward": {
+    "tags": [
+      "forward",
+      "skip"
+    ]
+  },
+  "skull": {
+    "tags": [
+      "skull"
+    ]
+  },
+  "slack": {
+    "tags": [
+      "slack"
+    ]
+  },
+  "slash": {
+    "tags": [
+      "slash"
+    ]
+  },
+  "slice": {
+    "tags": [
+      "slice"
+    ]
+  },
+  "sliders": {
+    "tags": [
+      "sliders"
+    ]
+  },
+  "sliders-horizontal": {
+    "tags": [
+      "horizontal",
+      "sliders"
+    ]
+  },
+  "smartphone": {
+    "tags": [
+      "smartphone"
+    ]
+  },
+  "smartphone-charging": {
+    "tags": [
+      "charging",
+      "smartphone"
+    ]
+  },
+  "smartphone-nfc": {
+    "tags": [
+      "nfc",
+      "smartphone"
+    ]
+  },
+  "smile": {
+    "tags": [
+      "smile"
+    ]
+  },
+  "smile-plus": {
+    "tags": [
+      "plus",
+      "smile"
+    ]
+  },
+  "snail": {
+    "tags": [
+      "snail"
+    ]
+  },
+  "snowflake": {
+    "tags": [
+      "snowflake"
+    ]
+  },
+  "sofa": {
+    "tags": [
+      "sofa"
+    ]
+  },
+  "sort-asc": {
+    "tags": [
+      "asc",
+      "sort"
+    ]
+  },
+  "sort-desc": {
+    "tags": [
+      "desc",
+      "sort"
+    ]
+  },
+  "soup": {
+    "tags": [
+      "soup"
+    ]
+  },
+  "space": {
+    "tags": [
+      "space"
+    ]
+  },
+  "spade": {
+    "tags": [
+      "spade"
+    ]
+  },
+  "sparkle": {
+    "tags": [
+      "sparkle"
+    ]
+  },
+  "sparkles": {
+    "tags": [
+      "sparkles"
+    ]
+  },
+  "speaker": {
+    "tags": [
+      "speaker"
+    ]
+  },
+  "speech": {
+    "tags": [
+      "speech"
+    ]
+  },
+  "spell-check": {
+    "tags": [
+      "check",
+      "spell"
+    ]
+  },
+  "spell-check-2": {
+    "tags": [
+      "2",
+      "check",
+      "spell"
+    ]
+  },
+  "spline": {
+    "tags": [
+      "spline"
+    ]
+  },
+  "split": {
+    "tags": [
+      "split"
+    ]
+  },
+  "split-square-horizontal": {
+    "tags": [
+      "horizontal",
+      "split",
+      "square"
+    ]
+  },
+  "split-square-vertical": {
+    "tags": [
+      "split",
+      "square",
+      "vertical"
+    ]
+  },
+  "spray-can": {
+    "tags": [
+      "can",
+      "spray"
+    ]
+  },
+  "sprout": {
+    "tags": [
+      "sprout"
+    ]
+  },
+  "square": {
+    "tags": [
+      "square"
+    ]
+  },
+  "square-asterisk": {
+    "tags": [
+      "asterisk",
+      "square"
+    ]
+  },
+  "square-code": {
+    "tags": [
+      "code",
+      "square"
+    ]
+  },
+  "square-dashed-bottom": {
+    "tags": [
+      "bottom",
+      "dashed",
+      "square"
+    ]
+  },
+  "square-dashed-bottom-code": {
+    "tags": [
+      "bottom",
+      "code",
+      "dashed",
+      "square"
+    ]
+  },
+  "square-dot": {
+    "tags": [
+      "dot",
+      "square"
+    ]
+  },
+  "square-equal": {
+    "tags": [
+      "equal",
+      "square"
+    ]
+  },
+  "square-slash": {
+    "tags": [
+      "slash",
+      "square"
+    ]
+  },
+  "square-stack": {
+    "tags": [
+      "square",
+      "stack"
+    ]
+  },
+  "square-user": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "square",
+      "user"
+    ]
+  },
+  "square-user-round": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "round",
+      "square",
+      "user"
+    ]
+  },
+  "squirrel": {
+    "tags": [
+      "squirrel"
+    ]
+  },
+  "stamp": {
+    "tags": [
+      "stamp"
+    ]
+  },
+  "star": {
+    "tags": [
+      "star"
+    ]
+  },
+  "star-half": {
+    "tags": [
+      "half",
+      "star"
+    ]
+  },
+  "star-off": {
+    "tags": [
+      "off",
+      "star"
+    ]
+  },
+  "step-back": {
+    "tags": [
+      "back",
+      "step"
+    ]
+  },
+  "step-forward": {
+    "tags": [
+      "forward",
+      "step"
+    ]
+  },
+  "stethoscope": {
+    "tags": [
+      "stethoscope"
+    ]
+  },
+  "sticker": {
+    "tags": [
+      "sticker"
+    ]
+  },
+  "sticky-note": {
+    "tags": [
+      "note",
+      "sticky"
+    ]
+  },
+  "stop-circle": {
+    "tags": [
+      "circle",
+      "stop"
+    ]
+  },
+  "store": {
+    "tags": [
+      "store"
+    ]
+  },
+  "stretch-horizontal": {
+    "tags": [
+      "horizontal",
+      "stretch"
+    ]
+  },
+  "stretch-vertical": {
+    "tags": [
+      "stretch",
+      "vertical"
+    ]
+  },
+  "strikethrough": {
+    "tags": [
+      "strikethrough"
+    ]
+  },
+  "subscript": {
+    "tags": [
+      "subscript"
+    ]
+  },
+  "subtitles": {
+    "tags": [
+      "subtitles"
+    ]
+  },
+  "sun": {
+    "tags": [
+      "sun"
+    ]
+  },
+  "sun-dim": {
+    "tags": [
+      "dim",
+      "sun"
+    ]
+  },
+  "sun-medium": {
+    "tags": [
+      "medium",
+      "sun"
+    ]
+  },
+  "sun-moon": {
+    "tags": [
+      "moon",
+      "sun"
+    ]
+  },
+  "sun-snow": {
+    "tags": [
+      "snow",
+      "sun"
+    ]
+  },
+  "sunrise": {
+    "tags": [
+      "sunrise"
+    ]
+  },
+  "sunset": {
+    "tags": [
+      "sunset"
+    ]
+  },
+  "superscript": {
+    "tags": [
+      "superscript"
+    ]
+  },
+  "swiss-franc": {
+    "tags": [
+      "franc",
+      "swiss"
+    ]
+  },
+  "switch-camera": {
+    "tags": [
+      "camera",
+      "image",
+      "lens",
+      "photo",
+      "picture",
+      "switch"
+    ]
+  },
+  "sword": {
+    "tags": [
+      "sword"
+    ]
+  },
+  "swords": {
+    "tags": [
+      "swords"
+    ]
+  },
+  "syringe": {
+    "tags": [
+      "syringe"
+    ]
+  },
+  "table": {
+    "tags": [
+      "table"
+    ]
+  },
+  "table-2": {
+    "tags": [
+      "2",
+      "table"
+    ]
+  },
+  "table-properties": {
+    "tags": [
+      "properties",
+      "table"
+    ]
+  },
+  "tablet": {
+    "tags": [
+      "tablet"
+    ]
+  },
+  "tablet-smartphone": {
+    "tags": [
+      "smartphone",
+      "tablet"
+    ]
+  },
+  "tablets": {
+    "tags": [
+      "tablets"
+    ]
+  },
+  "tag": {
+    "tags": [
+      "tag"
+    ]
+  },
+  "tags": {
+    "tags": [
+      "tags"
+    ]
+  },
+  "tally-1": {
+    "tags": [
+      "1",
+      "tally"
+    ]
+  },
+  "tally-2": {
+    "tags": [
+      "2",
+      "tally"
+    ]
+  },
+  "tally-3": {
+    "tags": [
+      "3",
+      "tally"
+    ]
+  },
+  "tally-4": {
+    "tags": [
+      "4",
+      "tally"
+    ]
+  },
+  "tally-5": {
+    "tags": [
+      "5",
+      "tally"
+    ]
+  },
+  "tangent": {
+    "tags": [
+      "tangent"
+    ]
+  },
+  "target": {
+    "tags": [
+      "target"
+    ]
+  },
+  "tent": {
+    "tags": [
+      "tent"
+    ]
+  },
+  "tent-tree": {
+    "tags": [
+      "tent",
+      "tree"
+    ]
+  },
+  "terminal": {
+    "tags": [
+      "terminal"
+    ]
+  },
+  "terminal-square": {
+    "tags": [
+      "square",
+      "terminal"
+    ]
+  },
+  "test-tube": {
+    "tags": [
+      "test",
+      "tube"
+    ]
+  },
+  "test-tube-2": {
+    "tags": [
+      "2",
+      "test",
+      "tube"
+    ]
+  },
+  "test-tubes": {
+    "tags": [
+      "test",
+      "tubes"
+    ]
+  },
+  "text": {
+    "tags": [
+      "text"
+    ]
+  },
+  "text-cursor": {
+    "tags": [
+      "cursor",
+      "text"
+    ]
+  },
+  "text-cursor-input": {
+    "tags": [
+      "cursor",
+      "input",
+      "text"
+    ]
+  },
+  "text-quote": {
+    "tags": [
+      "quote",
+      "text"
+    ]
+  },
+  "text-select": {
+    "tags": [
+      "select",
+      "text"
+    ]
+  },
+  "theater": {
+    "tags": [
+      "theater"
+    ]
+  },
+  "thermometer": {
+    "tags": [
+      "thermometer"
+    ]
+  },
+  "thermometer-snowflake": {
+    "tags": [
+      "snowflake",
+      "thermometer"
+    ]
+  },
+  "thermometer-sun": {
+    "tags": [
+      "sun",
+      "thermometer"
+    ]
+  },
+  "thumbs-down": {
+    "tags": [
+      "down",
+      "thumbs"
+    ]
+  },
+  "thumbs-up": {
+    "tags": [
+      "thumbs",
+      "up"
+    ]
+  },
+  "ticket": {
+    "tags": [
+      "ticket"
+    ]
+  },
+  "timer": {
+    "tags": [
+      "timer"
+    ]
+  },
+  "timer-off": {
+    "tags": [
+      "off",
+      "timer"
+    ]
+  },
+  "timer-reset": {
+    "tags": [
+      "reset",
+      "timer"
+    ]
+  },
+  "toggle-left": {
+    "tags": [
+      "left",
+      "toggle"
+    ]
+  },
+  "toggle-right": {
+    "tags": [
+      "right",
+      "toggle"
+    ]
+  },
+  "tornado": {
+    "tags": [
+      "tornado"
+    ]
+  },
+  "torus": {
+    "tags": [
+      "torus"
+    ]
+  },
+  "touchpad": {
+    "tags": [
+      "touchpad"
+    ]
+  },
+  "touchpad-off": {
+    "tags": [
+      "off",
+      "touchpad"
+    ]
+  },
+  "tower-control": {
+    "tags": [
+      "control",
+      "tower"
+    ]
+  },
+  "toy-brick": {
+    "tags": [
+      "brick",
+      "toy"
+    ]
+  },
+  "tractor": {
+    "tags": [
+      "tractor"
+    ]
+  },
+  "traffic-cone": {
+    "tags": [
+      "cone",
+      "traffic"
+    ]
+  },
+  "train-front": {
+    "tags": [
+      "front",
+      "train"
+    ]
+  },
+  "train-front-tunnel": {
+    "tags": [
+      "front",
+      "train",
+      "tunnel"
+    ]
+  },
+  "train-track": {
+    "tags": [
+      "track",
+      "train"
+    ]
+  },
+  "tram-front": {
+    "tags": [
+      "front",
+      "tram"
+    ]
+  },
+  "trash": {
+    "tags": [
+      "trash"
+    ]
+  },
+  "trash-2": {
+    "tags": [
+      "2",
+      "trash"
+    ]
+  },
+  "tree-deciduous": {
+    "tags": [
+      "deciduous",
+      "tree"
+    ]
+  },
+  "tree-pine": {
+    "tags": [
+      "pine",
+      "tree"
+    ]
+  },
+  "trees": {
+    "tags": [
+      "trees"
+    ]
+  },
+  "trello": {
+    "tags": [
+      "trello"
+    ]
+  },
+  "trending-down": {
+    "tags": [
+      "down",
+      "trending"
+    ]
+  },
+  "trending-up": {
+    "tags": [
+      "trending",
+      "up"
+    ]
+  },
+  "triangle": {
+    "tags": [
+      "triangle"
+    ]
+  },
+  "triangle-right": {
+    "tags": [
+      "right",
+      "triangle"
+    ]
+  },
+  "trophy": {
+    "tags": [
+      "trophy"
+    ]
+  },
+  "truck": {
+    "tags": [
+      "truck"
+    ]
+  },
+  "turtle": {
+    "tags": [
+      "turtle"
+    ]
+  },
+  "tv": {
+    "tags": [
+      "tv"
+    ]
+  },
+  "tv-2": {
+    "tags": [
+      "2",
+      "tv"
+    ]
+  },
+  "twitch": {
+    "tags": [
+      "twitch"
+    ]
+  },
+  "twitter": {
+    "tags": [
+      "twitter"
+    ]
+  },
+  "type": {
+    "tags": [
+      "type"
+    ]
+  },
+  "umbrella": {
+    "tags": [
+      "umbrella"
+    ]
+  },
+  "umbrella-off": {
+    "tags": [
+      "off",
+      "umbrella"
+    ]
+  },
+  "underline": {
+    "tags": [
+      "underline"
+    ]
+  },
+  "undo": {
+    "tags": [
+      "undo"
+    ]
+  },
+  "undo-2": {
+    "tags": [
+      "2",
+      "undo"
+    ]
+  },
+  "undo-dot": {
+    "tags": [
+      "dot",
+      "undo"
+    ]
+  },
+  "unfold-horizontal": {
+    "tags": [
+      "horizontal",
+      "unfold"
+    ]
+  },
+  "unfold-vertical": {
+    "tags": [
+      "unfold",
+      "vertical"
+    ]
+  },
+  "ungroup": {
+    "tags": [
+      "ungroup"
+    ]
+  },
+  "unlink": {
+    "tags": [
+      "unlink"
+    ]
+  },
+  "unlink-2": {
+    "tags": [
+      "2",
+      "unlink"
+    ]
+  },
+  "unlock": {
+    "tags": [
+      "unlock"
+    ]
+  },
+  "unlock-keyhole": {
+    "tags": [
+      "keyhole",
+      "unlock"
+    ]
+  },
+  "unplug": {
+    "tags": [
+      "unplug"
+    ]
+  },
+  "upload": {
+    "tags": [
+      "upload"
+    ]
+  },
+  "upload-cloud": {
+    "tags": [
+      "cloud",
+      "upload"
+    ]
+  },
+  "usb": {
+    "tags": [
+      "usb"
+    ]
+  },
+  "user": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-check": {
+    "tags": [
+      "account",
+      "avatar",
+      "check",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-check-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "check",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-cog": {
+    "tags": [
+      "account",
+      "avatar",
+      "cog",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-cog-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "cog",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-minus": {
+    "tags": [
+      "account",
+      "avatar",
+      "minus",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-minus-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "minus",
+      "person",
+      "profile",
+      "user"
+    ]
+  },
+  "user-plus": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "plus",
+      "profile",
+      "user"
+    ]
+  },
+  "user-plus-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "person",
+      "plus",
+      "profile",
+      "user"
+    ]
+  },
+  "user-round": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "user-round-check": {
+    "tags": [
+      "account",
+      "avatar",
+      "check",
+      "person",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "user-round-cog": {
+    "tags": [
+      "account",
+      "avatar",
+      "cog",
+      "person",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "user-round-minus": {
+    "tags": [
+      "account",
+      "avatar",
+      "minus",
+      "person",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "user-round-plus": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "plus",
+      "profile",
+      "round",
+      "user"
+    ]
+  },
+  "user-round-x": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "round",
+      "user",
+      "x"
+    ]
+  },
+  "user-x": {
+    "tags": [
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "user",
+      "x"
+    ]
+  },
+  "user-x-2": {
+    "tags": [
+      "2",
+      "account",
+      "avatar",
+      "person",
+      "profile",
+      "user",
+      "x"
+    ]
+  },
+  "users": {
+    "tags": [
+      "users"
+    ]
+  },
+  "users-2": {
+    "tags": [
+      "2",
+      "users"
+    ]
+  },
+  "users-round": {
+    "tags": [
+      "round",
+      "users"
+    ]
+  },
+  "utensils": {
+    "tags": [
+      "utensils"
+    ]
+  },
+  "utensils-crossed": {
+    "tags": [
+      "crossed",
+      "utensils"
+    ]
+  },
+  "utility-pole": {
+    "tags": [
+      "pole",
+      "utility"
+    ]
+  },
+  "variable": {
+    "tags": [
+      "variable"
+    ]
+  },
+  "vegan": {
+    "tags": [
+      "vegan"
+    ]
+  },
+  "venetian-mask": {
+    "tags": [
+      "mask",
+      "venetian"
+    ]
+  },
+  "verified": {
+    "tags": [
+      "verified"
+    ]
+  },
+  "vibrate": {
+    "tags": [
+      "vibrate"
+    ]
+  },
+  "vibrate-off": {
+    "tags": [
+      "off",
+      "vibrate"
+    ]
+  },
+  "video": {
+    "tags": [
+      "video"
+    ]
+  },
+  "video-off": {
+    "tags": [
+      "off",
+      "video"
+    ]
+  },
+  "videotape": {
+    "tags": [
+      "videotape"
+    ]
+  },
+  "view": {
+    "tags": [
+      "view"
+    ]
+  },
+  "voicemail": {
+    "tags": [
+      "voicemail"
+    ]
+  },
+  "volume": {
+    "tags": [
+      "volume"
+    ]
+  },
+  "volume-1": {
+    "tags": [
+      "1",
+      "volume"
+    ]
+  },
+  "volume-2": {
+    "tags": [
+      "2",
+      "volume"
+    ]
+  },
+  "volume-x": {
+    "tags": [
+      "volume",
+      "x"
+    ]
+  },
+  "vote": {
+    "tags": [
+      "vote"
+    ]
+  },
+  "wallet": {
+    "tags": [
+      "wallet"
+    ]
+  },
+  "wallet-2": {
+    "tags": [
+      "2",
+      "wallet"
+    ]
+  },
+  "wallet-cards": {
+    "tags": [
+      "cards",
+      "wallet"
+    ]
+  },
+  "wallpaper": {
+    "tags": [
+      "wallpaper"
+    ]
+  },
+  "wand": {
+    "tags": [
+      "wand"
+    ]
+  },
+  "wand-2": {
+    "tags": [
+      "2",
+      "wand"
+    ]
+  },
+  "warehouse": {
+    "tags": [
+      "warehouse"
+    ]
+  },
+  "watch": {
+    "tags": [
+      "watch"
+    ]
+  },
+  "waves": {
+    "tags": [
+      "waves"
+    ]
+  },
+  "waypoints": {
+    "tags": [
+      "waypoints"
+    ]
+  },
+  "webcam": {
+    "tags": [
+      "webcam"
+    ]
+  },
+  "webhook": {
+    "tags": [
+      "webhook"
+    ]
+  },
+  "weight": {
+    "tags": [
+      "weight"
+    ]
+  },
+  "wheat": {
+    "tags": [
+      "wheat"
+    ]
+  },
+  "wheat-off": {
+    "tags": [
+      "off",
+      "wheat"
+    ]
+  },
+  "whole-word": {
+    "tags": [
+      "whole",
+      "word"
+    ]
+  },
+  "wifi": {
+    "tags": [
+      "wifi"
+    ]
+  },
+  "wifi-off": {
+    "tags": [
+      "off",
+      "wifi"
+    ]
+  },
+  "wind": {
+    "tags": [
+      "wind"
+    ]
+  },
+  "wine": {
+    "tags": [
+      "wine"
+    ]
+  },
+  "wine-off": {
+    "tags": [
+      "off",
+      "wine"
+    ]
+  },
+  "workflow": {
+    "tags": [
+      "workflow"
+    ]
+  },
+  "wrap-text": {
+    "tags": [
+      "text",
+      "wrap"
+    ]
+  },
+  "wrench": {
+    "tags": [
+      "wrench"
+    ]
+  },
+  "x": {
+    "tags": [
+      "x"
+    ]
+  },
+  "x-circle": {
+    "tags": [
+      "circle",
+      "x"
+    ]
+  },
+  "x-octagon": {
+    "tags": [
+      "octagon",
+      "x"
+    ]
+  },
+  "x-square": {
+    "tags": [
+      "square",
+      "x"
+    ]
+  },
+  "youtube": {
+    "tags": [
+      "youtube"
+    ]
+  },
+  "zap": {
+    "tags": [
+      "zap"
+    ]
+  },
+  "zap-off": {
+    "tags": [
+      "off",
+      "zap"
+    ]
+  },
+  "zoom-in": {
+    "tags": [
+      "in",
+      "zoom"
+    ]
+  },
+  "zoom-out": {
+    "tags": [
+      "out",
+      "zoom"
+    ]
+  }
+}
