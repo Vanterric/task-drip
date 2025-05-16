@@ -84,7 +84,7 @@ export default function LoginPage() {
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-6 py-20 transition overflow-x-hidden cursor-default">
       <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
 
-      <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
+      <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-5 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
             {isDarkMode ? (
               <Sun className="w-10 h-10 text-white" />
             ) : (
