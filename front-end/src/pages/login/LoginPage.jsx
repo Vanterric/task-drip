@@ -134,7 +134,7 @@ export default function LoginPage() {
       </button>
     </div>
 
-    <div className="h-3 bg-[#E0ECFC] dark:bg-white/10 rounded-full overflow-hidden">
+    <div className="h-3 bg-[#D4E3FF] dark:bg-[#4C6CA8] rounded-full overflow-hidden transition">
       <div className="w-2/5 h-full bg-[#4BAF8E] transition-all duration-500 rounded-full" />
     </div>
   </div>
