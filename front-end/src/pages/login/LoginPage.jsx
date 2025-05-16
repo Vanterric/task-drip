@@ -464,7 +464,17 @@ export default function LoginPage() {
             )}
 
             <p className="mt-6 text-xs text-[#91989E] text-center">
-              By continuing, you agree to our <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" href="#">Privacy Policy</a> and <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" href="#">Terms & Conditions</a>.
+              By continuing, you agree to our <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" 
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing">
+                Privacy Policy
+              </a> and <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" 
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing">
+                Terms & Conditions
+              </a>.
             </p>
 
             <button
