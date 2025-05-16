@@ -93,7 +93,7 @@ export default function ProgressBar({ completedCount, tasks }) {
         <p className="text-sm text-[#91989E] cursor-default">{Math.round(progress)}%</p>
       </div>
 
-      <div className="relative w-full h-2 bg-[#E0ECFC] rounded-full overflow-visible">
+      <div className="relative w-full h-2 bg-[#D4E3FF] dark:bg-[#4C6CA8] rounded-full overflow-visible">
         {/* Animated Sparkles */}
         {sparkles.map((sparkle) => (
   <div
