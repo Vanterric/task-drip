@@ -81,7 +81,7 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-6 py-20 transition overflow-x-hidden cursor-default">
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5]  dark:bg-[#212732] px-6 max-[540px]:px-4 py-20 transition overflow-x-hidden cursor-default">
       <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
 
       <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-5 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
@@ -94,11 +94,14 @@ export default function LoginPage() {
       <div className="text-center flex items-center justify-center flex-col h-[80vh]">
         
         <img src={DewList_Logo} alt="DewList Logo" className="w-32 mb-6" />
-        <h1 className="text-4xl md:text-6xl font-bold text-[#4F5962] dark:text-white mb-6 text-center transition">
-          One task at a time.
+        <h1 className="text-4xl md:text-6xl font-bold text-[#4F5962] dark:text-white mb-2 text-center transition">
+          DewList
         </h1>
-        <p className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 text-center max-w-2xl transition">
-          DewList helps ADHD brains focus by showing just one task at a time. No clutter. No chaos. Just clarity.
+        <h2 className="text-2xl md:text-3xl font-semibold text-[#4F5962] dark:text-white mb-4 text-center transition">
+          One task at a time.
+        </h2>
+        <p className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 text-center max-w-2xl  transition max-[540px]:text-sm">
+          DewList helps ADHD brains focus by showing <br/> just one task at a time. No clutter. No chaos. Just clarity.
         </p>
         <button
           onClick={() => {
