@@ -4,7 +4,7 @@ const INAPP_DISMISSED_KEY = 'dewlist_inapp_dismissed_at'
 
 const isInAppBrowser = () => {
   const ua = navigator.userAgent || navigator.vendor || window.opera
-  return /Instagram|FBAN|FBAV|Messenger|Line|Gmail|Snapchat/i.test(ua)
+  return /Instagram|FBAN|FBAV|Messenger|Line|Gmail|Snapchat|GSA|Line/i.test(ua)
 }
 
 const daysAgo = (key, days) => {
