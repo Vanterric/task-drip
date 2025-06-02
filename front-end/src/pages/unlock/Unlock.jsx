@@ -2,11 +2,16 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import { CheckCircle } from "lucide-react";
+import { redirectIfInApp } from "../../utilities/redirectFromInApp";
 
 export default function UnlockPage() {
   const [status, setStatus] = useState("loading"); // loading | success | error
   const navigate = useNavigate();
   const { setToken, setUser } = useAuth();
+
+  useEffect(() => {
+  redirectIfInApp()
+ }, [])
 
 
   useEffect(() => {
