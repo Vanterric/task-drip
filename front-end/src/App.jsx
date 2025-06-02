@@ -6,6 +6,7 @@ import HomePage from "./pages/home/HomePage";
 import SubscribePage from "./pages/subscribe/SubscribePage";
 import { useEffect, useState } from "react";
 import PWAInstallBanner from "./components/PWAInstallBanner";
+import InAppBrowserBanner from "./components/InAppBrowserBanner";
 
 function App() {
 
@@ -38,6 +39,7 @@ function App() {
       </Routes>
     </Router>
     <PWAInstallBanner />
+    <InAppBrowserBanner />
     </>
   );
 }
