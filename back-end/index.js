@@ -196,6 +196,7 @@ const getRandomMessage = () => {
   return messages[Math.floor(Math.random() * messages.length)];
 };
 
+
 sendPushNotifications = async () => {
   const users = await User.find({
     lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
