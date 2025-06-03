@@ -35,7 +35,7 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close();
 
   const { action } = event;
-  const { userId, url = '/' } = event.notification.data || {};
+  const { userId, url = '/', token } = event.notification.data || {};
 
   if (action === 'snooze') {
     console.log('🔕 Snoozing push notification for user:', userId);
@@ -44,8 +44,6 @@ self.addEventListener('notificationclick', function (event) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // If using token auth, uncomment below:
-          // 'Authorization': `Bearer ${yourAuthToken}`
         },
         body: JSON.stringify({ userId })
       }).catch(err => {

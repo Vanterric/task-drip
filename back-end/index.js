@@ -215,7 +215,7 @@ const getRandomMessage = () => {
   title: "Hey, it’s DewList 👋",
   body: getRandomMessage(),
   url: '/', 
-  userId: userId, 
+  userId: user._id, 
   badge: '/icons/icon-192.png', 
   icon: '/icons/icon-192.png', 
   actions: [
@@ -301,7 +301,7 @@ app.post('/subscribe', verifyToken, async (req, res) => {
   }
 });
 
-app.post('/snoozePush', verifyToken, async (req, res) => {
+app.post('/snoozePush', async (req, res) => {
   try {
     const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
