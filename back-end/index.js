@@ -1,4 +1,5 @@
 require('dotenv').config();
+const webpush = require( 'web-push');
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
@@ -55,6 +56,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 });
 
 app.use(express.json());
+
+
+
 // auth routes
 
 const verifyToken = (req, res, next) => {
@@ -167,11 +171,92 @@ const verifyToken = (req, res, next) => {
     }
   });
 
+  // Push notifications
+webpush.setVapidDetails(
+  'mailto:hello@dewlist.app',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
+
+const getRandomMessage = () => {
+  const messages = [
+    "You’ve got this — even one small win today counts 🌟",
+  "Just one task can make a difference. Ready to tackle it? 💪",
+  "Little steps lead to big things. Let’s take one together! 🐾",
+  "Hey superstar! 🌟 Ready to check off a task? Let’s go! 🚀",
+  "No need to do it all — just show up for one thing 💼✨",
+  "Hey, you! Yes, you! Ready to crush a task? Let’s do it! 💥",
+  "Progress > perfection. Let’s nudge something forward 🚀",
+  "You don’t need motivation — just momentum. Tap to start 🔄",
+  "Remember, every task completed is a step closer to your goals 🏆",
+  "Gentle reminder: You’re allowed to make progress at your own pace 💚",
+  "Got some time to check off just one task? Let’s do it! ⏰",
+  "You’re not behind — you’re exactly where you need to be. Let’s take a step forward together 🌱",
+  ];
+  return messages[Math.floor(Math.random() * messages.length)];
+};
+
+sendPushNotifications = async () => {
+  const users = await User.find({
+    lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+    $or: [
+      { lastPushSentAt: { $exists: false } },
+      { lastPushSentAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+    ],
+    pushSubscriptions: { $exists: true, $not: { $size: 0 } }
+  });
+
+  for (const user of users) {
+    const payload = JSON.stringify({
+      title: "Hey, it’s DewList 👋",
+      body: getRandomMessage(),
+      url: '/'
+    });
+
+    for (const sub of user.pushSubscriptions) {
+      try {
+        await webpush.sendNotification(sub, payload);
+      } catch (err) {
+        console.error('Push failed for', sub.endpoint, err.message);
+      }
+    }
+
+    user.lastPushSentAt = new Date();
+    await user.save();
+  }
+
+  console.log(`✅ Sent pushes to ${users.length} users`);
+};
+
+app.post('/subscribe', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const newSub = req.body;
+
+    const alreadyExists = user.pushSubscriptions.some(
+      (sub) => sub.endpoint === newSub.endpoint
+    );
+
+    if (!alreadyExists) {
+      user.pushSubscriptions.push(newSub); // Store raw subscription
+      await user.save();
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Error saving push subscription:', err);
+    res.status(500).json({ error: 'Failed to save subscription' });
+  }
+});
+
   // user routes
   app.get('/user', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
-    console.log("User data:", user);
-    res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt });
+    user.lastActiveAt = new Date();
+    await user.save();
+    res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [] });
   });
 
   
@@ -313,7 +398,6 @@ const verifyToken = (req, res, next) => {
   });
 
   app.post('/ai/breakdown', verifyToken, async (req, res) => {
-    console.log('AI breakdown request:', req.body);
     const { goal } = req.body;
   
     if (!goal || goal.length < 5) {
@@ -339,8 +423,6 @@ Respond with a JSON object in the following format:
 
 Goal: "${goal}"
 `;
-
-  console.log('sending prompt to OpenAI:');
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
@@ -349,11 +431,8 @@ Goal: "${goal}"
     ],
     temperature: 0.5,
   });
-  
-  console.log('response recieved from OpenAI:', response);
       const raw = response.choices?.[0]?.message?.content;
       const taskList = JSON.parse(raw); // try-catch optional
-      console.log('AI tasks:', taskList);
       res.json({ taskList });
     } catch (err) {
       console.error('OpenAI error:', err);

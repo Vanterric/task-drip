@@ -6,6 +6,7 @@ export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
   const [isFirst100User, setIsFirst100User] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
+  const [isSubscribedToPushNotifications, setIsSubscribedToPushNotifications] = useState(false);
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -58,6 +59,7 @@ export function AuthProvider({ children }) {
         setUser(data);
         setIsFirst100User(data.isFirstHundredUser || false);
         setIsFirstTimeUser(data.isFirstTimeUser || false);
+        setIsSubscribedToPushNotifications(data?.pushSubscriptions?.length > 0);
       } catch (error) {
         console.error("Error fetching user:", error);
       }
@@ -105,7 +107,7 @@ export function AuthProvider({ children }) {
   };
   verifyToken();
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications }}>
       {children}
     </AuthContext.Provider>
   );

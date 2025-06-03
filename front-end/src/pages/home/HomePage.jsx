@@ -10,9 +10,11 @@ import TaskDripBadge from "../../components/TaskDripBadge";
 import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
 import { vibration } from "../../utilities/vibration";
 import FirstTimeUserTaskBreakdownModal from "../../components/FirstTimeUserTaskBreakDownModal";
+import PWAInstallBanner from "../../components/PWAInstallBanner";
+import PushNotificationBanner from "../../components/PushNotificationBanner";
 
 export default function HomePage() {
-  const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User } = useAuth();
+  const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
   const [activeTaskList, setActiveTaskList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -337,8 +339,8 @@ token={token}
   }}
 />
 
-
-
+<PWAInstallBanner />
+<PushNotificationBanner isSubscribedToPushNotifications={isSubscribedToPushNotifications} setIsSubscribedToPushNotifications={setIsSubscribedToPushNotifications}/>
     </div>
   );
 }

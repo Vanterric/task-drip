@@ -5,7 +5,6 @@ import PrivateRoute from "./components/PrivateRoute";
 import HomePage from "./pages/home/HomePage";
 import SubscribePage from "./pages/subscribe/SubscribePage";
 import { useEffect, useState } from "react";
-import PWAInstallBanner from "./components/PWAInstallBanner";
 import InAppBrowserBanner from "./components/InAppBrowserBanner";
 
 function App() {
@@ -38,7 +37,6 @@ function App() {
         <Route path="/" element={<Navigate to="/app" />} />
       </Routes>
     </Router>
-    <PWAInstallBanner />
     <InAppBrowserBanner />
     </>
   );
