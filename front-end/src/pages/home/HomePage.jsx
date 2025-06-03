@@ -11,7 +11,7 @@ import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
 import { vibration } from "../../utilities/vibration";
 
 export default function HomePage() {
-  const { token, user, wasDowngraded, setWasDowngraded } = useAuth();
+  const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User } = useAuth();
   const [activeTaskList, setActiveTaskList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -20,6 +20,9 @@ export default function HomePage() {
   const [taskLists, setTaskLists] = useState([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
+  
+
+  
 
   
 
@@ -54,6 +57,20 @@ export default function HomePage() {
   
     if (token) fetchData();
   }, [token]);
+
+  useEffect(() => {
+  const dismissed = localStorage.getItem('firstHundredBannerDismissed');
+  if (dismissed === 'true') {
+    setIsFirst100User(false);
+  }
+}, [isFirst100User, setIsFirst100User]);
+
+
+  const closeFirstHundredBanner = () => {
+  localStorage.setItem('firstHundredBannerDismissed', 'true');
+  setIsFirst100User(false);
+};
+
   
 
   const handleComplete = async (taskId) => {
@@ -98,6 +115,20 @@ export default function HomePage() {
           </button>
         </div>
       )}
+      {isFirst100User && (
+        <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
+          🎉 Whoa, look at you! You're one of the first 100 people to try DewList. 
+          To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered breakdowns.
+          Go wild (but like… one task at a time 😉)
+          <button
+            onClick={() => closeFirstHundredBanner()}
+            className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
+          >
+            ×
+          </button>
+        </div>
+      )}
+
       {/* Masthead */}
       <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 ">
   {/* TaskDrip branding + hamburger */}

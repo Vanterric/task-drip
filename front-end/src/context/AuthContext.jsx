@@ -4,6 +4,8 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
+  const [isFirst100User, setIsFirst100User] = useState(false);
+  const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -38,6 +40,33 @@ export function AuthProvider({ children }) {
       setWasDowngraded(true);
     }
   }, [user]);
+
+  useEffect(() => {
+    
+    const fetchUser = async () => {
+      if (!token) return;
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!res.ok) throw new Error("Failed to fetch user");
+        
+        const data = await res.json();
+        
+        setUser(data);
+
+        // Check if the user is one of the first 100 users
+        setIsFirst100User(data.isFirstHundredUser || false);
+        setIsFirstTimeUser(data.isFirstTimeUser || false);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+      }
+    };
+
+    fetchUser();
+  }, [token]);
   
 
 
@@ -78,7 +107,7 @@ export function AuthProvider({ children }) {
   };
   verifyToken();
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser }}>
       {children}
     </AuthContext.Provider>
   );

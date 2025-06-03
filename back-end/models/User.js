@@ -7,6 +7,8 @@ const UserSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   isLifeTimePro: { type: Boolean, default: false }, // For lifetime users
   proExpiresAt: { type: Date, default:null }, // For subscription users
+  isFirstHundredUser: { type: Boolean, default: false }, // For first 100 users
+  isFirstTimeUser: { type: Boolean, default: true }, // For first-time users
 });
 
 module.exports = mongoose.model('User', UserSchema);

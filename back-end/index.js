@@ -78,13 +78,24 @@ const verifyToken = (req, res, next) => {
     res.json({ valid: true, user: req.user });
   });
   
-  
   app.post('/auth/request-link', async (req, res) => {
     const { email } = req.body;
     const lowerCaseEmail = email.toLowerCase().trim();
     try {
       let user = await User.findOne({ email: lowerCaseEmail });
-      if (!user) user = await User.create({ email: lowerCaseEmail });
+      if (!user) {
+      const userCount = await User.countDocuments();
+      const isFirstHundredUser = userCount < 100;
+
+      user = await User.create({
+        email: lowerCaseEmail,
+        ...(isFirstHundredUser && {
+          isPro: true,
+          isFirstHundredUser: true,
+          proExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
+        })
+      });
+    }
   
       const token = jwt.sign(
         { email: user.email, id: user._id },
@@ -160,13 +171,21 @@ const verifyToken = (req, res, next) => {
   // user routes
   app.get('/user', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
-    res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt });
+    res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt });
   });
 
   
   app.post('/user/upgrade', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
     user.isPro = true;
+    await user.save();
+    res.json({ success: true });
+  });
+  
+  app.post('/user/noLongerFirstTime', verifyToken, async (req, res) => {
+    const user = await User.findById(req.user.id);
+    if (!user.isFirstTimeUser) return res.status(400).json({ error: "User is not a first-time user" });
+    user.isFirstTimeUser = false;
     await user.save();
     res.json({ success: true });
   });
