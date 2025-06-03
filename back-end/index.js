@@ -166,11 +166,11 @@ const verifyToken = (req, res, next) => {
       res.status(500).json({ error: "Failed to downgrade" });
     }
   });
-  
-  
+
   // user routes
   app.get('/user', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
+    console.log("User data:", user);
     res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt });
   });
 

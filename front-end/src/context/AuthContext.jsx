@@ -56,8 +56,6 @@ export function AuthProvider({ children }) {
         const data = await res.json();
         
         setUser(data);
-
-        // Check if the user is one of the first 100 users
         setIsFirst100User(data.isFirstHundredUser || false);
         setIsFirstTimeUser(data.isFirstTimeUser || false);
       } catch (error) {

@@ -9,6 +9,7 @@ import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
 import AITaskBreakdownModal from "../../components/AITaskBreakdownModal";
 import { vibration } from "../../utilities/vibration";
+import FirstTimeUserTaskBreakdownModal from "../../components/FirstTimeUserTaskBreakDownModal";
 
 export default function HomePage() {
   const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User } = useAuth();
@@ -20,6 +21,7 @@ export default function HomePage() {
   const [taskLists, setTaskLists] = useState([]);
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
+  const [showFirstTimeModal, setShowFirstTimeModal] = useState(false);
   
 
   
@@ -70,6 +72,16 @@ export default function HomePage() {
   localStorage.setItem('firstHundredBannerDismissed', 'true');
   setIsFirst100User(false);
 };
+
+useEffect(() => {
+  const checkFirstTime = async () => {
+    if (isFirstTimeUser) {
+      setShowFirstTimeModal(true);
+    }
+  };
+  checkFirstTime();
+}, [user]);
+
 
   
 
@@ -279,6 +291,7 @@ export default function HomePage() {
   }}
 />
 <AITaskBreakdownModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
+  <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => setShowFirstTimeModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
 token={token}
