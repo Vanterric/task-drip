@@ -59,7 +59,9 @@ export function AuthProvider({ children }) {
         setUser(data);
         setIsFirst100User(data.isFirstHundredUser || false);
         setIsFirstTimeUser(data.isFirstTimeUser || false);
-        setIsSubscribedToPushNotifications(data?.pushSubscriptions?.length > 0);
+         if (user?.pushSubscriptions) {
+          checkIfCurrentDeviceSubscribed(user.pushSubscriptions, setIsSubscribedToPushNotifications);
+        }
       } catch (error) {
         console.error("Error fetching user:", error);
       }
