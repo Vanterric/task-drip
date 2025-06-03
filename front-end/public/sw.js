@@ -12,7 +12,6 @@ self.addEventListener('fetch', (event) => {
 })
 
 self.addEventListener('push', function (event) {
-  console.log('🔥 Push received:', event);
   const data = event.data?.json() || {};
   
   const title = data.title || 'Hey, it’s DewList 👋';
@@ -38,7 +37,6 @@ self.addEventListener('notificationclick', function (event) {
   const { userId, url = '/', token } = event.notification.data || {};
 
   if (action === 'snooze') {
-    console.log('🔕 Snoozing push notification for user:', userId);
     event.waitUntil(
       fetch('https://task-drip.onrender.com/snoozePush', {
         method: 'POST',

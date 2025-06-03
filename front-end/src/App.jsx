@@ -15,10 +15,10 @@ function App() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
-          console.log('✅ Service worker registered', reg)
+          console.log('✅ Service worker registered')
         })
         .catch((err) => {
-          console.error('❌ Service worker registration failed', err)
+          console.error('❌ Service worker registration failed')
         })
     })
   }

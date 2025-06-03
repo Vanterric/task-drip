@@ -84,10 +84,6 @@ useEffect(() => {
   checkFirstTime();
 }, [user]);
 
-
-  console.log("Frontend VAPID Public Key:", import.meta.env.VITE_VAPID_PUBLIC_KEY);
-
-
   const handleComplete = async (taskId) => {
     vibration('button-press')
     const headers = {
