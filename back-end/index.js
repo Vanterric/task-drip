@@ -195,6 +195,61 @@ const getRandomMessage = () => {
   ];
   return messages[Math.floor(Math.random() * messages.length)];
 };
+/* const sendPushToUser = async () => {
+  try {
+
+    const userId = '6801516bb197a1b90012b487';
+    const user = await User.findById(userId);
+
+    if (!user) {
+      console.error('❌ User not found.');
+      return;
+    }
+
+    if (!user.pushSubscriptions || user.pushSubscriptions.length === 0) {
+      console.log('⚠️ User has no push subscriptions.');
+      return;
+    }
+
+    const payload = JSON.stringify({
+  title: "Hey, it’s DewList 👋",
+  body: getRandomMessage(),
+  url: '/', 
+  userId: user._id.toString(), 
+  badge: '/icons/icon-192.png', // Optional badge icon
+  icon: '/icons/icon-192.png', // Optional icon
+  actions: [
+    {
+      action: 'open-app',
+      title: '✨ Open DewList',
+      icon: '/icons/icon-192.png'
+    },
+    {
+      action: 'snooze',
+      title: '😴 Remind Me Later',
+      icon: '/icons/icon-192.png'
+    }
+  ],
+
+});
+
+
+    for (const sub of user.pushSubscriptions) {
+      try {
+        await webpush.sendNotification(sub, payload);
+        console.log(`✅ Sent push to ${sub.endpoint}`);
+      } catch (err) {
+        console.error(`❌ Failed push to ${sub.endpoint}:`, err.message);
+      }
+    }
+
+  } catch (err) {
+    console.error('Fatal error:', err);
+    process.exit(1);
+  }
+};
+
+sendPushToUser(); */
 
 sendPushNotifications = async () => {
   const users = await User.find({
@@ -258,7 +313,7 @@ app.post('/snoozePush', verifyToken, async (req, res) => {
 
     user.lastPushSentAt = null;
     await user.save();
-
+    console.log('✅ Snoozed push for user', user.email);
     res.json({ success: true });
   } catch (err) {
     console.error('❌ Failed to snooze push:', err);
