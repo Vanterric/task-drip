@@ -215,7 +215,7 @@ const getRandomMessage = () => {
   title: "Hey, it’s DewList 👋",
   body: getRandomMessage(),
   url: '/', 
-  userId: user._id.toString(), 
+  userId: userId, 
   badge: '/icons/icon-192.png', 
   icon: '/icons/icon-192.png', 
   actions: [

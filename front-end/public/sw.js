@@ -22,6 +22,7 @@ self.addEventListener('push', function (event) {
     badge: data.badge || null,
     data: {
       url: data.url || '/',
+      userId: data.userId || null,
     },
     actions: data.actions || []  };
 
