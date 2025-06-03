@@ -18,8 +18,8 @@ self.addEventListener('push', function (event) {
   const title = data.title || 'Hey, it’s DewList 👋';
   const options = {
     body: data.body || getRandomNudge(),
-    icon: '/icons/icon-192.png',
-    badge: '/icons/icon-192.png',
+    icon: data.icon || null,
+    badge: data.badge || null,
     data: {
       url: data.url || '/',
     },
@@ -45,12 +45,21 @@ self.addEventListener('push', function (event) {
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
   if (event.action === 'snooze') {
-    // Handle snooze logic here
-    console.log('🔕 Snooze clicked');
-    return;
+    event.waitUntil(
+      fetch('https://task-drip.onrender.com/snoozePush', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          // include auth token if needed
+        },
+        body: JSON.stringify({ userId: event.notification.data.userId }) // optional if your backend uses auth
+      }).catch(err => console.error('Failed to snooze:', err))
+    );
+  } else {
+    // Default action: open app
+    const urlToOpen = event.notification.data.url || '/';
+    event.waitUntil(clients.openWindow(urlToOpen));
   }
-  const urlToOpen = event.notification.data?.url || '/';
-  event.waitUntil(clients.openWindow(urlToOpen));
 });
 
 function getRandomNudge() {
