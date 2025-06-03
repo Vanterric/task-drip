@@ -196,7 +196,6 @@ const getRandomMessage = () => {
   return messages[Math.floor(Math.random() * messages.length)];
 };
 
-
 sendPushNotifications = async () => {
   const users = await User.find({
     lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
@@ -254,7 +253,7 @@ app.post('/subscribe', verifyToken, async (req, res) => {
 
 app.post('/snoozePush', verifyToken, async (req, res) => {
   try {
-    const user = await User.findById(req.user.id);
+    const user = await User.findById(req.userId);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
     user.lastPushSentAt = null;
@@ -266,9 +265,6 @@ app.post('/snoozePush', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-
-
 
   // user routes
   app.get('/user', verifyToken, async (req, res) => {

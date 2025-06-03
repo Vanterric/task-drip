@@ -44,23 +44,40 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
-  if (event.action === 'snooze') {
+
+  const { action } = event;
+  const { userId, url = '/' } = event.notification.data || {};
+
+  if (action === 'snooze') {
     event.waitUntil(
       fetch('https://task-drip.onrender.com/snoozePush', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          // include auth token if needed
+          // If using token auth, uncomment below:
+          // 'Authorization': `Bearer ${yourAuthToken}`
         },
-        body: JSON.stringify({ userId: event.notification.data.userId }) // optional if your backend uses auth
-      }).catch(err => console.error('Failed to snooze:', err))
+        body: JSON.stringify({ userId })
+      }).catch(err => {
+        console.error('❌ Failed to snooze push:', err);
+      })
     );
-  } else {
-    // Default action: open app
-    const urlToOpen = event.notification.data.url || '/';
-    event.waitUntil(clients.openWindow(urlToOpen));
+    return;
   }
+
+  // Default action: open or focus the app
+  event.waitUntil(
+    clients.matchAll({ type: 'window', includeUncontrolled: true }).then(windowClients => {
+      for (const client of windowClients) {
+        if (client.url.includes(url) && 'focus' in client) {
+          return client.focus();
+        }
+      }
+      return clients.openWindow(url);
+    })
+  );
 });
+
 
 function getRandomNudge() {
   const messages = [
