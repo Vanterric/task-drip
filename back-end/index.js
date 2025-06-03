@@ -252,6 +252,24 @@ app.post('/subscribe', verifyToken, async (req, res) => {
   }
 });
 
+app.post('/snoozePush', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+
+    user.lastPushSentAt = null;
+    await user.save();
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error('❌ Failed to snooze push:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+
+
+
   // user routes
   app.get('/user', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);

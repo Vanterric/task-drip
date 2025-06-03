@@ -18,11 +18,23 @@ self.addEventListener('push', function (event) {
   const title = data.title || 'Hey, it’s DewList 👋';
   const options = {
     body: data.body || getRandomNudge(),
-    icon: '/dewlist-icon.png',
-    badge: '/dewlist-icon.png',
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
     data: {
       url: data.url || '/',
     },
+    actions: [
+    {
+      action: 'open-app',
+      title: 'Open DewList',
+      icon: '/icons/icon-192.png',
+    },
+    {
+      action: 'snooze',
+      title: 'Remind Me Later',
+      icon: '/icons/icon-192.png',
+    }
+  ]
   };
 
   event.waitUntil(
@@ -32,6 +44,11 @@ self.addEventListener('push', function (event) {
 
 self.addEventListener('notificationclick', function (event) {
   event.notification.close();
+  if (event.action === 'snooze') {
+    // Handle snooze logic here
+    console.log('🔕 Snooze clicked');
+    return;
+  }
   const urlToOpen = event.notification.data?.url || '/';
   event.waitUntil(clients.openWindow(urlToOpen));
 });
