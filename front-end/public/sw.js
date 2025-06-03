@@ -37,6 +37,7 @@ self.addEventListener('notificationclick', function (event) {
   const { userId, url = '/' } = event.notification.data || {};
 
   if (action === 'snooze') {
+    console.log('🔕 Snoozing push notification for user:', userId);
     event.waitUntil(
       fetch('https://task-drip.onrender.com/snoozePush', {
         method: 'POST',
