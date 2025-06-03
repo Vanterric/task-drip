@@ -23,19 +23,7 @@ self.addEventListener('push', function (event) {
     data: {
       url: data.url || '/',
     },
-    actions: [
-    {
-      action: 'open-app',
-      title: 'Open DewList',
-      icon: '/icons/icon-192.png',
-    },
-    {
-      action: 'snooze',
-      title: 'Remind Me Later',
-      icon: '/icons/icon-192.png',
-    }
-  ]
-  };
+    actions: data.actions || []  };
 
   event.waitUntil(
     self.registration.showNotification(title, options)

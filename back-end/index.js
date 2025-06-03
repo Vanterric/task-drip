@@ -216,14 +216,9 @@ const getRandomMessage = () => {
   body: getRandomMessage(),
   url: '/', 
   userId: user._id.toString(), 
-  badge: '/icons/icon-192.png', // Optional badge icon
-  icon: '/icons/icon-192.png', // Optional icon
+  badge: '/icons/icon-192.png', 
+  icon: '/icons/icon-192.png', 
   actions: [
-    {
-      action: 'open-app',
-      title: '✨ Open DewList',
-      icon: '/icons/icon-192.png'
-    },
     {
       action: 'snooze',
       title: '😴 Remind Me Later',
