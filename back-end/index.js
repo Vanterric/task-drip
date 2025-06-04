@@ -304,12 +304,15 @@ app.post('/subscribe', verifyToken, async (req, res) => {
 app.post('/snoozePush', async (req, res) => {
   console.log('✅ Snoozed push for user', req.body.userId);
   try {
+    console.log('finding user with ID:', req.body.userId);
     const user = await User.findById(req.body.userId);
+    console.log('found user:', user);    
     if (!user) return res.status(404).json({ error: 'User not found' });
-
+    console.log('snoozing push for user:', user.email);
     user.lastPushSentAt = null;
+    console.log('setting lastPushSentAt to null for user:', user.email);
     await user.save();
-    
+    console.log('✅ Push snoozed successfully for user:', user.email);
     res.json({ success: true });
   } catch (err) {
     console.error('❌ Failed to snooze push:', err);
