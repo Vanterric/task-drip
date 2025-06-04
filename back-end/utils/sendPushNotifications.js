@@ -21,10 +21,14 @@ const getRandomMessage = () => {
 };
 
 sendPushNotifications = async () => {
+  console.log("Sending push notifications...");
   const users = await User.find({
-    lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) },
     $or: [
-      { lastPushSentAt: { $exists: false } },
+    {lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) }},
+    { lastActiveAt: null }
+    ],
+    $or: [
+      { lastPushSentAt: null },
       { lastPushSentAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
     ],
     pushSubscriptions: { $exists: true, $not: { $size: 0 } }
