@@ -4,6 +4,7 @@ const dotenv = require('dotenv');
 const sendPushNotifications = require('./utils/sendPushNotifications');
 
 (async () => {
+    console.log("📅 Cron job ran at", new Date().toLocaleString());
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to DB');
