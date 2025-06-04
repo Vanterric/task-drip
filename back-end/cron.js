@@ -1,7 +1,13 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
-
+const webpush = require( 'web-push');
 const sendPushNotifications = require('./utils/sendPushNotifications');
+
+webpush.setVapidDetails(
+  'mailto:hello@dewlist.app',
+  process.env.VAPID_PUBLIC_KEY,
+  process.env.VAPID_PRIVATE_KEY
+);
 
 (async () => {
     console.log("📅 Cron job ran at", new Date().toLocaleString());
