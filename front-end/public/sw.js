@@ -35,6 +35,7 @@ self.addEventListener('notificationclick', function (event) {
 
   const { action } = event;
   const { userId, url = '/'} = event.notification.data || {};
+  console.log('Notification action:', action, 'User ID:', userId, 'URL:', url);
 
   if (action === 'snooze') {
     event.waitUntil(
