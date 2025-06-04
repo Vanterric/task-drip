@@ -34,7 +34,7 @@ self.addEventListener('notificationclick', function (event) {
   event.notification.close();
 
   const { action } = event;
-  const { userId, url = '/', token } = event.notification.data || {};
+  const { userId, url = '/'} = event.notification.data || {};
 
   if (action === 'snooze') {
     event.waitUntil(
@@ -43,7 +43,7 @@ self.addEventListener('notificationclick', function (event) {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userId })
+        body: JSON.stringify({ userId: userId })
       }).catch(err => {
         console.error('❌ Failed to snooze push:', err);
       })
