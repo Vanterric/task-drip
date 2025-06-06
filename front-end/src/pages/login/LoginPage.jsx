@@ -1,9 +1,11 @@
 import { Check, CheckCircle, ChevronDown, Moon, RefreshCw, Sun } from "lucide-react";
-import { useContext, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { vibration } from "../../utilities/vibration";
 import DewList_Logo from "../../assets/DewList_Logo.png";
 import { ListTodo, Sparkles, Bot } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
+import { testimonials } from "./testimonials";
+import { mapRefferer } from "./referrerMap";
 
 export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
@@ -12,6 +14,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
   const [openIndex, setOpenIndex] = useState(null);
+  const referrer = localStorage.getItem("dewlist_ref") || "";
+  const [referrerName, setReferrerName] = useState("");
 
   const faqs = [
   {
@@ -47,6 +51,10 @@ export default function LoginPage() {
 ,
 ];
 
+useEffect(() => {
+  setReferrerName(referrer === "" ? "" : mapRefferer(referrer));
+}, [referrer])
+
 
   const toggle = (i) => {
     setOpenIndex(openIndex === i ? null : i);
@@ -63,7 +71,7 @@ export default function LoginPage() {
       const res = await fetch(`${BACKEND_URL}/auth/request-link`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({ email, referrer }),
       });
 
       const data = await res.json();
@@ -100,9 +108,9 @@ export default function LoginPage() {
         <h2 className="text-2xl md:text-3xl font-semibold text-[#4F5962] dark:text-white mb-4 text-center transition">
           One task at a time.
         </h2>
-        <p className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 text-center max-w-2xl  transition max-[540px]:text-sm">
-          DewList helps ADHD brains focus by showing <br/> just one task at a time. No clutter. No chaos. Just clarity.
-        </p>
+        <div className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 text-center max-w-2xl  transition max-[540px]:text-sm">
+          {referrerName!=="" ? <div>{referrerName} thinks you'll love this. <i>We do too.</i><br/><br/></div> : ""} DewList helps ADHD brains focus by showing <br/> just one task at a time. No clutter. No chaos. Just clarity.
+        </div>
         <button
           onClick={() => {
             vibration("button-press");
@@ -216,38 +224,7 @@ export default function LoginPage() {
     What people are saying
   </h2>
   <div className="max-w-5xl mx-auto grid gap-8 md:grid-cols-3">
-    {[
-  {
-    name: "Davie, 21",
-    role: "CS Master's Student",
-    quote: "Overall, it's clean. I love it. I love the glowing hover, amazing animations - small details like that make a difference."
-  },
-  /* {
-    name: "Ruthie, 60",
-    role: "Real Estate Agent",
-    quote: "I asked for dark mode. I got dark mode (And it looks soooooo good). Talk about excellent customer service!"
-  }, */
-  {
-    name: "Brandon, 25",
-    role: "Marketing at DewList",
-    quote: "Been Pro for months. Never used the AI. I’m too stubborn. But one task at a time? That’s the kind of micromanagement I can handle."
-  },
-  /* {
-    name: "David, 57",
-    role: "Healthcare Executive",
-    quote: "For home-based tasks on mobile, DewList is the best. Very easy to use, and completing tasks feels rewarding. Keep it up!"
-  }, */
-  /* {
-    name: "Sara, 28",
-    role: "Designer",
-    quote: "I love the simplicity. I can focus on one task at a time without getting overwhelmed. The design is clean and easy to use."
-  }, */
-  {
-    name: "Derrick, 30",
-    role: "Founder of DewList",
-    quote: "I used DewList to build DewList! Super helpful. And my favorite feature? The haptics for sure. I’m a sucker for a good buzz."
-  }     
-    ].map(({ name, role, quote }, i) => (
+    {testimonials.map(({ name, role, quote }, i) => (
       <div
         key={i}
         className="bg-white dark:bg-[#4F5962] border border-[#E0ECFC] dark:border-[#4F596240] rounded-3xl p-6 shadow-md flex flex-col justify-between transition"

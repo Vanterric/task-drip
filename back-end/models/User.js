@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema({
   },
   lastActiveAt: { type: Date, default: Date.now }, 
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
+  referrer: { type: String, default: null }, // Referrer code
 });
 
 module.exports = mongoose.model('User', UserSchema);

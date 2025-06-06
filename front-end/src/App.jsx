@@ -25,16 +25,29 @@ function App() {
 }, [])
 
 
+
+
+const location = window.location;
+
+useEffect(() => {
+  console.log('Checking for referral code in URL');
+  const params = new URLSearchParams(location.search);
+  const refCode = params.get('referral');
+  console.log('Referral code found:', refCode);
+  if (refCode) {
+    localStorage.setItem('dewlist_ref', refCode);
+  }
+}, []);
   
   return (
     <>
     <Router>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route path={`/login`} element={<LoginPage />} />
         <Route path="/unlock" element={<UnlockPage />} />
         <Route path="/app" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/subscribe" element={<PrivateRoute><SubscribePage /></PrivateRoute>} />
-        <Route path="/" element={<Navigate to="/app" />} />
+        <Route path="/" element={<Navigate to={`/app${location.search}`} />} />
       </Routes>
     </Router>
     <InAppBrowserBanner />

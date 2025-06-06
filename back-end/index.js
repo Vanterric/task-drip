@@ -83,7 +83,7 @@ const verifyToken = (req, res, next) => {
   });
   
   app.post('/auth/request-link', async (req, res) => {
-    const { email } = req.body;
+    const { email, referrer } = req.body;
     const lowerCaseEmail = email.toLowerCase().trim();
     try {
       let user = await User.findOne({ email: lowerCaseEmail });
@@ -93,6 +93,7 @@ const verifyToken = (req, res, next) => {
 
       user = await User.create({
         email: lowerCaseEmail,
+        referrer: referrer || null, // Store referrer if provided
         ...(isFirstHundredUser && {
           isPro: true,
           isFirstHundredUser: true,
