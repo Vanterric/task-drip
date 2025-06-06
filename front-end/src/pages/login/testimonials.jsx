@@ -2,7 +2,7 @@ export const testimonials = [
     /* {
     name: "Alice",
     role: "ADHD Coach & Specialist",
-    quote:"No one can multitask, we just have to focus on getting something done. DewList’s simple, single-task design is perfect for neurodivergent minds."
+    quote:"No one can multitask. We just have to focus on getting something done. DewList’s simple, single-task design is perfect for neurodivergent minds."
     }, */
   {
     name: "Davie",
