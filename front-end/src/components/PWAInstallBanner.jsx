@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 const INSTALL_DISMISSED_KEY = 'dewlist_install_dismissed_at'
 const INSTALL_ACCEPTED_KEY = 'dewlist_installed_at'
@@ -23,6 +24,7 @@ const isInStandalone = () =>
 export default function PWAInstallBanner() {
   const [deferredPrompt, setDeferredPrompt] = useState(null)
   const [bannerType, setBannerType] = useState(null) // 'install' | 'postinstall' | 'ios'
+  const {isFirstTimeUser} = useAuth();
 
   useEffect(() => {
     // Don't show anything if already in standalone mode
@@ -72,7 +74,7 @@ export default function PWAInstallBanner() {
     setBannerType(null)
   }
 
-  if (!bannerType || bannerType === 'ios') return null
+  if (!bannerType || bannerType === 'ios' || isFirstTimeUser) return null
 
   return (
     <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
