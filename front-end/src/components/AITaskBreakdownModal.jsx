@@ -6,6 +6,21 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
+  const dailyPromptMap = {
+  "Monday": "Happy Monday! What’s one thing that would help you start the week on solid ground?",
+  "Tuesday": "Hey, it’s Tuesday. What’s something that’s been floating in your brain because you’re not sure where to begin?",
+  "Wednesday": "Happy hump day! What’s a task that feels messy, complex, or hard to untangle right now?",
+  "Thursday": "It’s Thursday! Almost there. What’s one thing you’ve been circling around that needs some clarity or smaller steps?",
+  "Friday": "Happy Friday! What’s something you’d like to wrap up before the weekend, but still feels a little foggy?",
+  "Saturday": "Look at you being productive during the weekend! What’s something you’d like to make progress on, but you’re not sure how to get started?",
+  "Sunday": "Sunday Funday! What’s coming up next week that feels too big or vague to plan for? Let’s get ahead of it together."
+}
+
+
+
+
+    const today = new Date();
+    const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
 
   const handleSubmit = async () => {
     if (!goal.trim()) return;
@@ -98,7 +113,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
 
         <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1 cursor-default">AI Task Breakdown</h2>
         <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
-          Describe your goals and have AI break it down into a task list.
+          {dailyPromptMap[dayOfWeek]}
         </p>
 
         <textarea

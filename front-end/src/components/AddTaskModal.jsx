@@ -4,6 +4,19 @@ import { vibration } from "../utilities/vibration";
 export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
   const [taskText, setTaskText] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const dailyPromptMap = {
+  "Monday": "Happy Monday! What’s one small step you can take today to set a kind tone for your week?",
+  "Tuesday": "Hey, it’s Tuesday. What’s one thing that’s been floating around in your brain you’d feel better nudging forward?",
+  "Wednesday": "Happy Hump Day! What’s one task that would make the rest of your week feel more manageable or smooth?",
+  "Thursday": "It’s Thursday! Almost there! What’s one meaningful thing you’d like to make progress on before the week wraps up?",
+  "Friday": "Happy Friday! What’s one thing you could close out today to give yourself a cleaner break heading into the weekend?",
+  "Saturday": "Hello, weekend. What’s one light or satisfying task that feels doable and good for *you* today?",
+  "Sunday": "It’s Sunday. What’s one low-effort move that could make next week feel calmer, clearer, or more grounded?"
+}
+
+
+    const today = new Date();
+    const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -22,6 +35,9 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
         <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default">Add a new task</h2>
+        <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
+          {dailyPromptMap[dayOfWeek]}
+        </p>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4">
           <input
             type="text"
