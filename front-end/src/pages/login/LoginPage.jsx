@@ -6,6 +6,8 @@ import { ListTodo, Sparkles, Bot } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { testimonials } from "./testimonials";
 import { mapRefferer } from "./referrerMap";
+import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+
 
 export default function LoginPage() {
   const [showModal, setShowModal] = useState(false);
@@ -382,6 +384,12 @@ useEffect(() => {
     Designed to reduce overwhelm, boost focus, and help neurodivergent users tackle one task at a time, without distractions or decision fatigue.
   
   </p>
+  <div className="flex gap-4 mt-0">
+    <FaInstagram className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://instagram.com/dewlist.app', '_blank')} />
+    <FaFacebook className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://www.facebook.com/dewlistapp', '_blank')}/>
+    <FaLinkedin className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://www.linkedin.com/company/dewlist', '_blank')}/>
+  </div>
+  
   <p>
     <a
       href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing"
