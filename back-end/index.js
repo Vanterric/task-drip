@@ -226,7 +226,7 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [] });
+    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [] });
   });
 
   
@@ -241,9 +241,17 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user.isFirstTimeUser) return res.status(400).json({ error: "User is not a first-time user" });
     user.isFirstTimeUser = false;
+    user.lastActiveAt = new Date();
     await user.save();
     res.json({ success: true });
   });
+
+  app.post('/user/setLastActiveAt', verifyToken, async (req, res) => {
+    const user = await User.findById(req.user.id);
+    user.lastActiveAt = new Date();
+    user.save();
+    res.json({ success: true });
+  })
 
   
   // tasklist routes
@@ -261,6 +269,8 @@ app.post('/snoozePush', async (req, res) => {
     const { name, icon = "clipboard-check" } = req.body;
   
     const list = await TaskList.create({ userId: req.user.id, name, icon });
+    user.lastActiveAt = new Date();
+    user.save();
     res.json(list);
   });
 
@@ -315,6 +325,8 @@ app.post('/snoozePush', async (req, res) => {
     if (!user.isPro && taskCount >= 5) return res.status(403).json({ error: 'Free tier limit' });
   
     const task = await Task.create({ tasklistId, content: req.body.content });
+    user.lastActiveAt = new Date();
+    user.save();
     res.json(task);
   });
 

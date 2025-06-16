@@ -12,6 +12,7 @@ import { vibration } from "../../utilities/vibration";
 import FirstTimeUserTaskBreakdownModal from "../../components/FirstTimeUserTaskBreakDownModal";
 import PWAInstallBanner from "../../components/PWAInstallBanner";
 import PushNotificationBanner from "../../components/PushNotificationBanner";
+import { setLastActiveAt } from "../../utilities/setLastActiveAt";
 
 export default function HomePage() {
   const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
@@ -85,6 +86,7 @@ useEffect(() => {
 }, [user]);
 
   const handleComplete = async (taskId) => {
+    setLastActiveAt(user);
     vibration('button-press')
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -102,6 +104,7 @@ useEffect(() => {
   };
 
   const handleSkip = (taskId) => {
+    setLastActiveAt(user);
     vibration('button-press')
     const index = tasks.findIndex((t) => t._id === taskId);
     const reordered = [...tasks];
