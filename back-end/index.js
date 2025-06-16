@@ -90,15 +90,28 @@ const verifyToken = (req, res, next) => {
       if (!user) {
       const userCount = await User.countDocuments();
       const isFirstHundredUser = userCount < 100;
+      let proExpiresAt = null;
+
+        if (isFirstHundredUser) {
+          proExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+        }
+
+        if (referrer) {
+          if (proExpiresAt) {
+            proExpiresAt = new Date(proExpiresAt.getTime() + 30 * 24 * 60 * 60 * 1000);
+          } else {
+            proExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
+          }
+        }
+
+      const isPro = isFirstHundredUser || !!referrer;
 
       user = await User.create({
         email: lowerCaseEmail,
         referrer: referrer || null, // Store referrer if provided
-        ...(isFirstHundredUser && {
-          isPro: true,
-          isFirstHundredUser: true,
-          proExpiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days from now
-        })
+        proExpiresAt: proExpiresAt,
+        isPro: isPro,
+        isFirstHundredUser: isFirstHundredUser,
       });
     }
   
