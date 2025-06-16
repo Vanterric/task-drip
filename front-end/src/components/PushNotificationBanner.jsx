@@ -38,9 +38,9 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
     localStorage.setItem('pushBannerDismissedAt', new Date().toISOString());
     setShowBanner(false);
   };
+  const device = getDeviceLabel();
 
   const handleSubscribe = async () => {
-    const device = getDeviceLabel();
     const subscribed = await subscribeToPush(device);
     if (subscribed) {
       setIsSubscribedToPushNotifications(true);
@@ -48,7 +48,7 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
     }
   };
 
-  if (!showBanner) return null;
+  if (!showBanner || device === 'ios' || device === 'mac') return null;
 
   return (
     <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">

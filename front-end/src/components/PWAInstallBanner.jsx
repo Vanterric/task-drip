@@ -72,7 +72,7 @@ export default function PWAInstallBanner() {
     setBannerType(null)
   }
 
-  if (!bannerType) return null
+  if (!bannerType || bannerType === 'ios') return null
 
   return (
     <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
@@ -108,16 +108,6 @@ export default function PWAInstallBanner() {
             </button>
             )}
 
-        </>
-
-        )}
-
-        {bannerType === 'ios' && (
-          <>
-            <p className="font-semibold text-base cursor-default">Want DewList on your home screen?</p>
-            <p className="text-sm opacity-90 cursor-default">
-                Tap the <span className="font-bold">Share</span> icon <span className="italic">(the little square with the arrow)</span>, then hit <span className="font-bold">“Add to Home Screen.”</span> Boom — no more tab juggling.
-            </p>
         </>
 
         )}
