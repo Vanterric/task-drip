@@ -10,6 +10,7 @@ import dewListIcon from "../assets/DewList_Icon.png";
 import FeedbackModal from "./FeedbackModal";
 import LucideIcon from "./LucideIcon";
 import IconPickerModal from "./IconPickerModal";
+import { handleUpdateIcon } from "../utilities/handleUpdateIcon";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal }) {
@@ -112,31 +113,7 @@ useEffect(() => {
     setShowInput(false);
   };
   
-const handleUpdateIcon = async (listId, icon) => {
-  const headers = {
-    Authorization: `Bearer ${token}`,
-    "Content-Type": "application/json",
-  };
 
-  try {
-    const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${listId}`, {
-      method: "PUT",
-      headers,
-      body: JSON.stringify({ icon }),
-    });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error?.error || "Failed to update icon");
-    }
-
-    const updatedList = await response.json();
-    return updatedList;
-  } catch (err) {
-    console.error("Icon update failed:", err.message);
-    throw err;
-  }
-};
 
   const refetchTaskListsOrUpdateUI = async () => {
     try {
@@ -162,6 +139,7 @@ const handleUpdateIcon = async (listId, icon) => {
           { headers }
         );
         const updatedTasks = await taskRes.json();
+        
         setTasks(updatedTasks);
       } else {
         // Fallback: set first available list as active
@@ -390,7 +368,7 @@ if (activeTaskList?._id === listToDelete._id) {
   token={token}
   onSave={refetchTaskListsOrUpdateUI}
 />
-{isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon); setTaskLists((prev ) => prev.map((list => list._id === listId ? {...list, icon:icon}: list)));}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
+{isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon, token, setTaskLists);}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
 
 {isFeedbackModalOpen ? <FeedbackModal onClose={()=>setIsFeedbackModalOpen(false)}/>:null}
     </div>

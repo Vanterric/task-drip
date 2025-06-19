@@ -1,8 +1,10 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
+import getRelevantIcon from '../utilities/getRelevantIcon';
+import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 
-export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists }) {
+export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
@@ -37,7 +39,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         body: JSON.stringify({ goal }),
       });
   
-      const { taskList } = await res.json(); // from AI backend: { title, tasks: [...] }
+      const { taskList } = await res.json();
   
       // 2. Create new task list
       const listRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
@@ -46,7 +48,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
-        body: JSON.stringify({ name: taskList.title }),
+        body: JSON.stringify({ name: taskList.title, creationPrompt:goal  }),
       });
   
       const newTaskList = await listRes.json();
@@ -83,7 +85,11 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       );
       
       const savedTasks = await taskRes.json();
+      const newIcon = await getRelevantIcon(goal)
+      if (newIcon) handleUpdateIcon(newTaskList._id, newIcon, token, setTaskLists);
+      setFinalTask(savedTasks[savedTasks.length - 1]);
       setTasks(savedTasks);
+      
       onClose();
     } catch (err) {
       console.error('Error handling AI task breakdown:', err);

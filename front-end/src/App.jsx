@@ -15,7 +15,7 @@ function App() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
-          console.log('✅ Service worker registered')
+          console.log('✅ Service worker registered', reg);
         })
         .catch((err) => {
           console.error('❌ Service worker registration failed')
@@ -30,10 +30,8 @@ function App() {
 const location = window.location;
 
 useEffect(() => {
-  console.log('Checking for referral code in URL');
   const params = new URLSearchParams(location.search);
   const refCode = params.get('referral');
-  console.log('Referral code found:', refCode);
   if (refCode) {
     localStorage.setItem('dewlist_ref', refCode);
   }

@@ -13,6 +13,8 @@ import FirstTimeUserTaskBreakdownModal from "../../components/FirstTimeUserTaskB
 import PWAInstallBanner from "../../components/PWAInstallBanner";
 import PushNotificationBanner from "../../components/PushNotificationBanner";
 import { setLastActiveAt } from "../../utilities/setLastActiveAt";
+import getRelevantIcon from "../../utilities/getRelevantIcon";
+import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 
 export default function HomePage() {
   const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
@@ -25,6 +27,9 @@ export default function HomePage() {
   const [showUpgradeModal, setShowUpgradeModal] = useState(false);
   const [showAIModal, setShowAIModal] = useState(false);
   const [showFirstTimeModal, setShowFirstTimeModal] = useState(false);
+  const [finalTask, setFinalTask] = useState(null);
+  const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
+  const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
   
 
   
@@ -46,12 +51,14 @@ export default function HomePage() {
   
         setTaskLists(lists);
         setActiveTaskList(lists[0]); // pick the first list
-  
+        
+        setFinalTask(lists[0][-1])
         const resTasks = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${lists[0]._id}`,
           { headers }
         );
         const taskData = await resTasks.json();
+        setFinalTask(taskData[taskData.length -1])
         setTasks(taskData);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -106,6 +113,14 @@ useEffect(() => {
   const handleSkip = (taskId) => {
     setLastActiveAt(user);
     vibration('button-press')
+    if (finalTask && taskId === finalTask._id && !isSkippedThroughAlertShown) {
+      setIsSkippedThroughAlertShown(true);
+      return
+    }
+    if (isSkippedThroughAlertShown) {
+      setIsSkippedThroughAlertShown(false);
+
+    }    
     const index = tasks.findIndex((t) => t._id === taskId);
     const reordered = [...tasks];
     const [skipped] = reordered.splice(index, 1);
@@ -172,7 +187,33 @@ useEffect(() => {
       <div className="flex-grow flex flex-col items-center justify-center px-4">
         {loading ? (
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
-        ) : !activeTaskList || tasks.length === 0 ? (
+        ) : isSkippedThroughAlertShown ? 
+        <div className="w-full max-w-md text-center space-y-6">
+        <div className="bg-[#F6DFD3] dark:bg-[#2D3545] rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
+          <p>End of List</p><p>Click skip to start over</p>
+          </div> 
+          <div className="flex gap-4 justify-center">
+            <button
+            onClick={() => handleComplete(nextTask._id)}
+            className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+          >
+            <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+            Done
+          </button>
+
+              <button
+                onClick={() => handleSkip(nextTask._id)}
+                className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+              >
+                <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
+                Skip
+              </button>
+
+            </div>
+
+            <ProgressBar completedCount={completedCount} tasks={tasks} />
+          </div>
+        : !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-[#91989E] text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
@@ -279,6 +320,7 @@ useEffect(() => {
     });
   
     const newTask = await taskRes.json();
+    setFinalTask(newTask)
     setTasks((prev) => [...prev, newTask]);
   }}
   
@@ -292,7 +334,7 @@ useEffect(() => {
     window.location.href = '/subscribe'; // or whatever your route is
   }}
 />
-<AITaskBreakdownModal isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
+<AITaskBreakdownModal token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask}/>
   <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => setShowFirstTimeModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
@@ -315,6 +357,8 @@ token={token}
       }}
     );
     const taskData = await res.json();
+    setFinalTask(taskData[taskData.length -1])
+    setIsSkippedThroughAlertShown(false);
     setTasks(taskData);
   }}
   onAddTaskList={async (name) => {
@@ -335,6 +379,8 @@ token={token}
     const newList = await res.json();
     setTaskLists((prev) => [...prev, newList]);
     setActiveTaskList(newList);
+    const newIcon = await getRelevantIcon(name)
+    if (newIcon) handleUpdateIcon(newList._id, newIcon, token, setTaskLists);
     setTasks([]);
   }}
 />

@@ -7,6 +7,7 @@ const jwt = require('jsonwebtoken');
 const User = require('./models/User');
 const TaskList = require('./models/TaskList');
 const Task = require('./models/Task');
+const Icon = require('./models/Icon');
 const app = express();
 const {Resend} = require('resend');
 const { OpenAI } = require('openai');
@@ -15,6 +16,8 @@ app.use(cors({
 }));
 
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
+const { systemPromptTaskBreakdown } = require('./system-prompts/systemPromptTaskBreakdown');
+const saveCreationPrompt = require('./utils/saveCreationPrompt');
 
 
 mongoose.connect(process.env.MONGO_URI)
@@ -276,12 +279,15 @@ app.post('/snoozePush', async (req, res) => {
   app.post('/tasklists', verifyToken, async (req, res) => {
     const count = await TaskList.countDocuments({ userId: req.user.id });
     const user = await User.findById(req.user.id);
+    const creationPrompt = req.body.creationPrompt;
+    
   
     if (!user.isPro && count >= 3) return res.status(403).json({ error: 'Free tier limit reached' });
 
     const { name, icon = "clipboard-check" } = req.body;
   
     const list = await TaskList.create({ userId: req.user.id, name, icon });
+    await saveCreationPrompt(list._id, creationPrompt);
     user.lastActiveAt = new Date();
     user.save();
     res.json(list);
@@ -328,8 +334,7 @@ app.post('/snoozePush', async (req, res) => {
     const tasks = await Task.find({ tasklistId });
     res.json(tasks);
   });
-  
-  
+
   app.post('/tasks', verifyToken, async (req, res) => {
     const tasklistId = req.body.tasklistId;
     const user = await User.findById(req.user.id);
@@ -400,40 +405,79 @@ app.post('/snoozePush', async (req, res) => {
     }
   
     try {
-      const prompt = `
-You're an intelligent productivity assistant.
-
-Break down the following goal into 5–10 clear, actionable tasks. Then, suggest a short, descriptive title for this task list.
-
-Respond with a JSON object in the following format:
-
-{
-  "title": "Short, helpful title",
-  "tasks": [
-    { "content": "First task" },
-    { "content": "Second task" }
-    ...
-  ]
-}
-
-Goal: "${goal}"
+      const prompt = `Here is the user's goal:
+      Goal: "${goal}"
 `;
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
     messages: [
-      { role: 'system', content: 'You are a helpful productivity assistant.' },
+      { role: 'system', content: systemPromptTaskBreakdown},
       { role: 'user', content: prompt },
     ],
     temperature: 0.5,
   });
       const raw = response.choices?.[0]?.message?.content;
       const taskList = JSON.parse(raw); // try-catch optional
+      console.log('AI task breakdown result:', taskList);
+      
       res.json({ taskList });
     } catch (err) {
       console.error('OpenAI error:', err);
       res.status(500).json({ error: 'AI breakdown failed.' });
     }
   });
+
+  // semantically choose an icon
+  app.get('/icon', async (req, res) => {
+  const { prompt } = req.query;
+
+  if (!prompt || prompt.length < 2) {
+    return res.status(400).json({ error: 'Missing or invalid prompt' });
+  }
+
+  try {
+    // Step 1: Get embedding for the user's prompt
+    const embedRes = await openai.embeddings.create({
+      model: 'text-embedding-ada-002',
+      input: prompt,
+    });
+
+    const queryEmbedding = embedRes.data[0].embedding;
+
+    // Step 2: MongoDB vector search
+    const results = await Icon.aggregate([
+      {
+        $vectorSearch: {
+          index: 'icon_embedding_index',
+          path: 'embedding',
+          queryVector: queryEmbedding,
+          numCandidates: 100,
+          limit: 1  // ← must be inside here!
+        }
+      },
+      {
+        $project: {
+          _id: 0,
+          name: 1,
+          description: 1,
+          tags: 1,
+          score: { $meta: 'vectorSearchScore' }
+        }
+      }
+    ]);
+
+
+
+    if (!results.length) {
+      return res.status(404).json({ error: 'No matching icon found' });
+    }
+
+    res.json({ icon: results[0] });
+  } catch (err) {
+    console.error('🔥 Icon search error:', err.message);
+    res.status(500).json({ error: 'Failed to retrieve matching icon' });
+  }
+});
 
 
   // send feedback endpoint
