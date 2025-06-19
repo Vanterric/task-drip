@@ -1,6 +1,8 @@
 import { X } from 'lucide-react';
 import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
+import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
+import getRelevantIcon from '../utilities/getRelevantIcon';
 
 export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists }) {
   if (!isOpen) return null;
