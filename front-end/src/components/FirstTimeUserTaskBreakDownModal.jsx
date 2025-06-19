@@ -82,7 +82,8 @@ export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setAc
 
       const savedTasks = await taskRes.json();
       setTasks(savedTasks);
-
+      const newIcon = await getRelevantIcon(goal)
+      if (newIcon) handleUpdateIcon(newTaskList._id, newIcon, localStorage.getItem('authToken'), setTaskLists);
       // 5. Mark user as no longer first-time
       await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/noLongerFirstTime`, {
         method: 'POST',
