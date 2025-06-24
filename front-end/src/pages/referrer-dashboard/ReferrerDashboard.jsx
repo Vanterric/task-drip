@@ -94,7 +94,7 @@ if (!user.isReferrer) {
       <hr className="my-6 border-gray-300" />
       <div  className="mt-10 mb-10">
         <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month 🌱</h2>
-        {showSignUpsDetails ? <p className="text-xs italic flex justify-center mt-1">{signUpsLastMonth > 0 ? `${Math.abs(((signUpsThisMonth - signUpsLastMonth) / signUpsLastMonth) * 100).toFixed(1)}% from last month` : 'No signups last month to compare'}</p>  : null}
+        {showSignUpsDetails ? <p className="text-xs italic flex justify-center mt-1 text-center">{signUpsLastMonth > 0 ? `${Math.abs(((signUpsThisMonth - signUpsLastMonth) / signUpsLastMonth) * 100).toFixed(1)}% from last month` : 'No signups last month to compare'}</p>  : null}
         <div className="flex items-center gap-0 justify-center mt-5">
           <p className="text-2xl m-1">{signUpsThisMonth}</p>
           {signUpsLastMonth > 0 ? (
@@ -119,7 +119,7 @@ if (!user.isReferrer) {
       <hr className="my-6 border-gray-300" />
       <div  className="mt-10 mb-10">
         <h2 className="text-xl font-semibold mb2 flex justify-center">Active Users This Month 🫧</h2>
-        {showActiveUsersDetails ? <p className="text-xs italic flex justify-center mt-1">User is considered active if they used DewList in the past 30 days.</p> : null}
+        {showActiveUsersDetails ? <p className="text-xs italic flex justify-center mt-1 text-center">User is considered active if they used DewList in the past 30 days.</p> : null}
         <div className="flex items-center gap-0 justify-center mt-5">
           <p className="text-2xl m-1">{activeUsersThisMonth}</p>
     <span
