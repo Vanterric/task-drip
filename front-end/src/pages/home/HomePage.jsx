@@ -131,6 +131,48 @@ useEffect(() => {
   const nextTask = tasks.find((t) => !t.isComplete);
   const completedCount = tasks.filter((t) => t.isComplete).length;
 
+  function formatResetSchedule({ number, cadence, startDate }) {
+  const date = new Date(startDate);
+  const isSingle = number === 1;
+
+  const time = date.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit', hour12: true });
+  const weekday = date.toLocaleDateString(undefined, { weekday: 'long' });
+  const month = date.toLocaleDateString(undefined, { month: 'long' });
+
+  // Calculate ordinal week index
+  const dayOfMonth = date.getDate();
+  const weekOfMonth = Math.ceil(dayOfMonth / 7);
+
+  const ordinal = ['1st', '2nd', '3rd', '4th', '5th'][weekOfMonth - 1] || `${weekOfMonth}th`;
+
+  if (cadence === 'days') {
+    return isSingle
+      ? `Resets every day at ${time}`
+      : `Resets every ${number} days at ${time}`;
+  }
+
+  if (cadence === 'weeks') {
+    return isSingle
+      ? `Resets every week on ${weekday}`
+      : `Resets every ${number} weeks on ${weekday}`;
+  }
+
+  if (cadence === 'months') {
+    return isSingle
+      ? `Resets every month on the ${ordinal} ${weekday}`
+      : `Resets every ${number} months on the ${ordinal} ${weekday}`;
+  }
+
+  if (cadence === 'years') {
+    return isSingle
+      ? `Resets every year on the ${ordinal} ${weekday} of ${month}`
+      : `Resets every ${number} years on the ${ordinal} ${weekday} of ${month}`;
+  }
+
+  return '';
+}
+
+
   return (
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
       {wasDowngraded && (
@@ -161,7 +203,7 @@ useEffect(() => {
       {/* Masthead */}
       <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 ">
   {/* TaskDrip branding + hamburger */}
-  <div className="flex items-center justify-between px-4 py-4 w-full">
+  <div className="flex items-start justify-between px-4 py-4 w-full">
   {/* Left: Branding */}
   <div className="flex items-center space-x-2">
     <button
@@ -177,9 +219,20 @@ useEffect(() => {
   </div>
 
   {/* Right: Active task list name */}
-  <h1 className="text-2xl font-bold text-right truncate max-w-[60%] cursor-default">
+  <div className="flex-grow flex flex-col items-end justify-start max-w-[70%]">
+  <h1 className="text-2xl font-bold text-right truncate cursor-default max-w-[100%]">
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
+  {activeTaskList.resetSchedule && activeTaskList.resetSchedule.number && (
+    <div className="ml-4 text-sm text-[#91989E] dark:text-[#A1A8B0] cursor-default text-right">
+      {activeTaskList.resetSchedule.startDate && (
+        <span className="ml-2 text-xs text-[#4BAF8E] dark:text-[#A1A8B0]">
+          {formatResetSchedule(activeTaskList.resetSchedule)}
+        </span>
+      )}
+      </div>
+  )}
+  </div>
 </div>
 </div>
 
