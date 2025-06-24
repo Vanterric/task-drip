@@ -50,7 +50,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
       {
         isPro: true,
         isLifeTimePro: intent.metadata?.plan === 'lifetime',
-        proExpiresAt: intent.metadata?.plan === 'lifetime' ? null : Date.now() + 1000 * 60 * 60 * 24 * 30 // or Stripe's subscription end
+        proExpiresAt: intent.metadata?.plan === 'lifetime' ? null : Date.now() + 1000 * 60 * 60 * 24 * 30, // or Stripe's subscription end
+        proSubscriptionType: intent.metadata?.plan || 'monthly',
+        lastDatePaid: Date.now(),
       }
     );
   }
@@ -242,7 +244,7 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [] });
+    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer });
   });
 
   
@@ -517,5 +519,34 @@ app.post('/snoozePush', async (req, res) => {
   } catch (err) {
     console.error("Failed to send feedback email:", err);
     res.status(500).json({ error: "Failed to send feedback." });
+  }
+});
+
+
+//referrer endpoints
+app.get('/getReferredUsers', async (req, res) => {
+  const { referrer } = req.query;
+  if (!referrer) {
+    return res.status(400).json({ error: 'Missing referrer parameter' });
+  }
+  // if referrer is derrickgallegos, get all users
+  
+  if (referrer === 'derrickgallegos') {
+    try {
+      const users = await User.find().select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType').lean();
+      return res.json({ users });
+    } catch (err) {
+      console.error('Error fetching all users:', err);
+      return res.status(500).json({ error: 'Server error' });
+    }
+  }
+
+  // if referrer is anyone else, get just their referred users
+  try {
+    const users = await User.find({ referrer }).select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType').lean();
+    res.json({ users });
+  } catch (err) {
+    console.error('Error fetching referred users:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });

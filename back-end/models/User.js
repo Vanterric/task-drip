@@ -6,7 +6,9 @@ const UserSchema = new mongoose.Schema({
   magicToken: { type: String }, // Short-lived token for login
   createdAt: { type: Date, default: Date.now },
   isLifeTimePro: { type: Boolean, default: false }, // For lifetime users
-  proExpiresAt: { type: Date, default:null }, // For subscription users
+  proExpiresAt: { type: Date, default:null }, // For subscription users,
+  proSubscriptionType: { type: String, enum: ['monthly', 'yearly', "lifetime", null], default: null }, // Subscription type
+  lastDatePaid: { type: Date, default: null }, // Last date user paid
   isFirstHundredUser: { type: Boolean, default: false }, // For first 100 users
   isFirstTimeUser: { type: Boolean, default: true }, // For first-time users
   pushSubscriptions: {
@@ -16,6 +18,7 @@ const UserSchema = new mongoose.Schema({
   lastActiveAt: { type: Date, default: Date.now }, 
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
   referrer: { type: String, default: null }, // Referrer code
+  isReferrer: { type: Boolean, default: false }, // If user is part of the referrer program
 });
 
 module.exports = mongoose.model('User', UserSchema);

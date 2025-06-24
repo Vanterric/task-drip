@@ -6,6 +6,7 @@ import HomePage from "./pages/home/HomePage";
 import SubscribePage from "./pages/subscribe/SubscribePage";
 import { useEffect, useState } from "react";
 import InAppBrowserBanner from "./components/InAppBrowserBanner";
+import ReferrerDashboard from "./pages/referrer-dashboard/ReferrerDashboard";
 
 function App() {
 
@@ -45,6 +46,7 @@ useEffect(() => {
         <Route path="/unlock" element={<UnlockPage />} />
         <Route path="/app" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/subscribe" element={<PrivateRoute><SubscribePage /></PrivateRoute>} />
+        <Route path = "/referrer-dashboard" element = {<PrivateRoute><ReferrerDashboard/></PrivateRoute>}/>
         <Route path="/" element={<Navigate to={`/app${location.search}`} />} />
       </Routes>
     </Router>

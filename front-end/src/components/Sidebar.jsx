@@ -202,7 +202,12 @@ useEffect(() => {
             )}
           </button>
         </div>
-
+        {user.isReferrer ? 
+        <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-center transition`}>
+          <div className="text-sm text-[#4C6CA8] dark:text-[#90A9D6] hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] cursor-pointer transition" onClick={()=>window.open(`/referrer-dashboard`)}>Referrer Dashboard</div>
+        </div>
+        :
+        null}
         {/* Scrollable task list */}
         <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
           {taskLists.map((list) => (
