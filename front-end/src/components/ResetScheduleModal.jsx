@@ -4,6 +4,7 @@ import { vibration } from "../utilities/vibration";
 export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList }) {
   const [number, setNumber] = useState(taskList.resetSchedule?.number || 1);
   const [cadence, setCadence] = useState(taskList.resetSchedule?.cadence || "days");
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [startDate, setStartDate] = useState(taskList.resetSchedule?.startDate ? new Date(taskList.resetSchedule.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
     const start = taskList.resetSchedule?.startDate
   ? new Date(taskList.resetSchedule.startDate)
@@ -30,13 +31,15 @@ const [resetTime, setResetTime] = useState(initialResetTime);
         const [hours, minutes] = resetTime.split(':').map(Number);
         const localStart = new Date(year, month - 1, day, hours, minutes);
         onSubmit(
-            taskList._id, 
+            taskList._id,
+            isNotificationsEnabled,
             {
             number: number,
             cadence: cadence,
             startDate: localStart.toISOString(),
             lastReset: new Date().toISOString()
-            }
+            },
+            taskList.name
         )}} 
             className="flex flex-col gap-4">
           <div className="flex items-center gap-2 text-[#4F5962] dark:text-white text-sm">
@@ -93,6 +96,29 @@ const [resetTime, setResetTime] = useState(initialResetTime);
               onChange={(e) => setStartDate(e.target.value)}
               className="px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] bg-transparent text-[#4F5962] dark:text-white"
             />
+          </div>
+          <div className="flex flex-col gap-1">
+            <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-default">
+              Get notifications when tasks are reset?
+            </label>
+            <p className="text-xs text-[#91989E] dark:text-[#B0B0B0]">
+              You’ll receive a notification when tasks are reset, so you can stay on top of your schedule.
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="get-notifications"
+                checked={isNotificationsEnabled}
+                onChange={(e) => {
+                  vibration('button-press');
+                  setIsNotificationsEnabled(e.target.checked);
+                }}
+                className="appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+              />
+              <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-pointer">
+                Yes, notify me
+              </label>
+              </div>
           </div>
 
           <div className="flex gap-4 justify-end pt-2">

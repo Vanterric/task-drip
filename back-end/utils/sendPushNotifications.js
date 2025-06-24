@@ -20,9 +20,11 @@ const getRandomMessage = () => {
   return messages[Math.floor(Math.random() * messages.length)];
 };
 
-sendPushNotifications = async () => {
+sendPushNotifications = async (resetUserIds = []) => {
   console.log("Sending push notifications...");
- const users = await User.find({
+
+    // 1. INACTIVITY PUSHES
+ const inactiveUsers = await User.find({
   $and: [
     {
       $or: [
@@ -41,7 +43,7 @@ sendPushNotifications = async () => {
     }
   ]
 });
-  for (const user of users) {
+  for (const user of inactiveUsers) {
     const payload = JSON.stringify({
       title: "Hey, it’s DewList 👋",
       body: getRandomMessage(),
@@ -58,7 +60,7 @@ sendPushNotifications = async () => {
     ],
     });
 
-    for (const sub of user.pushSubscriptions) {
+    for (const sub of user.pushSubscriptions.filter(s => s.type === 'inactivity')) {
       try {
         await webpush.sendNotification(sub, payload);
       } catch (err) {
@@ -70,7 +72,38 @@ sendPushNotifications = async () => {
     await user.save();
   }
 
-  console.log(`✅ Sent pushes to ${users.length} users`);
+  // 2. RESET NOTIFICATIONS (only to provided user IDs)
+if (resetUserIds.length > 0) {
+    const resetUsers = await User.find({
+      _id: { $in: resetUserIds },
+      'pushSubscriptions.type': 'reset'
+    });
+
+    for (const user of resetUsers) {
+      const resetSubs = user.pushSubscriptions.filter(sub => sub.type === 'reset');
+
+      for (const sub of resetSubs) {
+        const payload = JSON.stringify({
+          title: `${sub.label || 'Your list'} was reset!`,
+          body: `It's a fresh start! Time to dive back into "${sub.label || 'your tasks'}" ✨`,
+          url: '/',
+          userId: user._id,
+          badge: '/icons/icon-192.png',
+          icon: '/icons/icon-192.png',
+        });
+
+        try {
+          await webpush.sendNotification(sub, payload);
+        } catch (err) {
+          console.error('❌ Reset push failed:', sub.endpoint, err.message);
+        }
+      }
+    }
+  }
+
+  console.log(`✅ Sent ${inactiveUsers.length} inactivity push${inactiveUsers.length !== 1 ? 'es' : ''}`);
+  console.log(`✅ Sent ${resetUserIds.length} reset push${resetUserIds.length !== 1 ? 'es' : ''}`);
+
 };
 
 module.exports = sendPushNotifications;

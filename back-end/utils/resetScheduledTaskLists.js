@@ -11,6 +11,7 @@ async function resetScheduledTaskLists() {
   });
 
   let resetCount = 0;
+  const affectedUserIds = new Set();
 
   for (const list of allLists) {
     const { number, cadence, startDate, lastReset } = list.resetSchedule;
@@ -74,10 +75,13 @@ async function resetScheduledTaskLists() {
       list.resetSchedule.lastReset = now;
       await list.save();
       resetCount++;
+
+    affectedUserIds.add(list.userId.toString());
     }
   }
 
   console.log(`✅ Reset ${resetCount} task list${resetCount === 1 ? '' : 's'}`);
+  return Array.from(affectedUserIds);
 }
 
 module.exports = resetScheduledTaskLists;

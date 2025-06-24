@@ -12,6 +12,7 @@ import LucideIcon from "./LucideIcon";
 import IconPickerModal from "./IconPickerModal";
 import { handleUpdateIcon } from "../utilities/handleUpdateIcon";
 import ResetScheduleModal from "./ResetScheduleModal";
+import { subscribeToPush } from "../utilities/subscribeToPush";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal }) {
@@ -115,7 +116,20 @@ useEffect(() => {
     setShowInput(false);
   };
 
-  const handleSetResetSchedule = async (taskListId, resetSchedule) => {
+  const getDeviceLabel = () => {
+    const platform = navigator.platform || '';
+    const userAgent = navigator.userAgent || '';
+
+    if (/Android/i.test(userAgent)) return 'android';
+    if (/iPhone|iPad|iPod/i.test(userAgent)) return 'ios';
+    if (/Win/i.test(platform)) return 'windows';
+    if (/Mac/i.test(platform)) return 'mac';
+    if (/Linux/i.test(platform)) return 'linux';
+
+    return 'unknown';
+  };
+
+  const handleSetResetSchedule = async (taskListId, isNotificationsEnabled, resetSchedule, taskListLabel = '') => {
     try {
       const headers = {
         Authorization: `Bearer ${token}`,
@@ -136,6 +150,11 @@ useEffect(() => {
       if (activeTaskList?._id === updatedList._id) {
         setActiveTaskList(updatedList);
       }
+      if (isNotificationsEnabled) {
+        const device = getDeviceLabel();
+      const success = await subscribeToPush(device, 'reset', taskListLabel);
+      if (!success) console.warn("Failed to subscribe for reset notifications");
+    }
       refetchTaskListsOrUpdateUI();
       setIsResetScheduleModalOpen(false);
     } catch (error) {

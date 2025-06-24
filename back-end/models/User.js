@@ -11,10 +11,23 @@ const UserSchema = new mongoose.Schema({
   lastDatePaid: { type: Date, default: null }, // Last date user paid
   isFirstHundredUser: { type: Boolean, default: false }, // For first 100 users
   isFirstTimeUser: { type: Boolean, default: true }, // For first-time users
-  pushSubscriptions: {
-    type: [Object],
-    default: [] // each subscription will include an edpoint, expirationTime, keys.p256dh, keys.auth
-  },
+  pushSubscriptions: [
+  {
+    endpoint: String,
+    expirationTime: Date,
+    keys: {
+      p256dh: String,
+      auth: String,
+    },
+    device: String, // optional but useful
+    type: {
+      type: String,
+      enum: ['inactivity', 'reset', 'all'], // extensible
+      default: 'inactivity'
+    },
+    label: String // optional label for the subscription
+  }
+],
   lastActiveAt: { type: Date, default: Date.now }, 
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
   referrer: { type: String, default: null }, // Referrer code

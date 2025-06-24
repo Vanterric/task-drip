@@ -202,14 +202,14 @@ app.post('/subscribe', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
 
-    const newSub = req.body;
+    const { device, type = 'inactivity', label, ...subscription } = req.body;
 
     const alreadyExists = user.pushSubscriptions.some(
-      (sub) => sub.endpoint === newSub.endpoint
+      (sub) => sub.endpoint === subscription.endpoint && sub.type === type
     );
 
     if (!alreadyExists) {
-      user.pushSubscriptions.push(newSub); // Store raw subscription
+      user.pushSubscriptions.push({ ...subscription, device, type, label });
       await user.save();
     }
 

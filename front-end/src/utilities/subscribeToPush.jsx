@@ -1,6 +1,6 @@
 import { urlBase64ToUint8Array } from './vapidUtils';
 
-export const subscribeToPush = async (deviceLabel = 'unknown') => {
+export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivity', label='') => {
   if (!('serviceWorker' in navigator)) return false;
   if (!('PushManager' in window)) return false;
 
@@ -16,6 +16,8 @@ export const subscribeToPush = async (deviceLabel = 'unknown') => {
     const payload = {
       ...subscription.toJSON(),
       device: deviceLabel,
+      type,
+      label, // Optional label for the subscription
     };
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/subscribe`, {

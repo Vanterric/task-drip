@@ -15,9 +15,9 @@ webpush.setVapidDetails(
   try {
     await mongoose.connect(process.env.MONGO_URI);
     console.log('✅ Connected to DB');
-    await resetScheduledTaskLists();
+    const affectedUserIds = await resetScheduledTaskLists();
     console.log('✅ Scheduled task lists reset');
-    await sendPushNotifications();
+    await sendPushNotifications([...affectedUserIds]);
     console.log('✅ Push notifications sent');
     process.exit(0);
   } catch (err) {
