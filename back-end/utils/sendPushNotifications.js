@@ -22,18 +22,25 @@ const getRandomMessage = () => {
 
 sendPushNotifications = async () => {
   console.log("Sending push notifications...");
-  const users = await User.find({
-    $or: [
-    {lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) }},
-    { lastActiveAt: null }
-    ],
-    $or: [
-      { lastPushSentAt: null },
-      { lastPushSentAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
-    ],
-    pushSubscriptions: { $exists: true, $not: { $size: 0 } }
-  });
-
+ const users = await User.find({
+  $and: [
+    {
+      $or: [
+        { lastActiveAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } },
+        { lastActiveAt: null }
+      ]
+    },
+    {
+      $or: [
+        { lastPushSentAt: null },
+        { lastPushSentAt: { $lte: new Date(Date.now() - 24 * 60 * 60 * 1000) } }
+      ]
+    },
+    {
+      pushSubscriptions: { $exists: true, $not: { $size: 0 } }
+    }
+  ]
+});
   for (const user of users) {
     const payload = JSON.stringify({
       title: "Hey, it’s DewList 👋",
