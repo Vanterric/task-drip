@@ -64,12 +64,12 @@ if (!user.isReferrer) {
   
   return (
     <div className="p-4 max-w-3xl mx-auto bg-[#212732]">
-      <h1 className="text-2xl font-bold mb-2 flex justify-center">Referrer Dashboard</h1>
-      <p className="flex justify-center mb-5 text-[#90A9D6] cursor-pointer" onClick={()=>window.location.href='/app'}>Back to DewList</p>
+      <h1 className="text-2xl font-bold mb-2 flex justify-center mt-5">Referrer Dashboard</h1>
+      <p className="flex justify-center mb-10 text-[#90A9D6] cursor-pointer" onClick={()=>window.location.href='/app'}>Back to DewList</p>
       <p>Welcome back, {referrerInfo.name}! 👋</p>
       <br/>
       <p className="mb-2">Share your unique referral link to earn {toPercentage(referrerInfo.percentShare)} on user subscriptions</p>
-      <div className="bg-gray-100 p-4 rounded-lg">
+      <div className="bg-gray-100 p-4 rounded-lg mb-10">
         <p className="break-all text-[#4F5962] font-bold">
           https://dewlist.app/?referral={referrerInfo.referralLink}
         </p>
