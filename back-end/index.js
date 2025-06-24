@@ -376,6 +376,7 @@ app.post('/snoozePush', async (req, res) => {
 
   app.post('/create-payment-intent', async (req, res) => {
     const { email, plan } = req.body;
+    const user = await User.findOne({ email });
   
     const amountMap = {
       monthly: 500,
@@ -387,7 +388,7 @@ app.post('/snoozePush', async (req, res) => {
       amount: amountMap[plan],
       currency: 'usd',
       receipt_email: email,
-      metadata: { plan },
+      metadata: { plan, referrer: user.referrer || null },
     });
   
     res.json({ clientSecret: paymentIntent.client_secret });
