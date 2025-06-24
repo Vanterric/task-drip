@@ -2,7 +2,7 @@ const referrerMapForDashboard = (email) => {
     const referrerMap = {
         "derrickgallegos@rocketmail.com": {
             name: "Derrick",
-            referralLink: "derrickgallegos",
+            referralLink: "brandongallegos",
             superUser: true,
             percentShare: 1,
         },

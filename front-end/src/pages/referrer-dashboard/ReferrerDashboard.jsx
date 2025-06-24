@@ -63,8 +63,9 @@ if (!user.isReferrer) {
   }
   
   return (
-    <div className="p-4 max-w-3xl mx-auto">
-      <h1 className="text-2xl font-bold mb-4 flex justify-center">Referrer Dashboard</h1>
+    <div className="p-4 max-w-3xl mx-auto bg-[#212732]">
+      <h1 className="text-2xl font-bold mb-2 flex justify-center">Referrer Dashboard</h1>
+      <p className="flex justify-center mb-5 text-[#90A9D6] cursor-pointer" onClick={()=>window.location.href='/app'}>Back to DewList</p>
       <p>Welcome back, {referrerInfo.name}! 👋</p>
       <br/>
       <p className="mb-2">Share your unique referral link to earn {toPercentage(referrerInfo.percentShare)} on user subscriptions</p>
@@ -82,7 +83,7 @@ if (!user.isReferrer) {
       </div>
       <hr className="my-6 border-gray-300" />
       <div  className="mt-10 mb-10">
-        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month</h2>
+        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month🫧</h2>
         <div className="flex items-center gap-0 justify-center">
           <p className="text-2xl m-1">{signUpsThisMonth}</p>
           {signUpsLastMonth > 0 ? (
@@ -106,7 +107,7 @@ if (!user.isReferrer) {
       </div>
       <hr className="my-6 border-gray-300" />
       <div className = 'mt-10'>
-        <h2 className="text-xl font-semibold mb-2 flex justify-center">User Signups Over Time</h2>
+        <h2 className="text-xl font-semibold mb-2 flex justify-center">User Signups Over Time🌊</h2>
         <SignupLineChart users={users} />
       </div>
     </div>
