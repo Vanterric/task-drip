@@ -223,7 +223,7 @@ useEffect(() => {
   <h1 className="text-2xl font-bold text-right truncate cursor-default max-w-[100%]">
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
-  {activeTaskList.resetSchedule && activeTaskList.resetSchedule.number && (
+  {activeTaskList?.resetSchedule && activeTaskList?.resetSchedule?.number && (
     <div className="ml-4 text-sm text-[#91989E] dark:text-[#A1A8B0] cursor-default text-right">
       {activeTaskList.resetSchedule.startDate && (
         <span className="ml-2 text-xs text-[#4BAF8E] dark:text-[#A1A8B0]">
