@@ -12,6 +12,9 @@ const ReferrerDashboard = () => {
   const [estimatedMonthlyPayout, setEstimatedMonthlyPayout] = useState(0);
   const [signUpsThisMonth, setSignUpsThisMonth] = useState(0);
   const [signUpsLastMonth, setSignUpsLastMonth] = useState(0);
+  const [activeUsersThisMonth, setActiveUsersThisMonth] = useState(0);
+  const [showSignUpsDetails, setShowSignUpsDetails] = useState(false);
+  const [showActiveUsersDetails, setShowActiveUsersDetails] = useState(false);
   const MONTHLY_PRICE = 5;
   const YEARLY_PRICE = 30;
   const LIFETIME_PRICE = 100;
@@ -50,6 +53,13 @@ const ReferrerDashboard = () => {
         const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
         return createdAt.getMonth() === lastMonth.getMonth() && createdAt.getFullYear() === lastMonth.getFullYear();
       }).length);
+      setActiveUsersThisMonth(referredUsers.filter(user => {
+        console.log(user.lastActiveAt);
+        if (!user.lastActiveAt) return false;
+        const lastActive = new Date(user.lastActiveAt);
+        const now = new Date();
+        return lastActive.getMonth() === now.getMonth() && lastActive.getFullYear() === now.getFullYear();
+      }).length);
     }
     fetchReferredUsers();
   }, [referrerInfo.referralLink]);
@@ -83,8 +93,9 @@ if (!user.isReferrer) {
       </div>
       <hr className="my-6 border-gray-300" />
       <div  className="mt-10 mb-10">
-        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month 🫧</h2>
-        <div className="flex items-center gap-0 justify-center">
+        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month 🌱</h2>
+        {showSignUpsDetails ? <p className="text-xs italic flex justify-center mt-1">{signUpsLastMonth > 0 ? `${Math.abs(((signUpsThisMonth - signUpsLastMonth) / signUpsLastMonth) * 100).toFixed(1)}% from last month` : 'No signups last month to compare'}</p>  : null}
+        <div className="flex items-center gap-0 justify-center mt-5">
           <p className="text-2xl m-1">{signUpsThisMonth}</p>
           {signUpsLastMonth > 0 ? (
     <span
@@ -92,17 +103,31 @@ if (!user.isReferrer) {
       title={`${Math.abs(((signUpsThisMonth - signUpsLastMonth) / signUpsLastMonth) * 100).toFixed(1)}% from last month`}
     >
       {signUpsThisMonth >= signUpsLastMonth ? 
-      <ChevronUp className="h-4 w-4 text-green-500" />
-       : <ChevronDown className="h-4 w-4 text-red-500" />}
+      <ChevronUp className="h-4 w-4 text-green-500" onClick={()=>setShowSignUpsDetails(!showSignUpsDetails)} />
+       : <ChevronDown className="h-4 w-4 text-red-500" onClick={()=>setShowSignUpsDetails(!showSignUpsDetails)} />}
     </span>
   ) : (
     <span
       className="text-sm text-gray-500 cursor-help"
       title="No signups last month to compare"
     >
-      <Info className="h-4 w-4" />
+      <Info className="h-4 w-4" onClick={()=>setShowSignUpsDetails(!showSignUpsDetails)} />
     </span>
   )}
+        </div>
+      </div>
+      <hr className="my-6 border-gray-300" />
+      <div  className="mt-10 mb-10">
+        <h2 className="text-xl font-semibold mb2 flex justify-center">Active Users This Month 🫧</h2>
+        {showActiveUsersDetails ? <p className="text-xs italic flex justify-center mt-1">User is considered active if they used DewList in the past 30 days.</p> : null}
+        <div className="flex items-center gap-0 justify-center mt-5">
+          <p className="text-2xl m-1">{activeUsersThisMonth}</p>
+    <span
+      className="text-sm text-gray-500 cursor-help"
+      title="User is considered active if they used DewList in the past 30 days."
+    >
+      <Info onClick={()=>setShowActiveUsersDetails(!showActiveUsersDetails)} className="h-4 w-4" />
+    </span>
         </div>
       </div>
       <hr className="my-6 border-gray-300" />

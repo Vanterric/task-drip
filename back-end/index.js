@@ -533,7 +533,7 @@ app.get('/getReferredUsers', async (req, res) => {
   
   if (referrer === 'derrickgallegos') {
     try {
-      const users = await User.find().select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType').lean();
+      const users = await User.find().select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType lastActiveAt').lean();
       return res.json({ users });
     } catch (err) {
       console.error('Error fetching all users:', err);
