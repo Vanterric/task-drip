@@ -16,8 +16,8 @@ async function sendMagicLinkEmail(toEmail, magicLink) {
          height="48"
          style="display: block; margin: 0 auto 16px auto;" />
 
-    <h2 style="color: #4C6CA8; margin-bottom: 8px;">Your Magic Link</h2>
-    <p style="margin: 0 0 16px;">You're one click away from focused productivity — one task at a time.</p>
+    <h2 style="color: #4C6CA8; margin-bottom: 8px;">Find Your Focus.</h2>
+    <p style="margin: 0 0 16px;">Productivity that works with your brain - whether your a fast thinker, big dreamer, chronic starter, or deep focus-er. Get things done your way, one step at a time.</p>
     
     <a href="${magicLink}"
        style="

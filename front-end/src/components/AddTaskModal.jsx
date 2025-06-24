@@ -5,13 +5,13 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit }) {
   const [taskText, setTaskText] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const dailyPromptMap = {
-  "Monday": "Happy Monday! What’s one small step you can take today to set a kind tone for your week?",
-  "Tuesday": "Hey, it’s Tuesday. What’s one thing that’s been floating around in your brain you’d feel better nudging forward?",
-  "Wednesday": "Happy Hump Day! What’s one task that would make the rest of your week feel more manageable or smooth?",
-  "Thursday": "It’s Thursday! Almost there! What’s one meaningful thing you’d like to make progress on before the week wraps up?",
-  "Friday": "Happy Friday! What’s one thing you could close out today to give yourself a cleaner break heading into the weekend?",
-  "Saturday": "Hello, weekend. What’s one light or satisfying task that feels doable and good for *you* today?",
-  "Sunday": "It’s Sunday. What’s one low-effort move that could make next week feel calmer, clearer, or more grounded?"
+  "Monday": "Happy Monday! What’s one small step you can take today to set a kind, steady tone for your week?",
+  "Tuesday": "Hey, it’s Tuesday. Got something your brain's been quietly dodging? Take one tiny step towards it and clear a little mental bandwidth.",
+  "Wednesday": "Midweek reset! What's one thing you could tackle today to help your future brain feel a little more steady handling the rest of the week?",
+  "Thursday": "It’s Thursday! Got a mental tab you keep circling? Let's clear it and make space for the weekend.",
+  "Friday": "Happy Friday! Big energy or low key - what's one thing you'd like to wrap up today?",
+  "Saturday": "Hello, weekend. What’s one light, satisfying task that feels doable and good for *you* today?",
+  "Sunday": "It’s Sunday. What’s one easy move you could make to help next week feel a little calmer and clearer?"
 }
 
 

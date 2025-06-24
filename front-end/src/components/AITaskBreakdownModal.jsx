@@ -9,13 +9,13 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
   const dailyPromptMap = {
-  "Monday": "Happy Monday! What’s one thing that would help you start the week on solid ground?",
-  "Tuesday": "Hey, it’s Tuesday. What’s something that’s been floating in your brain because you’re not sure where to begin?",
-  "Wednesday": "Happy hump day! What’s a task that feels messy, complex, or hard to untangle right now?",
+  "Monday": "Happy Monday! What's one thing you could do today to start the week feeling grounded and clear?",
+  "Tuesday": "Hey, it’s Tuesday. What's cluttering your head because it's missing a start cue?",
+  "Wednesday": "Midweek check-in! What’s a task that feels a little tangled or tricky right now?",
   "Thursday": "It’s Thursday! Almost there. What’s one thing you’ve been circling around that needs some clarity or smaller steps?",
   "Friday": "Happy Friday! What’s something you’d like to wrap up before the weekend, but still feels a little foggy?",
-  "Saturday": "Look at you being productive during the weekend! What’s something you’d like to make progress on, but you’re not sure how to get started?",
-  "Sunday": "Sunday Funday! What’s coming up next week that feels too big or vague to plan for? Let’s get ahead of it together."
+  "Saturday": "Weekend Vibes! Been holding onto an idea or side project? Let's break it down into bite-sized tasks!",
+  "Sunday": "Sunday Funday! What's feeling big or blurry next week? Let's untangle it together!"
 }
 
 
