@@ -6,6 +6,12 @@ const TaskListSchema = new mongoose.Schema({
   createdAt: { type: Date, default: Date.now },
   icon: { type: String, default: 'clipboard-check' },
   creationPrompt: { type: String, default: '' },
+  resetSchedule:{
+    number: { type: Number, default: null },
+    cadence: { type: String, default: null }, // days, weeks, months, years
+    startDate: { type: Date, default: null },
+    lastReset: { type: Date, default: null }
+  }
 });
 
 module.exports = mongoose.model('TaskList', TaskListSchema);

@@ -302,7 +302,7 @@ app.post('/snoozePush', async (req, res) => {
   });
   
   app.put('/tasklists/:id', verifyToken, async (req, res) => {
-    const { name, icon } = req.body;
+    const { name, icon, resetSchedule } = req.body;
   
     if (name && name.trim() === "") {
       return res.status(400).json({ error: "Name cannot be empty" });
@@ -312,6 +312,7 @@ app.post('/snoozePush', async (req, res) => {
       const updateFields = {};
         if (name) updateFields.name = name;
         if (icon) updateFields.icon = icon;
+        if (resetSchedule) updateFields.resetSchedule = resetSchedule
 
         const updated = await TaskList.findByIdAndUpdate(
           req.params.id,

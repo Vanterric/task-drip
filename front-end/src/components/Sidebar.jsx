@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
-import { LogOut, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
+import { LogOut, LucideCalendarCog, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
@@ -11,6 +11,7 @@ import FeedbackModal from "./FeedbackModal";
 import LucideIcon from "./LucideIcon";
 import IconPickerModal from "./IconPickerModal";
 import { handleUpdateIcon } from "../utilities/handleUpdateIcon";
+import ResetScheduleModal from "./ResetScheduleModal";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal }) {
@@ -27,6 +28,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
   const { user } = useAuth();
   const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
+  const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
 
 
 useEffect(() => {
@@ -112,7 +114,34 @@ useEffect(() => {
     setNewListName("");
     setShowInput(false);
   };
-  
+
+  const handleSetResetSchedule = async (taskListId, resetSchedule) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${taskListId}`, {
+        method: "PUT",
+        headers,
+        body: JSON.stringify({ resetSchedule }),
+      });
+      if (!res.ok) {
+        throw new Error("Failed to set reset schedule");
+      }
+      const updatedList = await res.json();
+      setTaskLists((prev) =>
+        prev.map((list) => (list._id === updatedList._id ? updatedList : list))
+      );
+      if (activeTaskList?._id === updatedList._id) {
+        setActiveTaskList(updatedList);
+      }
+      refetchTaskListsOrUpdateUI();
+      setIsResetScheduleModalOpen(false);
+    } catch (error) {
+      console.error("Error setting reset schedule:", error);
+    }
+  }
 
 
   const refetchTaskListsOrUpdateUI = async () => {
@@ -246,6 +275,18 @@ useEffect(() => {
                     <Pencil className="w-4 h-4 text-[#4C6CA8] dark:text-[#90A9D6]" />
                     Edit List
                   </button>
+                  <button
+                    className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
+                    onClick={() => {
+                      vibration('button-press');
+                      setIsResetScheduleModalOpen(true);
+                      setListToEdit(list);
+                      setActiveKebab(null);
+                    }}
+                  >
+                    <LucideCalendarCog className="w-4 h-4 text-[#4C6CA8] dark:text-[#90A9D6]" />
+                    Schedule
+                  </button>
 
                 <button
                   className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 text-[#D66565] hover:bg-[rgba(214,101,101,0.15)] transition rounded"
@@ -373,6 +414,7 @@ if (activeTaskList?._id === listToDelete._id) {
   token={token}
   onSave={refetchTaskListsOrUpdateUI}
 />
+{isResetScheduleModalOpen ? <ResetScheduleModal onClose={()=>setIsResetScheduleModalOpen(false)} onSubmit={handleSetResetSchedule} taskList = {listToEdit}/> : null}
 {isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon, token, setTaskLists);}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
 
 {isFeedbackModalOpen ? <FeedbackModal onClose={()=>setIsFeedbackModalOpen(false)}/>:null}
