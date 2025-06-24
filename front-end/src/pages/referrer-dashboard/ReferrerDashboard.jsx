@@ -3,12 +3,15 @@ import { useAuth } from "../../context/AuthContext";
 import getReferredUsers from "./getReferredUsers";
 import referrerMapForDashboard from "./referrerMapForDashboard";
 import SignupLineChart from "./SignupLineChart";
+import { ChevronDown, ChevronUp, Info } from "lucide-react";
 
 const ReferrerDashboard = () => {
   const {user} = useAuth();
   const [users, setUsers] = useState([]);
   const  [paidSubscribers, setPaidSubscribers] = useState(0);
   const [estimatedMonthlyPayout, setEstimatedMonthlyPayout] = useState(0);
+  const [signUpsThisMonth, setSignUpsThisMonth] = useState(0);
+  const [signUpsLastMonth, setSignUpsLastMonth] = useState(0);
   const MONTHLY_PRICE = 5;
   const YEARLY_PRICE = 30;
   const LIFETIME_PRICE = 100;
@@ -36,6 +39,17 @@ const ReferrerDashboard = () => {
       }).length;
       const estimatedPayout = (monthlySubscriberCount * MONTHLY_PRICE + yearlySubscriberCount * (YEARLY_PRICE / 12) + countOfForeverSubscribersThatSignedUpThisMonth * (LIFETIME_PRICE));
       setEstimatedMonthlyPayout((estimatedPayout * referrerInfo.percentShare).toFixed(2));
+      setSignUpsThisMonth(referredUsers.filter(user => {
+        const createdAt = new Date(user.createdAt);
+        const now = new Date();
+        return createdAt.getMonth() === now.getMonth() && createdAt.getFullYear() === now.getFullYear();
+      }).length);
+      setSignUpsLastMonth(referredUsers.filter(user => {
+        const createdAt = new Date(user.createdAt);
+        const now = new Date();
+        const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+        return createdAt.getMonth() === lastMonth.getMonth() && createdAt.getFullYear() === lastMonth.getFullYear();
+      }).length);
     }
     fetchReferredUsers();
   }, [referrerInfo.referralLink]);
@@ -51,7 +65,7 @@ if (!user.isReferrer) {
   return (
     <div className="p-4 max-w-3xl mx-auto">
       <h1 className="text-2xl font-bold mb-4 flex justify-center">Referrer Dashboard</h1>
-      <p>Welcome back, {referrerInfo.name}!</p>
+      <p>Welcome back, {referrerInfo.name}! 👋</p>
       <br/>
       <p className="mb-2">Share your unique referral link to earn {toPercentage(referrerInfo.percentShare)} on user subscriptions</p>
       <div className="bg-gray-100 p-4 rounded-lg">
@@ -59,14 +73,40 @@ if (!user.isReferrer) {
           https://dewlist.app/?referral={referrerInfo.referralLink}
         </p>
       </div>
-      <div className="mt-4">
-        <h2 className="text-xl font-semibold mb-2">{referrerInfo.referralLink === 'derrickgallegos'? "DewList User" :"Your Referral"} Metrics</h2>
+      <hr className="my-6 border-gray-300" />
+      <div className="mt-10 mb-10  flex justify-center flex-col items-center gap-2">
+        <h2 className="text-xl font-semibold mb-2">{referrerInfo.referralLink === 'derrickgallegos'? "DewList User" :"Your Referral"} Metrics 💧</h2>
         <p>Total Signups: {users.length}</p>
         <p>Total Paid Subscribers: {paidSubscribers}</p>
         <p>{referrerInfo.referralLink === 'derrickgallegos' ? 'Expected Revenue':`Expected Pay Out`} This Month: ${estimatedMonthlyPayout} </p>
       </div>
-      <div className = 'mt-4'>
-        <h2 className="text-xl font-semibold mb-2">User Signups Over Time</h2>
+      <hr className="my-6 border-gray-300" />
+      <div  className="mt-10 mb-10">
+        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month</h2>
+        <div className="flex items-center gap-0 justify-center">
+          <p className="text-2xl m-1">{signUpsThisMonth}</p>
+          {signUpsLastMonth > 0 ? (
+    <span
+      className={`text-sm cursor-help ${signUpsThisMonth >= signUpsLastMonth ? 'text-green-500' : 'text-red-500'}`}
+      title={`${Math.abs(((signUpsThisMonth - signUpsLastMonth) / signUpsLastMonth) * 100).toFixed(1)}% from last month`}
+    >
+      {signUpsThisMonth >= signUpsLastMonth ? 
+      <ChevronUp className="h-4 w-4 text-green-500" />
+       : <ChevronDown className="h-4 w-4 text-red-500" />}
+    </span>
+  ) : (
+    <span
+      className="text-sm text-gray-500 cursor-help"
+      title="No signups last month to compare"
+    >
+      <Info className="h-4 w-4" />
+    </span>
+  )}
+        </div>
+      </div>
+      <hr className="my-6 border-gray-300" />
+      <div className = 'mt-10'>
+        <h2 className="text-xl font-semibold mb-2 flex justify-center">User Signups Over Time</h2>
         <SignupLineChart users={users} />
       </div>
     </div>

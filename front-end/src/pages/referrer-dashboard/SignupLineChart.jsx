@@ -112,7 +112,7 @@ for (let i = 0; i < totalMonths; i++) {
 
   return (
     <div className="w-full">
-      <div className="flex justify-end mb-4 gap-2">
+      <div className="flex justify-end mb-4 mt-4 gap-2">
         {['week', 'month', 'year', 'all'].map(option => (
           <button
             key={option}
@@ -128,10 +128,13 @@ for (let i = 0; i < totalMonths; i++) {
         ))}
       </div>
 
-      <ResponsiveContainer width="100%" height={300}>
-        <LineChart data={filteredData}>
+      <ResponsiveContainer width="100%"  height={300}>
+        <LineChart data={filteredData} margin={{ top: 0, right: 0, bottom: 0, left: 0 }} >
           <CartesianGrid strokeDasharray="3 3" />
           <XAxis
+        height={80}
+          angle={30}
+          textAnchor='start'
   dataKey="date"
   tickFormatter={(str) => {
   if (range === 'week' || range === 'month') {
@@ -151,7 +154,7 @@ for (let i = 0; i < totalMonths; i++) {
   interval = {1}
 />
 
-          <YAxis allowDecimals={false} />
+          <YAxis allowDecimals={false} width={20} />
           <Tooltip
             labelFormatter={(label) => {
               if (range === 'week' || range === 'month') {
