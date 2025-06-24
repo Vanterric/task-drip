@@ -83,7 +83,7 @@ if (!user.isReferrer) {
       </div>
       <hr className="my-6 border-gray-300" />
       <div  className="mt-10 mb-10">
-        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month🫧</h2>
+        <h2 className="text-xl font-semibold mb2 flex justify-center">Signups This Month 🫧</h2>
         <div className="flex items-center gap-0 justify-center">
           <p className="text-2xl m-1">{signUpsThisMonth}</p>
           {signUpsLastMonth > 0 ? (
@@ -107,7 +107,7 @@ if (!user.isReferrer) {
       </div>
       <hr className="my-6 border-gray-300" />
       <div className = 'mt-10'>
-        <h2 className="text-xl font-semibold mb-2 flex justify-center">User Signups Over Time🌊</h2>
+        <h2 className="text-xl font-semibold mb-2 flex justify-center">User Signups Over Time 🌊</h2>
         <SignupLineChart users={users} />
       </div>
     </div>
