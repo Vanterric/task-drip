@@ -69,7 +69,7 @@ async function resetScheduledTaskLists() {
     }
 
     if (now >= nextReset) {
-      await Task.updateMany({ listId: list._id }, { completed: false });
+      await Task.updateMany({ tasklistId: list._id }, { isComplete: false });
 
       list.resetSchedule.lastReset = now;
       await list.save();
