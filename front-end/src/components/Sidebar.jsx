@@ -151,10 +151,17 @@ useEffect(() => {
         setActiveTaskList(updatedList);
       }
       if (isNotificationsEnabled) {
+      const permission = await Notification.requestPermission();
+
+      if (permission === 'granted') {
         const device = getDeviceLabel();
-      const success = await subscribeToPush(device, 'reset', taskListLabel);
-      if (!success) console.warn("Failed to subscribe for reset notifications");
+        const success = await subscribeToPush(device, 'reset', taskListLabel);
+        if (!success) console.warn("Failed to subscribe for reset notifications");
+      } else {
+        console.warn("Notification permission was denied or dismissed.");
+      }
     }
+
       refetchTaskListsOrUpdateUI();
       setIsResetScheduleModalOpen(false);
     } catch (error) {
