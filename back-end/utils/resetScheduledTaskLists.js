@@ -1,5 +1,5 @@
-const TaskList = require('./models/TaskList');
-const Task = require('./models/Task');
+const TaskList = require('../models/TaskList');
+const Task = require('../models/Task');
 
 async function resetScheduledTaskLists() {
   const now = new Date();
