@@ -420,13 +420,14 @@ useEffect(() => {
               Welcome to DewList
             </h2>
             <p className="text-center text-[#91989E] mb-6">
-              We'll email you a magic login link. No passwords, no pressure.
+              We'll email you a magic login link. <br/>No passwords, no pressure.
             </p>
 
             {status === "success" ? (
-              <div className="flex items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-lg">
-                <CheckCircle className="w-5 h-5" />
-                Magic link sent! Take a peek at your inbox (and spam, just in case).
+              <div className="flex flex-col items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-2xl">
+                <CheckCircle className="w-6 h-6" />
+                Magic link sent! <br/>
+                <span className="text-[12.5px]">Check your inbox (and spam, just in case)</span>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
