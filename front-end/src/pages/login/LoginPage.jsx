@@ -426,7 +426,7 @@ useEffect(() => {
             {status === "success" ? (
               <div className="flex items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-lg">
                 <CheckCircle className="w-5 h-5" />
-                Magic link sent! Check your inbox.
+                Magic link sent! Take a peek at your inbox (and spam, just in case).
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
