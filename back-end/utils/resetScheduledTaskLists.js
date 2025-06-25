@@ -13,63 +13,95 @@ async function resetScheduledTaskLists() {
   let resetCount = 0;
   const affectedUserIds = new Set();
 
+  function getNthWeekdayOfMonth(year, month, weekday, nth) {
+  const firstDay = new Date(Date.UTC(year, month, 1));
+  let day = 1 + ((7 + weekday - firstDay.getUTCDay()) % 7) + (nth - 1) * 7;
+  const date = new Date(Date.UTC(year, month, day));
+  return date.getUTCMonth() === month ? date : null;
+}
+
+
   for (const list of allLists) {
     const { number, cadence, startDate, lastReset } = list.resetSchedule;
 
     const start = new Date(startDate); // UTC
-    const last = lastReset ? new Date(lastReset) : new Date(startDate);
 
-    let nextReset = new Date(last);
+    const now = new Date();
+let cycles = 0;
+let nextReset;
 
-    // cadence === "days" → fixed interval, drift allowed
-    if (cadence === 'days') {
-      nextReset.setDate(last.getDate() + number);
-    }
+const weekday = start.getUTCDay(); // 0 = Sunday, 6 = Saturday
 
-    // cadence === weeks/months/years → always aligned to startDate day/time
-    else {
-      // Calculate how many full cadences have passed since startDate
-      const elapsed = now.getTime() - start.getTime();
-      let cycles = 0;
+switch (cadence) {
+  case 'days': {
+    const msPerCycle = 1000 * 60 * 60 * 24 * number;
+    const elapsed = now.getTime() - start.getTime();
+    cycles = Math.floor(elapsed / msPerCycle);
+    nextReset = new Date(start.getTime() + cycles * msPerCycle);
+    break;
+  }
 
-      switch (cadence) {
-        case 'weeks':
-          cycles = Math.floor(elapsed / (1000 * 60 * 60 * 24 * 7 * number));
-          break;
-        case 'months': {
-          const nowYear = now.getFullYear();
-          const nowMonth = now.getMonth();
-          const startYear = start.getFullYear();
-          const startMonth = start.getMonth();
-          const totalMonths = (nowYear - startYear) * 12 + (nowMonth - startMonth);
-          cycles = Math.floor(totalMonths / number);
-          break;
-        }
-        case 'years': {
-          const diff = now.getFullYear() - start.getFullYear();
-          cycles = Math.floor(diff / number);
-          break;
-        }
-      }
+  case 'weeks': {
+    const startWeek = new Date(start);
+    startWeek.setUTCDate(start.getUTCDate() + number * 7 * Math.floor((now - start) / (1000 * 60 * 60 * 24 * 7 * number)));
+    startWeek.setUTCHours(start.getUTCHours(), start.getUTCMinutes(), 0, 0);
+    nextReset = startWeek;
+    break;
+  }
 
-      if (cycles === 0) continue;
+  case 'months': {
+    const nth = Math.floor((start.getUTCDate() - 1) / 7) + 1;
+    const totalMonths = (now.getUTCFullYear() - start.getUTCFullYear()) * 12 + (now.getUTCMonth() - start.getUTCMonth());
+    cycles = Math.floor(totalMonths / number);
 
-      // Generate nextReset aligned with startDate
-      nextReset = new Date(start);
-      switch (cadence) {
-        case 'weeks':
-          nextReset.setDate(start.getDate() + 7 * number * cycles);
-          break;
-        case 'months':
-          nextReset.setMonth(start.getMonth() + number * cycles);
-          break;
-        case 'years':
-          nextReset.setFullYear(start.getFullYear() + number * cycles);
-          break;
-      }
-    }
+    const targetMonth = start.getUTCMonth() + number * cycles;
+    nextReset = getNthWeekdayOfMonth(
+      start.getUTCFullYear() + Math.floor(targetMonth / 12),
+      targetMonth % 12,
+      weekday,
+      nth
+    );
+    if (!nextReset || now < nextReset) continue;
+    break;
+  }
 
-    if (now >= nextReset) {
+  case 'years': {
+    const nth = Math.floor((start.getUTCDate() - 1) / 7) + 1;
+    const thisYear = now.getUTCFullYear();
+    const startMonth = start.getUTCMonth();
+    const yearsPassed = thisYear - start.getUTCFullYear();
+    cycles = Math.floor(yearsPassed / number);
+
+    const resetYear = start.getUTCFullYear() + number * cycles;
+
+    nextReset = getNthWeekdayOfMonth(resetYear, startMonth, weekday, nth);
+    if (!nextReset || now < nextReset) continue;
+    break;
+  }
+}
+
+
+if (cycles === 0) continue;
+
+// Generate nextReset based on cycles * cadence from the original startDate
+nextReset = new Date(start); // reset baseline
+switch (cadence) {
+  case 'days':
+    nextReset.setUTCDate(start.getUTCDate() + number * cycles);
+    break;
+  case 'weeks':
+    nextReset.setUTCDate(start.getUTCDate() + 7 * number * cycles);
+    break;
+  case 'months':
+    nextReset.setUTCMonth(start.getUTCMonth() + number * cycles);
+    break;
+  case 'years':
+    nextReset.setUTCFullYear(start.getUTCFullYear() + number * cycles);
+    break;
+}
+
+
+    if (now >= nextReset && (!lastReset || lastReset < nextReset)) {
       await Task.updateMany({ tasklistId: list._id }, { isComplete: false });
 
       list.resetSchedule.lastReset = now;
