@@ -90,6 +90,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           isLifeTimePro: false,
           proSubscriptionType: plan || 'monthly',
           lastDatePaid: Date.now(),
+          proExpiresAt: session.subscription ? new Date(session.subscription.current_period_end * 1000) : null,
         }
       );
       return res.status(200).json({ received: true });
