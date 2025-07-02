@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { Stars, X } from 'lucide-react';
 import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
@@ -129,7 +129,8 @@ export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setAc
             <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
             {dailyPromptMap[dayOfWeek]} <br/> <br />
             Tell us, and we’ll turn it into a simple, doable task list!<br /><br />
-            <i>Normally this is a Pro-only feature, but your first one's on us </i>🎁
+            <i>Normally this is a Pro-only feature, but your first one's on us </i>🎁 <br/> <br/>
+            <i>If you like it, consider upgrading to Pro! You'll be able to create new task lists with a text description by clicking the "<Stars className='inline h-4'/>" button on the bottom left of the screen.</i>
             </p>
         <textarea
           disabled={loading}
