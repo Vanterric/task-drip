@@ -625,7 +625,6 @@ app.post('/snoozePush', async (req, res) => {
     mode: 'subscription',
     payment_method_types: ['card'],
     customer: user.stripeCustomerId,
-    customer_email: email,
     line_items: [
       {
         price: priceMap[plan],
