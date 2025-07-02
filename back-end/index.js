@@ -31,34 +31,135 @@ app.listen(process.env.PORT || 3001, () =>
 //Stripe Payment Fulfillment
 app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  let event;
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
+
+  let event;
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
+    console.log(`✅ Webhook received: ${event.type}`);
   } catch (err) {
-    console.error('Webhook Error:', err.message);
+    console.error('❌ Webhook Signature Error:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  if (event.type === 'payment_intent.succeeded') {
-    const intent = event.data.object;
-    const email = intent.receipt_email || intent.billing_details.email;
+  switch (event.type) {
+    // ✅ LIFETIME – One-time payment
+    case 'payment_intent.succeeded': {
+      const intent = event.data.object;
+      const email = intent.receipt_email || intent.billing_details?.email;
+      const plan = intent.metadata?.plan;
 
-    // ✅ Update your DB (MongoDB, etc)
-    await User.updateOne(
-      { email },
-      {
-        isPro: true,
-        isLifeTimePro: intent.metadata?.plan === 'lifetime',
-        proExpiresAt: intent.metadata?.plan === 'lifetime' ? null : Date.now() + 1000 * 60 * 60 * 24 * 30, // or Stripe's subscription end
-        proSubscriptionType: intent.metadata?.plan || 'monthly',
-        lastDatePaid: Date.now(),
+      if (!email) {
+        console.warn('⚠️ No email in payment intent');
+        return res.status(400).send('Missing email');
       }
-    );
-  }
 
-  res.json({ received: true });
+      if (plan !== 'lifetime') {
+        console.warn('⚠️ payment_intent.succeeded received for non-lifetime plan. Skipping.');
+        return res.status(200).json({ skipped: true });
+      }
+
+      await User.updateOne(
+        { email },
+        {
+          isPro: true,
+          isLifeTimePro: true,
+          proSubscriptionType: 'lifetime',
+          proExpiresAt: null,
+          lastDatePaid: Date.now(),
+        }
+      );
+      return res.status(200).json({ received: true });
+    }
+
+    // ✅ INITIAL SUBSCRIPTION
+    case 'checkout.session.completed': {
+      const session = event.data.object;
+      const email = session.customer_email;
+      const plan = session.metadata?.plan;
+
+      if (!email) {
+        console.warn('⚠️ No email in checkout.session.completed');
+        return res.status(400).send('Missing email');
+      }
+
+      await User.updateOne(
+        { email },
+        {
+          isPro: true,
+          isLifeTimePro: false,
+          proSubscriptionType: plan || 'monthly',
+          lastDatePaid: Date.now(),
+        }
+      );
+      return res.status(200).json({ received: true });
+    }
+
+    // ✅ SUBSCRIPTION RENEWAL
+    case 'invoice.payment_succeeded': {
+      const invoice = event.data.object;
+      const customerEmail = invoice.customer_email;
+
+      if (!customerEmail) {
+        console.warn('⚠️ No email in invoice.payment_succeeded');
+        return res.status(400).send('Missing email');
+      }
+
+      const periodEnd = invoice.lines.data[0]?.period?.end;
+      const interval = line.plan.interval;
+      const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+
+
+      await User.updateOne(
+        { email: customerEmail },
+        {
+          isPro: true,
+          proSubscriptionType: proSubscriptionType,
+          isLifeTimePro: false,
+          lastDatePaid: Date.now(),
+          proExpiresAt: periodEnd ? periodEnd * 1000 : null,
+        }
+      );
+      return res.status(200).json({ received: true });
+    }
+
+    // ✅ CANCELLATION
+    case 'customer.subscription.deleted': {
+      const subscription = event.data.object;
+
+      try {
+        const customer = await stripe.customers.retrieve(subscription.customer);
+        const email = customer.email;
+
+        if (!email) {
+          console.warn('⚠️ No email found when canceling subscription');
+          return res.status(400).send('Missing email');
+        }
+
+        await User.updateOne(
+          { email },
+          {
+            isPro: false,
+            isLifeTimePro: false,
+            proSubscriptionType: null,
+            proExpiresAt: null,
+          }
+        );
+
+        return res.status(200).json({ received: true });
+      } catch (err) {
+        console.error('❌ Error fetching customer:', err.message);
+        return res.status(500).send('Internal Error');
+      }
+    }
+
+    default:
+      console.log(`⚠️ Unhandled event type: ${event.type}`);
+      return res.status(200).json({ received: true });
+  }
 });
+
+
 
 app.use(express.json());
 
@@ -270,6 +371,19 @@ app.post('/snoozePush', async (req, res) => {
     user.save();
     res.json({ success: true });
   })
+  
+  app.post('/user/changeEmail', verifyToken, async (req, res) => {
+    const { newEmail, userId } = req.body;
+    if (!newEmail || !newEmail.includes('@')) return res.status(400).json({ error: 'Invalid email' });
+  
+    const user = await User.findById(userId);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+  
+    user.email = newEmail.toLowerCase().trim();
+    await user.save();
+  
+    res.json({ success: true, email: user.email });
+  });
 
   
   // tasklist routes
@@ -405,6 +519,62 @@ app.post('/snoozePush', async (req, res) => {
   
     res.json({ clientSecret: paymentIntent.client_secret });
   });
+
+  app.post('/create-checkout-session', async (req, res) => {
+  const { email, plan } = req.body;
+  const user = await User.findOne({ email });
+  if (!user) return res.status(404).json({ error: 'User not found' });
+
+  const priceMap =
+  process.env.ENVIRONMENT === 'dev'
+    ? {
+        monthly: 'price_1RFIo6RWVGtxvtb5uf6mF81I',    
+        yearly: 'price_1RFIouRWVGtxvtb51zP0eT2J',
+      }
+    : {
+        monthly: 'price_1RgXtiDFl6DTTJEmAOXQr2A4',  
+        yearly: 'price_1RgXtiDFl6DTTJEm7g5gS59Z',
+      };
+
+
+  const session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    payment_method_types: ['card'],
+    customer_email: email,
+    line_items: [
+      {
+        price: priceMap[plan],
+        quantity: 1,
+      },
+    ],
+    allow_promotion_codes: true,
+    metadata:{ plan, referrer: user.referrer || null },
+    success_url: 'https://dewlist.app/subscribe?status=success',
+    cancel_url: 'https://dewlist.app/subscribe?status=cancel',
+  });
+
+  res.json({ url: session.url });
+});
+
+app.post('/create-customer-portal-session', async (req, res) => {
+  const { email } = req.body;
+
+  if (!email) return res.status(400).json({ error: 'Missing email' });
+
+  const customers = await stripe.customers.list({ email, limit: 1 });
+  const customer = customers.data[0];
+
+  if (!customer) return res.status(404).json({ error: 'Customer not found' });
+
+  const session = await stripe.billingPortal.sessions.create({
+    customer: customer.id,
+    return_url: 'https://dewlist.app',
+  });
+
+  res.json({ url: session.url });
+});
+
+
 
   
   // AI endpoints

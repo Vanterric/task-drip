@@ -47,15 +47,17 @@ export default function SubscribePage() {
   
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    vibration('button-press')
-    setLoading(true);
-    setError(null);
+  e.preventDefault();
+  vibration('button-press');
+  setLoading(true);
+  setError(null);
 
+  if (selectedPlan === 'lifetime') {
+    // Keep your existing paymentIntent flow here
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-payment-intent`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: user.email, plan: selectedPlan }),
+      body: JSON.stringify({ email: user.email, plan: 'lifetime' }),
     });
 
     const { clientSecret } = await res.json();
@@ -70,11 +72,21 @@ export default function SubscribePage() {
     if (result.error) {
       setError(result.error.message);
     } else if (result.paymentIntent.status === 'succeeded') {
-        handleUpgradeComplete();
+      handleUpgradeComplete();
     }
+  } else {
+    // Redirect to Stripe Checkout for subscription
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-checkout-session`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: user.email, plan: selectedPlan }),
+    });
 
-    
-  };
+    const { url } = await res.json();
+    window.location.href = url;
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4">
@@ -104,17 +116,30 @@ export default function SubscribePage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <CardElement className="p-3 border rounded-md bg-white" />
-              {error && <div className="text-sm text-red-500">{error}</div>}
+              <p className="text-xs text-center text-[#91989E]">
+              {selectedPlan === 'lifetime'
+                ? 'Secure one-time payment powered by Stripe.'
+                : 'You’ll be redirected to Stripe for secure subscription checkout.'}
+            </p>
 
-              <button
-                type="submit"
-                disabled={!stripe || loading}
-                className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer"
-              >
-                {loading ? 'Processing...' : `Subscribe (${plans[selectedPlan].price})`}
-              </button>
-            </form>
+            {selectedPlan === 'lifetime' && (
+              <CardElement className="p-3 border rounded-md bg-white" />
+            )}
+            {error && <div className="text-sm text-red-500">{error}</div>}
+
+            <button
+              type="submit"
+              disabled={!stripe || loading}
+              className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer"
+            >
+              {loading
+                ? 'Processing...'
+                : selectedPlan === 'lifetime'
+                ? `Pay ${plans[selectedPlan].price}`
+                : `Subscribe (${plans[selectedPlan].price})`}
+            </button>
+          </form>
+
 
             <p className="text-center text-xs text-[#91989E] cursor-default">
               Secure checkout powered by Stripe.

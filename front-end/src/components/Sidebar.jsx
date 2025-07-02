@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
-import { LogOut, LucideCalendarCog, Moon, Pencil, Plus, Sun, Trash2 } from "lucide-react";
+import { Cog, LogOut, LucideCalendarCog, Moon, Pencil, Plus, Settings, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
@@ -13,6 +13,7 @@ import IconPickerModal from "./IconPickerModal";
 import { handleUpdateIcon } from "../utilities/handleUpdateIcon";
 import ResetScheduleModal from "./ResetScheduleModal";
 import { subscribeToPush } from "../utilities/subscribeToPush";
+import SettingsModal from "./SettingsModal";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -30,6 +31,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const { user } = useAuth();
   const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
   const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
 
 
 useEffect(() => {
@@ -371,7 +373,11 @@ useEffect(() => {
 
           )}
         </div>
-
+        {/* sticky settings */}
+          <div onClick={()=>{vibration('button-press'); setIsSettingsModalOpen(true)}} className="p-4 flex items-center justify-start gap-2 text-[#91989E] text-xs cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition w-fit">
+           <Settings className="w-5 h-5" />
+            Settings
+          </div>
         {/* Sticky logout */}
         <div className="p-4 border-t border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)]">
           <button
@@ -444,6 +450,7 @@ if (activeTaskList?._id === listToDelete._id) {
         setFinalTask(incompleteTasks[incompleteTasks.length -1])
         setTasks(taskData);}}
 />
+<SettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
 {isResetScheduleModalOpen ? <ResetScheduleModal onClose={()=>setIsResetScheduleModalOpen(false)} onSubmit={handleSetResetSchedule} taskList = {listToEdit}/> : null}
 {isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon, token, setTaskLists);}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
 
