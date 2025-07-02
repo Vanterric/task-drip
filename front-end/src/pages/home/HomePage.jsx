@@ -375,6 +375,7 @@ useEffect(() => {
       body: JSON.stringify({
         tasklistId: activeList._id,
         content: text,
+        order: tasks.length + 1, // append to end
       }),
     });
   
