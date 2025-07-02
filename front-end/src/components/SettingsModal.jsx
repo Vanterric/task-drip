@@ -39,7 +39,7 @@ export default function SettingsModal({ isOpen, onClose }) {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-customer-portal-session`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-    body: JSON.stringify({ email: user.email }),
+    body: JSON.stringify({ userId: user.id }),
   });
 
   const { url } = await res.json();
