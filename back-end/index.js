@@ -98,31 +98,34 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
     // ✅ SUBSCRIPTION RENEWAL
     case 'invoice.payment_succeeded': {
-      const invoice = event.data.object;
-      const customerEmail = invoice.customer_email;
+  const invoice = event.data.object;
+  const customerEmail = invoice.customer_email;
 
-      if (!customerEmail) {
-        console.warn('⚠️ No email in invoice.payment_succeeded');
-        return res.status(400).send('Missing email');
-      }
+  if (!customerEmail) {
+    console.warn('⚠️ No email in invoice.payment_succeeded');
+    return res.status(400).send('Missing email');
+  }
 
-      const periodEnd = invoice.lines.data[0]?.period?.end;
-      const interval = line.plan.interval;
-      const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+  const line = invoice.lines.data[0]; // ✅ define this first
+  const periodEnd = line?.period?.end;
+  const interval = line?.price?.recurring?.interval;
+  const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
 
-
-      await User.updateOne(
-        { email: customerEmail },
-        {
-          isPro: true,
-          proSubscriptionType: proSubscriptionType,
-          isLifeTimePro: false,
-          lastDatePaid: Date.now(),
-          proExpiresAt: periodEnd ? periodEnd * 1000 : null,
-        }
-      );
-      return res.status(200).json({ received: true });
+  await User.updateOne(
+    { email: customerEmail },
+    {
+      isPro: true,
+      proSubscriptionType,
+      isLifeTimePro: false,
+      lastDatePaid: Date.now(),
+      proExpiresAt: periodEnd ? periodEnd * 1000 : null,
     }
+  );
+
+  console.log(`💸 Payment succeeded for ${customerEmail} — plan: ${proSubscriptionType}`);
+  return res.status(200).json({ received: true });
+}
+
 
     // ✅ CANCELLATION
     case 'customer.subscription.deleted': {
@@ -146,6 +149,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
             proExpiresAt: null,
           }
         );
+      
+        
 
         return res.status(200).json({ received: true });
       } catch (err) {
@@ -153,6 +158,45 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
         return res.status(500).send('Internal Error');
       }
     }
+
+    case 'customer.subscription.updated': {
+  const subscription = event.data.object;
+
+  // Cancel scheduled — skip updates
+  if (subscription.cancel_at_period_end) {
+    console.log('ℹ️ Subscription marked to cancel at period end. Skipping type update.');
+    return res.status(200).json({ skipped: true });
+  }
+
+  try {
+    const customer = await stripe.customers.retrieve(subscription.customer);
+    const email = customer.email;
+
+    if (!email) {
+      console.warn('⚠️ No email found during subscription update');
+      return res.status(400).send('Missing email');
+    }
+
+    // Get the interval from the first subscription item
+    const planInterval = subscription.items.data[0]?.price?.recurring?.interval;
+
+    const proSubscriptionType = planInterval === 'year' ? 'yearly' : 'monthly';
+
+    await User.updateOne(
+      { email },
+      {
+        proSubscriptionType,
+      }
+    );
+
+    console.log(`🔁 Updated plan type for ${email} → ${proSubscriptionType}`);
+    return res.status(200).json({ received: true });
+  } catch (err) {
+    console.error('❌ Error during subscription type update:', err.message);
+    return res.status(500).send('Internal Error');
+  }
+}
+
 
     default:
       console.log(`⚠️ Unhandled event type: ${event.type}`);
