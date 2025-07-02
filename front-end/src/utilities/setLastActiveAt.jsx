@@ -16,7 +16,7 @@ export const setLastActiveAt = (user) => {
       return response.json();
     })
     .then((data) => {
-      console.log('Last active time updated:', data);
+      null
     })
     .catch((error) => {
       console.error('Error updating last active time:', error);

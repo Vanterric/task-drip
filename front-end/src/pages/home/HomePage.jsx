@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
-import { CheckCircle, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, Clock, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -58,7 +58,8 @@ export default function HomePage() {
           { headers }
         );
         const taskData = await resTasks.json();
-        setFinalTask(taskData[taskData.length -1])
+       const incompleteTasks = taskData.filter(t => !t.isComplete);
+        setFinalTask(incompleteTasks[incompleteTasks.length -1])
         setTasks(taskData);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -240,7 +241,7 @@ useEffect(() => {
       <div className="flex-grow flex flex-col items-center justify-center px-4">
         {loading ? (
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
-        ) : isSkippedThroughAlertShown ? 
+        ) : isSkippedThroughAlertShown && nextTask ? 
         <div className="w-full max-w-md text-center space-y-6">
         <div className="bg-[#F6DFD3] dark:bg-[#2D3545] rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
@@ -277,8 +278,13 @@ useEffect(() => {
           <div className="w-full max-w-md text-center space-y-6">
             <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 text-xl font-semibold transition cursor-default">
               {nextTask.content}
+              {/* <hr className="border-gray-300 dark:border-[#A1A8B0] w-full mt-6" />
+              <div className="text-sm mt-5 font-normal">Example Description of Task</div>
+              <div className="flex items-center justify-between text-xs gap-2 font-normal mt-5 mb-[-.5rem]">
+              <div className = 'cursor-pointer'>Edit</div>
+              <div className="flex gap-1 item-center justify-center"><AlarmClock className="h-4 w-4"/>6/25/2025</div>
+              </div> */}
             </div>
-
             <div className="flex gap-4 justify-center">
             <button
             onClick={() => handleComplete(nextTask._id)}
@@ -399,6 +405,7 @@ token={token}
   setActiveTaskList={setActiveTaskList}
   activeTaskList={activeTaskList}
   setTasks={setTasks}
+  setFinalTask={setFinalTask}
   onSelectList={async (list) => {
     setActiveTaskList(list);
 
@@ -410,7 +417,9 @@ token={token}
       }}
     );
     const taskData = await res.json();
-    setFinalTask(taskData[taskData.length -1])
+        const incompleteTasks = taskData.filter(t => !t.isComplete);
+        setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setTasks(taskData);
     setIsSkippedThroughAlertShown(false);
     setTasks(taskData);
   }}

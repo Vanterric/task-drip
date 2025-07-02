@@ -68,6 +68,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           body: JSON.stringify({
             tasklistId: newTaskList._id,
             content: task.content,
+            order: task.order || 0, 
           }),
         });
       }

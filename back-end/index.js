@@ -334,7 +334,7 @@ app.post('/snoozePush', async (req, res) => {
   // task routes
   app.get('/tasks', verifyToken, async (req, res) => {
     const { tasklistId } = req.query;
-    const tasks = await Task.find({ tasklistId });
+    const tasks = await Task.find({ tasklistId }).sort({ order: 1 });
     res.json(tasks);
   });
 
@@ -345,16 +345,27 @@ app.post('/snoozePush', async (req, res) => {
   
     if (!user.isPro && taskCount >= 5) return res.status(403).json({ error: 'Free tier limit' });
   
-    const task = await Task.create({ tasklistId, content: req.body.content });
+    const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0 });
     user.lastActiveAt = new Date();
     user.save();
     res.json(task);
   });
 
   app.put('/tasks/:id', verifyToken, async (req, res) => {
-    const task = await Task.findByIdAndUpdate(req.params.id, req.body, { new: true });
+  try {
+    const allowedFields = ['content', 'isComplete', 'order']; // whitelist keys
+    const updates = Object.fromEntries(
+      Object.entries(req.body).filter(([key]) => allowedFields.includes(key))
+    );
+
+    const task = await Task.findByIdAndUpdate(req.params.id, updates, { new: true });
     res.json(task);
-  });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Failed to update task' });
+  }
+});
+
   
   app.delete('/tasks/:id', verifyToken, async (req, res) => {
     await Task.deleteOne({ _id: req.params.id });

@@ -15,7 +15,7 @@ import ResetScheduleModal from "./ResetScheduleModal";
 import { subscribeToPush } from "../utilities/subscribeToPush";
 
 
-export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal }) {
+export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
   const { logout } = useAuth();
   const [showInput, setShowInput] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -435,10 +435,13 @@ if (activeTaskList?._id === listToDelete._id) {
 />
 <EditTaskListModal
   isOpen={showEditModal}
-  onClose={() => setShowEditModal(false)}
+  onClose={() => {setShowEditModal(false); setActiveTaskList(listToEdit)}}
   list={listToEdit}
   token={token}
-  onSave={refetchTaskListsOrUpdateUI}
+  onSave={(taskData)=>{refetchTaskListsOrUpdateUI(); 
+        const incompleteTasks = taskData.filter(t => !t.isComplete);
+        setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setTasks(taskData);}}
 />
 {isResetScheduleModalOpen ? <ResetScheduleModal onClose={()=>setIsResetScheduleModalOpen(false)} onSubmit={handleSetResetSchedule} taskList = {listToEdit}/> : null}
 {isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon, token, setTaskLists);}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
