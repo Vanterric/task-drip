@@ -2,6 +2,7 @@ import { useContext, useState } from "react";
 import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
+import { capitalizeFirst } from "../utilities/capitalizeFirst";
 
 export default function SettingsModal({ isOpen, onClose }) {
   
@@ -70,7 +71,7 @@ export default function SettingsModal({ isOpen, onClose }) {
 
           {/* Subscription */}
           <div>
-            <p className="font-medium">Subscription: {user.proSubscriptionType || "Free Plan"}</p>
+            <p className="font-medium">Subscription: {capitalizeFirst(user.proSubscriptionType) || "Free Plan"}</p>
             <div className="flex gap-2 mt-2">
               {user.isPro ? <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); handleManageSubscription()}}>
                 Manage Subscription

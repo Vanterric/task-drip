@@ -345,7 +345,7 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer });
+    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType });
   });
 
   
