@@ -6,7 +6,7 @@ import { capitalizeFirst } from "../utilities/capitalizeFirst";
 
 export default function SettingsModal({ isOpen, onClose }) {
   
-  const [theme, setTheme] = useState("light"); // 'light', 'dark', or 'system'
+  
   const [supportMessage, setSupportMessage] = useState("");
   const [saving, setSaving] = useState(false);
   const {user} = useAuth();
@@ -14,6 +14,7 @@ export default function SettingsModal({ isOpen, onClose }) {
   const { token } = useAuth();
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     const [email, setEmail] = useState(user.email);
+    const [theme, setTheme] = useState(isDarkMode ? "dark" : "light"); // 'light', 'dark', or 'system'
 
   const handleSave = async () => {
     vibration("button-press");
