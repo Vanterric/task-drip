@@ -32,6 +32,8 @@ const UserSchema = new mongoose.Schema({
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
   referrer: { type: String, default: null }, // Referrer code
   isReferrer: { type: Boolean, default: false }, // If user is part of the referrer program
+  stripeSubscriptionId: { type: String, default: null }, // Stripe subscription ID
+  stripeCustomerId: { type: String, default: null }, // Stripe customer ID
 });
 
 module.exports = mongoose.model('User', UserSchema);
