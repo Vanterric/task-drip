@@ -111,6 +111,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           const currentPeriodEnd = subscription.current_period_end * 1000;
           const interval = subscription.items.data[0]?.price?.recurring?.interval;
           const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+          const proExpiresAt = currentPeriodEnd ? new Date(currentPeriodEnd) : null;
 
           // Try to find user by customerId
           let user = await User.findOne({ stripeCustomerId: customerId });
@@ -134,7 +135,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
               stripeCustomerId: customerId,
               stripeSubscriptionId: subscriptionId,
               proSubscriptionType,
-              proExpiresAt: currentPeriodEnd,
+              proExpiresAt: proExpiresAt,
               lastDatePaid: Date.now(),
             }
           );
