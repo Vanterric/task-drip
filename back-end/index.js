@@ -149,14 +149,17 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     //
     case 'invoice.payment_succeeded': {
       const invoice = event.data.object;
-      const subscriptionId = invoice.subscription;
+      const line = invoice.lines?.data?.[0];
+      const subscriptionId = line?.parent?.subscription_item_details?.subscription;
+
 
       if (!subscriptionId) return res.status(400).json({ error: 'Missing subscription ID' });
 
-      const line = invoice.lines.data[0];
       const periodEnd = line?.period?.end;
       const interval = line?.price?.recurring?.interval;
       const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+      const proExpiresAt = periodEnd ? new Date(periodEnd * 1000) : null;
+
 
       await User.updateOne(
         { stripeSubscriptionId: subscriptionId },
@@ -165,7 +168,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           isLifeTimePro: false,
           proSubscriptionType,
           lastDatePaid: Date.now(),
-          proExpiresAt: periodEnd ? periodEnd * 1000 : null,
+          proExpiresAt: proExpiresAt
         }
       );
 
