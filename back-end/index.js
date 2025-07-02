@@ -99,7 +99,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
           const subscriptionId = session.subscription;
           const customerId = session.customer;
-          const email = session.customer_email;
+          const email = session.customer_email || session.customer_details?.email;
+
 
           if (!subscriptionId || !customerId || !email) {
             return res.status(400).json({ error: 'Missing subscription, customer ID, or email' });
