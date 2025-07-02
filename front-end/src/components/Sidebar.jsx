@@ -435,11 +435,12 @@ if (activeTaskList?._id === listToDelete._id) {
 />
 <EditTaskListModal
   isOpen={showEditModal}
-  onClose={() => {setShowEditModal(false); setActiveTaskList(listToEdit)}}
+  onClose={() => {setShowEditModal(false)}}
   list={listToEdit}
   token={token}
   onSave={(taskData)=>{refetchTaskListsOrUpdateUI(); 
         const incompleteTasks = taskData.filter(t => !t.isComplete);
+        setActiveTaskList(listToEdit)
         setFinalTask(incompleteTasks[incompleteTasks.length -1])
         setTasks(taskData);}}
 />
