@@ -200,26 +200,44 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     // PLAN SWITCHING
     //
     case 'customer.subscription.updated': {
-      const sub = event.data.object;
-      const subscriptionId = sub.id;
+  const rawSub = event.data.object;
+  const subscriptionId = rawSub.id;
 
-      if (sub.cancel_at_period_end) {
-        console.log(`Subscription ${subscriptionId} marked to cancel. Skipping update.`);
-        return res.status(200).json({ skipped: true });
-      }
+  if (rawSub.cancel_at_period_end) {
+    console.log(`Subscription ${subscriptionId} marked to cancel. Skipping update.`);
+    return res.status(200).json({ skipped: true });
+  }
 
-      const interval = sub.items.data[0]?.price?.recurring?.interval;
-      const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+  // 🔄 Re-fetch the subscription with expanded price
+  let sub;
+  try {
+    sub = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ['items.data.price'],
+    });
+  } catch (err) {
+    console.error(`❌ Failed to retrieve subscription ${subscriptionId}:`, err.message);
+    return res.status(500).json({ error: 'Failed to fetch subscription' });
+  }
 
-      await User.updateOne(
-        { stripeSubscriptionId: subscriptionId },
-        {
-          proSubscriptionType,
-        }
-      );
+  const item = sub.items.data?.[0];
+  const interval = item?.price?.recurring?.interval;
 
-      return res.status(200).json({ received: true });
-    }
+  if (!interval) {
+    console.warn(`⚠️ Missing interval for subscription ${subscriptionId}`);
+    return res.status(400).json({ error: 'Missing interval' });
+  }
+
+  const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
+
+  await User.updateOne(
+    { stripeSubscriptionId: subscriptionId },
+    { proSubscriptionType }
+  );
+
+  console.log(`🔁 Updated subscription type → ${proSubscriptionType} for ${subscriptionId}`);
+  return res.status(200).json({ received: true });
+}
+
 
     //
     // FINAL CANCELLATION
@@ -661,7 +679,7 @@ app.post('/snoozePush', async (req, res) => {
     allow_promotion_codes: true,
     metadata:{ plan, referrer: user.referrer || null },
     success_url: 'https://dewlist.app/subscribe?status=success',
-    cancel_url: 'https://dewlist.app/subscribe?status=cancel',
+    cancel_url: 'https://dewlist.app/subscribe',
   });
 
   res.json({ url: session.url });
@@ -679,7 +697,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: user.stripeCustomerId,
-    return_url: 'https://dewlist.app/settings',
+    return_url: 'https://dewlist.app/',
   });
 
   res.json({ url: session.url });
