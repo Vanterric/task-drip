@@ -74,9 +74,9 @@ export default function SettingsModal({ isOpen, onClose }) {
           <div>
             <p className="font-medium">Subscription: {capitalizeFirst(user.proSubscriptionType) || "Free Plan"}</p>
             <div className="flex gap-2 mt-2">
-              {user.isPro ? <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); handleManageSubscription()}}>
+              {user.isPro ? user.proSubscriptionType !== 'lifetime' ?<button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); handleManageSubscription()}}>
                 Manage Subscription
-              </button> : <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); window.location.href = '/subscribe'}}>
+              </button> : <p className="text-sm italic">Thanks for being a lifetime member!</p> : <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); window.location.href = '/subscribe'}}>
                 Upgrade
               </button>}
             </div>
@@ -101,7 +101,12 @@ export default function SettingsModal({ isOpen, onClose }) {
               <option value="system">System</option>
             </select>
           </div>
-
+            {/*Delete Account*/}
+            <div>
+            <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-4 transition cursor-pointer" onClick={()=>{window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
+              Delete Account
+            </p>
+            </div>
           {/* Support */}
           <div>
             <p className="text-xs mt-1">
