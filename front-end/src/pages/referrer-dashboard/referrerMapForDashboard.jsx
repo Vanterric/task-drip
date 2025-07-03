@@ -26,7 +26,12 @@ const referrerMapForDashboard = (email) => {
             referralLink: "alicestern",
             percentShare: .1,
         },
+        "compassionate.coach.fiona@gmail.com": {
+            name: "Fiona",
+            referralLink: "compassionatecoachfiona",
+            percentShare: .1,
     }
+    };
 
     if (referrerMap[email]) {
         return referrerMap[email];
