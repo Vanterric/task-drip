@@ -107,11 +107,31 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           }
 
           // Fetch full subscription to get current_period_end and interval
-          const subscription = await stripe.subscriptions.retrieve(subscriptionId);
-          const currentPeriodEnd = subscription.current_period_end * 1000;
-          const interval = subscription.items.data[0]?.price?.recurring?.interval;
+          const subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+          expand: ['items.data.price'],
+        });
+
+
+          // Grab the first subscription item
+          const item = subscription.items?.data?.[0];
+          if (!item) {
+            throw new Error(`No subscription items found for subscription ID: ${subscriptionId}`);
+          }
+
+          // ✅ Updated for Stripe 2025 API structure
+          const currentPeriodEndSeconds = item.current_period?.end;
+          const proExpiresAt = currentPeriodEndSeconds
+            ? new Date(currentPeriodEndSeconds * 1000)
+            : null;
+
+
+          // New interval
+          const interval = item?.price?.recurring?.interval;
+          if (!interval) {
+            throw new Error(`Missing interval on subscription item ${item.id}`);
+          }
           const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
-          const proExpiresAt = currentPeriodEnd ? new Date(currentPeriodEnd) : null;
+
 
           // Try to find user by customerId
           let user = await User.findOne({ stripeCustomerId: customerId });
