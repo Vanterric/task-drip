@@ -127,6 +127,8 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
           // New interval
           const interval = item?.price?.recurring?.interval;
+          console.log(`Interval: ${interval}`);
+          console.log( `Subscription item details:`, item);
           if (!interval) {
             throw new Error(`Missing interval on subscription item ${item.id}`);
           }
@@ -169,32 +171,53 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     //  RENEWAL
     //
     case 'invoice.payment_succeeded': {
-      const invoice = event.data.object;
-      const line = invoice.lines?.data?.[0];
-      const subscriptionId = line?.parent?.subscription_item_details?.subscription;
+  const invoice = event.data.object;
+  const line = invoice.lines?.data?.[0];
+  const subscriptionId = line?.parent?.subscription_item_details?.subscription;
 
+  if (!subscriptionId) {
+    console.warn('⚠️ Missing subscription ID in invoice line');
+    return res.status(400).json({ error: 'Missing subscription ID' });
+  }
 
-      if (!subscriptionId) return res.status(400).json({ error: 'Missing subscription ID' });
+  // 🔄 Fetch the full subscription with expanded pricing
+  let subscription;
+  try {
+    subscription = await stripe.subscriptions.retrieve(subscriptionId, {
+      expand: ['items.data.price'],
+    });
+  } catch (err) {
+    console.error(`❌ Failed to retrieve subscription ${subscriptionId}:`, err.message);
+    return res.status(500).json({ error: 'Subscription fetch failed' });
+  }
 
-      const periodEnd = line?.period?.end;
-      const interval = line?.price?.recurring?.interval;
-      const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
-      const proExpiresAt = periodEnd ? new Date(periodEnd * 1000) : null;
+  const item = subscription.items?.data?.[0];
+  const interval = item?.price?.recurring?.interval;
+  const currentPeriodEnd = item?.current_period?.end;
+  const proExpiresAt = currentPeriodEnd ? new Date(currentPeriodEnd * 1000) : null;
 
+  if (!interval) {
+    console.warn(`⚠️ Missing interval for subscription item ${item?.id}`);
+    return res.status(400).json({ error: 'Missing billing interval' });
+  }
 
-      await User.updateOne(
-        { stripeSubscriptionId: subscriptionId },
-        {
-          isPro: true,
-          isLifeTimePro: false,
-          proSubscriptionType,
-          lastDatePaid: Date.now(),
-          proExpiresAt: proExpiresAt
-        }
-      );
+  const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
 
-      return res.status(200).json({ received: true });
+  await User.updateOne(
+    { stripeSubscriptionId: subscriptionId },
+    {
+      isPro: true,
+      isLifeTimePro: false,
+      proSubscriptionType,
+      lastDatePaid: Date.now(),
+      proExpiresAt,
     }
+  );
+
+  console.log(`💸 Invoice paid: ${subscriptionId} → ${proSubscriptionType}`);
+  return res.status(200).json({ received: true });
+}
+
 
     //
     // PLAN SWITCHING
@@ -226,6 +249,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
     console.warn(`⚠️ Missing interval for subscription ${subscriptionId}`);
     return res.status(400).json({ error: 'Missing interval' });
   }
+
+  console.log(`Interval: ${interval}`);
+  console.log( `Subscription item details:`, item);
 
   const proSubscriptionType = interval === 'year' ? 'yearly' : 'monthly';
 
