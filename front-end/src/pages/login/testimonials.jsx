@@ -4,6 +4,11 @@ export const testimonials = [
     role: "ADHD Coach & Specialist",
     quote:"No one can multitask. We just have to focus on getting something done. DewList’s simple, single-task design is perfect for neurodivergent minds."
     },
+    {
+      name: "Fiona",
+      role: "ADHD Coach",
+      quote:"DewList helps me get out of bed on difficult days. It has a beautiful, simple design that's easy to use and stops me getting distracted."
+    },
   {
     name: "Davie",
     role: "CS Master's Student",
@@ -17,6 +22,6 @@ export const testimonials = [
   {
     name: "Derrick",
     role: "Founder of DewList",
-    quote: "I used DewList to build DewList! Super helpful. And my favorite feature? The haptics for sure. I’m a sucker for a good buzz."
+    quote: "DewList is a passion project that started as a simple idea to help myself and my brother get organized. We now use it daily, and I hope it helps you too!"
   }     
     ]
