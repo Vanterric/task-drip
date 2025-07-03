@@ -119,7 +119,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           }
 
           // ✅ Updated for Stripe 2025 API structure
-          const currentPeriodEndSeconds = item.current_period?.end;
+          const currentPeriodEndSeconds = item?.current_period?.end ?? item?.current_period_end;
           const proExpiresAt = currentPeriodEndSeconds
             ? new Date(currentPeriodEndSeconds * 1000)
             : null;
@@ -193,7 +193,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
   const item = subscription.items?.data?.[0];
   const interval = item?.price?.recurring?.interval;
-  const currentPeriodEnd = item?.current_period?.end;
+  const currentPeriodEnd = item?.current_period?.end ?? item?.current_period_end;
   const proExpiresAt = currentPeriodEnd ? new Date(currentPeriodEnd * 1000) : null;
 
   if (!interval) {
