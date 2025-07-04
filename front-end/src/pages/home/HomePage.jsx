@@ -204,7 +204,7 @@ useEffect(() => {
       {/* Masthead */}
       <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 ">
   {/* TaskDrip branding + hamburger */}
-  <div className="flex items-start justify-between px-4 py-4 w-full">
+  <div className="flex items-center justify-between px-4 py-4 w-full">
   {/* Left: Branding */}
   <div className="flex items-center space-x-2">
     <button
@@ -220,8 +220,8 @@ useEffect(() => {
   </div>
 
   {/* Right: Active task list name */}
-  <div className="flex-grow flex flex-col items-end justify-start max-w-[70%]">
-  <h1 className="text-2xl font-bold text-right truncate cursor-default max-w-[100%]">
+  <div className="flex-grow flex flex-col items-end justify-start max-w-[calc(100%-150px)] max-[400px]:max-w-[calc(100%-100px)]">
+  <h1 className="text-2xl font-bold text-right truncate cursor-default max-w-[100%] max-[400px]:text-xl">
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
   {activeTaskList?.resetSchedule && activeTaskList?.resetSchedule?.number && (
