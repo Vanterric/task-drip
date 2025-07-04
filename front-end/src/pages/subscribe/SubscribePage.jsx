@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
@@ -21,6 +21,20 @@ export default function SubscribePage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
+
+  const queryParams = new URLSearchParams(window.location.search);
+  const checkoutSuccess = queryParams.get('status') === 'success';
+
+  useEffect(() => {
+    if (checkoutSuccess) {
+      handleUpgradeComplete();
+    }
+  }, [checkoutSuccess]);
+
+  useEffect(() => {
+    user.isPro && setSubscribed(true);
+  }, [user]);
+
 
   const handleUpgradeComplete = async () => {
     const pollUntilPro = async (retries = 10) => {
@@ -93,9 +107,9 @@ export default function SubscribePage() {
       <div className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
         {!subscribed ? (
           <>
-            <h1 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white cursor-default">Upgrade to DewList Pro</h1>
+            <h1 className="text-2xl font-bold text-center text-yellow-500 dark:text-yellow-300 cursor-default mb-2">DewList Pro</h1>
             <p className="text-sm text-center text-[#91989E] cursor-default">
-              Get unlimited tasks, lists, and AI-powered breakdowns.
+              Upgrade to pro to get unlimited tasks, <br/> unlimited lists, AI-powered breakdowns, and more.
             </p>
 
             <div className="flex justify-center gap-2">
@@ -116,11 +130,7 @@ export default function SubscribePage() {
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-              <p className="text-xs text-center text-[#91989E]">
-              {selectedPlan === 'lifetime'
-                ? 'Secure one-time payment powered by Stripe.'
-                : 'You’ll be redirected to Stripe for secure subscription checkout.'}
-            </p>
+              
 
             {selectedPlan === 'lifetime' && (
               <CardElement className="p-3 border rounded-md bg-white" />
@@ -141,16 +151,18 @@ export default function SubscribePage() {
           </form>
 
 
-            <p className="text-center text-xs text-[#91989E] cursor-default">
-              Secure checkout powered by Stripe.
+            <p className="text-xs text-center text-[#91989E]">
+              {selectedPlan === 'lifetime'
+                ? 'Secure one-time payment powered by Stripe.'
+                : 'You’ll be redirected to Stripe for secure subscription checkout.'}
             </p>
           </>
         ) : (
           <div className="text-center space-y-6">
             <CheckCircle className="w-12 h-12 mx-auto text-[#6DBF67]" />
-            <h2 className="text-xl font-semibold text-[#4F5962] cursor-default">You’re now a Pro!</h2>
+            <h2 className="text-xl font-semibold text-[#4F5962] dark:text-white mb-2 cursor-default">Success!</h2>
             <p className="text-sm text-[#91989E] cursor-default">
-              Your upgrade was successful. You can now enjoy all premium features.
+              Your upgrade was successful. <br/> You can now enjoy all DewList Pro features.
             </p>
             <button
               onClick={() => {vibration('button-press'); navigate('/app')}}
