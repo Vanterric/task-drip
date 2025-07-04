@@ -11,7 +11,8 @@ const TaskListSchema = new mongoose.Schema({
     cadence: { type: String, default: null }, // days, weeks, months, years
     startDate: { type: Date, default: null },
     lastReset: { type: Date, default: null }
-  }
+  },
+  order: { type: Number, default: 0 },
 });
 
 module.exports = mongoose.model('TaskList', TaskListSchema);

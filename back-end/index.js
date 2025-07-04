@@ -524,6 +524,7 @@ app.post('/snoozePush', async (req, res) => {
   // tasklist routes
   app.get('/tasklists', verifyToken, async (req, res) => {
     const lists = await TaskList.find({ userId: req.user.id });
+    lists.sort((a, b) => a.order - b.order); 
     res.json(lists);
   });
 
@@ -551,7 +552,8 @@ app.post('/snoozePush', async (req, res) => {
   });
   
   app.put('/tasklists/:id', verifyToken, async (req, res) => {
-    const { name, icon, resetSchedule } = req.body;
+    const { name, icon, resetSchedule, order } = req.body;
+    console.log("Updating task list:", req.params.id, "with data:", req.body);
   
     if (name && name.trim() === "") {
       return res.status(400).json({ error: "Name cannot be empty" });
@@ -561,6 +563,7 @@ app.post('/snoozePush', async (req, res) => {
       const updateFields = {};
         if (name) updateFields.name = name;
         if (icon) updateFields.icon = icon;
+        if (order !== undefined) updateFields.order = order; 
         if (resetSchedule) updateFields.resetSchedule = resetSchedule
 
         const updated = await TaskList.findByIdAndUpdate(

@@ -14,6 +14,7 @@ import { handleUpdateIcon } from "../utilities/handleUpdateIcon";
 import ResetScheduleModal from "./ResetScheduleModal";
 import { subscribeToPush } from "../utilities/subscribeToPush";
 import SettingsModal from "./SettingsModal";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -32,6 +33,8 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
   const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
+  const [draggedId, setDraggedId] = useState(null);
+
 
 
 useEffect(() => {
@@ -217,6 +220,33 @@ useEffect(() => {
       console.error("Error refetching task lists or tasks:", err);
     }
   };
+
+  const handleListReorder = ({ source, destination }) => {
+    setDraggedId(null)
+  if (!destination) return;
+  const updated = Array.from(taskLists);
+  const [moved] = updated.splice(source.index, 1);
+  updated.splice(destination.index, 0, moved);
+
+  setTaskLists(updated);
+
+  // Save new order immediately
+  updated.forEach((list, index) => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...list, order: index }),
+    });
+  });
+};
+
+
+
+
+
   
 
   return (
@@ -240,7 +270,7 @@ useEffect(() => {
     <div
     ref={panelRef}
     onClick={(e) => {
-      e.stopPropagation(); // 💥 prevents backdrop click
+      e.stopPropagation(); 
       setActiveKebab(null);
     }}
     className={`relative z-50 w-72 bg-white dark:bg-[#4F5962] h-full shadow-lg flex flex-col transform transition duration-300 ease-in-out ${
@@ -266,21 +296,35 @@ useEffect(() => {
         :
         null}
         {/* Scrollable task list */}
-        <div className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+        <DragDropContext onDragEnd={handleListReorder} >
+          <Droppable droppableId="taskLists" direction="vertical">
+            {(provided) => (
+        <div ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
           {taskLists.map((list) => (
-            <div key={list._id} className="flex justify-between items-center w-full">
+            <Draggable key={list._id} draggableId={list._id} index={taskLists.indexOf(list)} >
+          {(provided, snapshot) => {
+            const isSelected = draggedId === list._id;
+            return(
+            <div 
+            onPointerDown={() => setDraggedId(list._id)} 
+            onPointerUp={() => setDraggedId(null)}
+            ref={provided.innerRef} 
+            {...provided.draggableProps} 
+            {...provided.dragHandleProps} 
+            className={`flex justify-between items-center w-full bg-white dark:bg-[#4F5962] rounded-lg ${isSelected ? 'shadow-lg' : ''}`}
+            >
               <div className="cursor-pointer" onClick={() => {setListToEdit(list);setIsIconPickerModalOpen(true); vibration('button-press')}}>
                 <LucideIcon icon = {list.icon} size={30} />
                 </div>
-            <button
+            <div
               onClick={() => {
+                setTimeout(() => onClose(), 300);
                 onSelectList(list);
-                onClose();
               }}
               className="cursor-pointer text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.25)] text-[#4F5962] dark:text-white transition"
             >
               {list.name}
-            </button>
+            </div>
           
             <button
               onClick={(e) => {e.stopPropagation();vibration('button-press');setActiveKebab(list._id)}}
@@ -331,9 +375,11 @@ useEffect(() => {
               </div>
             )}
           </div>
+          )}}
+            </Draggable>
           
           ))}
-
+          {provided.placeholder}
           {showInput ? (
             <div className="mt-4 space-y-2">
               <input
@@ -373,6 +419,9 @@ useEffect(() => {
 
           )}
         </div>
+            )}
+        </Droppable>
+        </DragDropContext>
         {/* sticky settings */}
           <div onClick={()=>{vibration('button-press'); setIsSettingsModalOpen(true)}} className="p-4 flex items-center justify-start gap-2 text-[#91989E] text-xs cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition w-fit">
            <Settings className="w-5 h-5" />
