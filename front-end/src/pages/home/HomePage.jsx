@@ -330,7 +330,7 @@ useEffect(() => {
       (
         <div className="flex-grow flex flex-col items-start px-10 w-full max-w-4xl mx-auto max-[500px]:mt-20 mt-25 overflow-y-auto pb-20 max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]">
           {tasks.map((task) => (
-            <div  key={task._id} className="flex flex-row gap-5 mt-5 p-4 justify-start items-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full">
+            <div  key={task._id} className="flex flex-row gap-5 mt-5 p-4 justify-start items-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default">
                 <input
                   type="checkbox"
                   checked={task.isComplete}
