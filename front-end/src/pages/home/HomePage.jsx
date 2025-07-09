@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
-import { AlarmClock, CheckCircle, Clock, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, Clock, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -30,8 +30,7 @@ export default function HomePage() {
   const [finalTask, setFinalTask] = useState(null);
   const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
-  
-
+  const [viewType, setViewType] = useState('one-task'); // 'one-task' or 'list'
   
 
   
@@ -95,6 +94,7 @@ useEffect(() => {
 
   const handleComplete = async (taskId) => {
     setLastActiveAt(user);
+    const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
     vibration('button-press')
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -103,11 +103,11 @@ useEffect(() => {
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${taskId}`, {
       method: "PATCH",
       headers,
-      body: JSON.stringify({ isComplete: true }),
+      body: JSON.stringify({ isComplete: !currentCompleteStatus }),
     });
     vibration('task-completion')
     setTasks((prev) =>
-      prev.map((t) => (t._id === taskId ? { ...t, isComplete: true } : t))
+      prev.map((t) => (t._id === taskId ? { ...t, isComplete: !currentCompleteStatus } : t))
     );
   };
 
@@ -202,7 +202,7 @@ useEffect(() => {
       )}
 
       {/* Masthead */}
-      <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 ">
+      <div className="flex items-center justify-between px-4 py-4 max-[500px]:px-2 max-[500px]:py-2 absolute top-0 left-0 right-0 z-10 backdrop-blur-md">
   {/* TaskDrip branding + hamburger */}
   <div className="flex items-center justify-between px-4 py-4 w-full">
   {/* Left: Branding */}
@@ -236,12 +236,14 @@ useEffect(() => {
   </div>
 </div>
 </div>
-
-
-      <div className="flex-grow flex flex-col items-center justify-center px-4">
+  
+      
+      {viewType === "one-task" ? 
+      /* One-Task View */
+      (<div className="flex-grow flex flex-col items-center justify-center px-4">
         {loading ? (
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
-        ) : isSkippedThroughAlertShown && nextTask ? 
+        ) : isSkippedThroughAlertShown && nextTask ? (
         <div className="w-full max-w-md text-center space-y-6">
         <div className="bg-[#F6DFD3] dark:bg-[#2D3545] rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
@@ -266,7 +268,7 @@ useEffect(() => {
             </div>
 
             <ProgressBar completedCount={completedCount} tasks={tasks} />
-          </div>
+          </div>)
         : !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-[#91989E] text-center cursor-default">
           {!activeTaskList
@@ -323,10 +325,33 @@ useEffect(() => {
           <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>
         )}
-      </div>
+      </div>) : 
+      /* List View */
+      (
+        <div className="flex-grow flex flex-col items-start px-10 w-full max-w-4xl mx-auto max-[500px]:mt-20 mt-25 overflow-y-auto pb-20 max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]">
+          {tasks.map((task) => (
+            <div  key={task._id} className="flex flex-row gap-5 mt-5 p-4 justify-start items-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full">
+                <input
+                  type="checkbox"
+                  checked={task.isComplete}
+                  onChange={() => handleComplete(task._id)}
+                  className="cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                />
+              {task.content}
+            </div>
+          ))}
+        </div>
+      )}
 
+      <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
+<button
+  className= {`cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  onClick={() => {vibration('button-press'); if (user.isPro) {setShowAIModal(true)} else {setShowUpgradeModal(true)}}}
+>
+<Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
+</button>
       <button
-  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group fixed bottom-6 right-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
   onClick={() => {
     vibration('button-press');
     if (tasks.length >= 5 && !user.isPro) {
@@ -339,12 +364,45 @@ useEffect(() => {
   <Plus className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
   Add Task
 </button>
-{user?.isPro ? <button
-  className= {`cursor-pointer group fixed bottom-6 left-6 flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
-  onClick={() => {vibration('button-press'); setShowAIModal(true)}}
+<button
+  className= {`cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  onClick={() => {vibration('button-press'); 
+  const resetTaskDetails = async (list)=>{
+    setActiveTaskList(list);
+
+    const res = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${list._id}`,
+      { headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      }}
+    );
+    const taskData = await res.json();
+        const incompleteTasks = taskData.filter(t => !t.isComplete);
+        setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setTasks(taskData);
+    setIsSkippedThroughAlertShown(false);
+    setTasks(taskData);
+  }
+  resetTaskDetails({...activeTaskList});
+  setViewType(viewType === 'one-task' ? 'list' : 'one-task');}}
 >
-<Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
-</button> : null}
+<div className="relative w-5 h-5 group">
+  <List
+    className={`absolute top-0 left-0 w-5 h-5 text-white transition-all duration-300 ease-in-out
+      ${viewType === 'one-task' ? 'opacity-100 scale-100 rotate-0 group-hover:rotate-[-12deg] group-hover:scale-110' : 'opacity-0 scale-90 rotate-6'}
+    `}
+  />
+  <LayoutPanelTop
+    className={`absolute top-0 left-0 w-5 h-5 text-white transition-all duration-300 ease-in-out
+      ${viewType !== 'one-task' ? 'opacity-100 scale-100 rotate-0 group-hover:rotate-[-12deg] group-hover:scale-110' : 'opacity-0 scale-90 -rotate-6'}
+    `}
+  />
+</div>
+
+
+</button>
+</div>
 
 
 <AddTaskModal
@@ -436,7 +494,7 @@ token={token}
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ name }),
+      body: JSON.stringify({ name, order: taskLists.length + 1 }),
     });
 
     const newList = await res.json();

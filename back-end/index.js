@@ -532,13 +532,14 @@ app.post('/snoozePush', async (req, res) => {
     const count = await TaskList.countDocuments({ userId: req.user.id });
     const user = await User.findById(req.user.id);
     const creationPrompt = req.body.creationPrompt;
+    const order = req.body.order || 0;
     
   
     if (!user.isPro && count >= 3) return res.status(403).json({ error: 'Free tier limit reached' });
 
     const { name, icon = "clipboard-check" } = req.body;
   
-    const list = await TaskList.create({ userId: req.user.id, name, icon });
+    const list = await TaskList.create({ userId: req.user.id, name, icon, order });
     await saveCreationPrompt(list._id, creationPrompt);
     user.lastActiveAt = new Date();
     user.save();

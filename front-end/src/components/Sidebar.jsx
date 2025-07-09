@@ -347,18 +347,23 @@ useEffect(() => {
                     <Pencil className="w-4 h-4 text-[#4C6CA8] dark:text-[#90A9D6]" />
                     Edit List
                   </button>
-                  {user.isPro && <button
+                  <button
                     className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
                       vibration('button-press');
-                      setIsResetScheduleModalOpen(true);
-                      setListToEdit(list);
-                      setActiveKebab(null);
+                      if (user.isPro) {
+                        setIsResetScheduleModalOpen(true);
+                        setListToEdit(list);
+                        setActiveKebab(null);
+                      } else {
+                        setShowUpgradeModal(true);
+                        onClose();
+                      }
                     }}
                   >
                     <LucideCalendarCog className="w-4 h-4 text-[#4C6CA8] dark:text-[#90A9D6]" />
                     Schedule
-                  </button>}
+                  </button>
 
                 <button
                   className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 text-[#D66565] hover:bg-[rgba(214,101,101,0.15)] transition rounded"

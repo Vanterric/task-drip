@@ -14,6 +14,7 @@ export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
         <ul className="text-left text-[#4F5962] dark:text-white text-sm pl-4 list-disc space-y-1 cursor-default">
           <li>Unlimited task lists</li>
           <li>Unlimited tasks per list</li>
+          <li>Scheduled task list reset</li>
           <li>AI-powered task breakdown</li>
         </ul>
         <p className="font-semibold text-[#4C6CA8] dark:text-[#90A9D6] cursor-default">Just $5/month or $30/year</p>
