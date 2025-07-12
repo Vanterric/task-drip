@@ -354,14 +354,26 @@ const handleTaskReorder = ({ source, destination }) => {
       </div>) : 
       /* List View */
       (
-        <DragDropContext onDragEnd={handleTaskReorder}>
+        <div className="max-[500px]:mt-20 mt-25">
+          {tasks.length > 0 && tasks.every((task) => task.isComplete) && (
+            <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2">
+              <TaskDripBadge />
+              <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
+                All tasks complete! Chill Time.
+              </div>
+            </div>
+          )}
+        <DragDropContext onDragEnd={handleTaskReorder} >
+          
+
   <Droppable droppableId="taskListArea">
     {(provided) => (
       <div
         {...provided.droppableProps}
         ref={provided.innerRef}
-        className="flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto max-[500px]:mt-20 mt-25 overflow-y-auto pb-20 max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]"
+        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-270px)] max-h-[calc(100vh-290px)]' : 'max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]' }`}
       >
+        
         {tasks.map((task, index) => (
           <Draggable key={task._id} draggableId={task._id} index={index}>
             {(provided) => (
@@ -369,7 +381,7 @@ const handleTaskReorder = ({ source, destination }) => {
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50 line-through' : ''} transition-all duration-200 relative`}
+                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50 line-through' : ''}  relative`}
               >
                 <input
                   type="checkbox"
@@ -387,6 +399,7 @@ const handleTaskReorder = ({ source, destination }) => {
     )}
   </Droppable>
 </DragDropContext>
+</div>
       )}
 
       <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
