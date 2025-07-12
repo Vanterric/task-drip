@@ -15,6 +15,8 @@ import PushNotificationBanner from "../../components/PushNotificationBanner";
 import { setLastActiveAt } from "../../utilities/setLastActiveAt";
 import getRelevantIcon from "../../utilities/getRelevantIcon";
 import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+
 
 export default function HomePage() {
   const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
@@ -31,6 +33,7 @@ export default function HomePage() {
   const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
   const [viewType, setViewType] = useState('one-task'); // 'one-task' or 'list'
+  const [draggedId, setDraggedId] = useState(null);
   
 
   
@@ -172,6 +175,29 @@ useEffect(() => {
 
   return '';
 }
+
+const handleTaskReorder = ({ source, destination }) => {
+  setDraggedId(null);
+  if (!destination) return;
+
+  const updated = Array.from(tasks);
+  const [moved] = updated.splice(source.index, 1);
+  updated.splice(destination.index, 0, moved);
+
+  setTasks(updated);
+
+  // Save all task orders, regardless of change
+  updated.forEach((task, index) => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...task, order: index }),
+    });
+  });
+};
 
 
   return (
@@ -328,19 +354,39 @@ useEffect(() => {
       </div>) : 
       /* List View */
       (
-        <div className="flex-grow flex flex-col items-start px-10 w-full max-w-4xl mx-auto max-[500px]:mt-20 mt-25 overflow-y-auto pb-20 max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]">
-          {tasks.map((task) => (
-            <div  key={task._id} className="flex flex-row gap-5 mt-5 p-4 justify-start items-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default">
+        <DragDropContext onDragEnd={handleTaskReorder}>
+  <Droppable droppableId="taskListArea">
+    {(provided) => (
+      <div
+        {...provided.droppableProps}
+        ref={provided.innerRef}
+        className="flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto max-[500px]:mt-20 mt-25 overflow-y-auto pb-20 max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]"
+      >
+        {tasks.map((task, index) => (
+          <Draggable key={task._id} draggableId={task._id} index={index}>
+            {(provided) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50 line-through' : ''} transition-all duration-200 relative`}
+              >
                 <input
                   type="checkbox"
                   checked={task.isComplete}
                   onChange={() => handleComplete(task._id)}
-                  className="cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                  className="cursor-pointer appearance-none w-5 h-5 mt-1 rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
                 />
-              {task.content}
-            </div>
-          ))}
-        </div>
+                {task.content}
+              </div>
+            )}
+          </Draggable>
+        ))}
+        {provided.placeholder}
+      </div>
+    )}
+  </Droppable>
+</DragDropContext>
       )}
 
       <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
