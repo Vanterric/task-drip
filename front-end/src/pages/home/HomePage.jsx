@@ -38,6 +38,7 @@ export default function HomePage() {
   const [draggedId, setDraggedId] = useState(null);
   const [showDescription, setShowDescription] = useState(false);
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   
 
   useEffect(() => {
@@ -389,9 +390,9 @@ function isPastDue(dewDate) {
             transition={{ delay: 0.3, duration: 0.3 }}
             className="flex items-center justify-between text-xs gap-2 font-normal mt-5"
           >
-            <div className="cursor-pointer" onClick={() => setIsEditTaskModalOpen(true)}>Edit Task</div>
+            <div className="cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
             <div className={`flex gap-1 items-center justify-center cursor-pointer ${
-    isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => setIsEditTaskModalOpen(true)}>
+    isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>
               <AlarmClock className="h-4 w-4"  />
               {nextTask.dewDate ? (
                 new Date(nextTask.dewDate).toLocaleDateString(undefined, {
@@ -492,7 +493,7 @@ function isPastDue(dewDate) {
                   }
                   <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
                   {task.dewDate && (
-                    <div onClick={() => {setIsEditTaskModalOpen(true)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
+                    <div onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
                       ) ? 'text-[#D66565]' : 'text-[#91989E] dark:text-[#A1A8B0]'}`}>
                         <AlarmClock className="inline-block mr-1 w-4 h-4" />
                       {new Date(task.dewDate).toLocaleDateString(undefined, {
@@ -502,7 +503,7 @@ function isPastDue(dewDate) {
                       })}
                     </div>
                   )}
-                  <div className="text-xs text-[#91989E] dark:text-[#A1A8B0] cursor-pointer" onClick={() => setIsEditTaskModalOpen(true)}>Edit Task</div>
+                  <div className="text-xs text-[#91989E] dark:text-[#A1A8B0] cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
                   </div>
                 </div>
               </div>
@@ -682,7 +683,7 @@ token={token}
 <EditTaskModal
   isOpen={isEditTaskModalOpen}
   onClose={() => setIsEditTaskModalOpen(false)}
-  task={nextTask}
+  task={selectedTask}
   onSubmit={handleUpdateTask}
   setTasks={setTasks}
 />
