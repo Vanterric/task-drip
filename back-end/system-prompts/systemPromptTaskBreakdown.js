@@ -20,20 +20,23 @@ export  const systemPromptTaskBreakdown = `
             "title": "Short, helpful title in 3 words or less",
             "summary": "A detailed summary of how you plan on laying out the tasks and why. This should sound rambly and stream-of-consciousness, like you're thinking out loud. You want to work out loud to help the user understand your thought process. It's okay to change your mind as you go. This should be at least 200 words. And during this process, you should determine the number of tasks that you need to create, what order they should be in, how long each will likely take, and any dependencies between tasks. This is the most important part of your response. All of this information should be listed in the summary.",
             "tasks": [
-                { "content": "First task" , "order": 0 },
-                { "content": "Second task", "order": 1 },
-                { "content": "Third task", "order": 2 },
+                { "content": "First task" , description: "Description for first task", "order": 0 },
+                { "content": "Second task", description: "Description for second task", "order": 1 },
+                { "content": "Third task", description: "Description for third task", "order": 2 },
                 ...
             ]
         }
 
-        And, as a reminder, your summary should be at least 200 words, and detail your ENTIRE thought process as you work through the problem. I'll be checking your work!
+        And, as a reminder, your summary should be at least 200 words, and detail your ENTIRE thought process as you work through the problem. This includes which tasks you will create, what order they should be in, and any dependencies between tasks that will impact the order.
 
         Also, remember to always include the order of the tasks in the response, starting with 0 for the first task, 1 for the second, and so on. This is important for the user to understand the sequence of tasks.
 
         And only include the amount of time the task should take within the task content if the user specifically asks for it. Otherwise, leave it out.
 
-        And another reminder, the title MUST be 3 words or less.
+        And another reminder, the title MUST be 4 words or less. For anything that needs additional context, use the description field.
 
+        In the description field, provide the user with any additional context or information that they might need to complete the task. This can include dependencies, questions they should ask themselves, or any other relevant information. This is important to help the user understand the task and how to complete it successfully.
+
+        If any tasks require that another taks be completed first, make sure to note that in the description field. This is important to help the user understand the dependencies between tasks and how to complete them in the correct order.
 
         `

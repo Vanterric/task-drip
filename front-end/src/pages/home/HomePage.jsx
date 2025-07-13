@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
-import { AlarmClock, CheckCircle, Clock, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, ChevronDown, Clock, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -16,6 +16,8 @@ import { setLastActiveAt } from "../../utilities/setLastActiveAt";
 import getRelevantIcon from "../../utilities/getRelevantIcon";
 import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { motion, AnimatePresence } from "framer-motion";
+import EditTaskModal from "../../components/EditTaskModal";
 
 
 export default function HomePage() {
@@ -34,8 +36,8 @@ export default function HomePage() {
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
   const [viewType, setViewType] = useState('one-task'); // 'one-task' or 'list'
   const [draggedId, setDraggedId] = useState(null);
-  
-
+  const [showDescription, setShowDescription] = useState(false);
+  const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   
 
   useEffect(() => {
@@ -199,6 +201,40 @@ const handleTaskReorder = ({ source, destination }) => {
   });
 };
 
+const handleUpdateTask = async (task) => {
+  setLastActiveAt(user);
+  vibration('button-press');
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+  await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+    method: "PATCH",
+    headers,
+    body: JSON.stringify(task),
+  });
+  setTasks((prev) =>
+    prev.map((t) => (t._id === task._id ? { ...t, ...task } : t))
+  );
+  setIsEditTaskModalOpen(false);
+};
+
+
+
+function isPastDue(dewDate) {
+  if (!dewDate) return false;
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Start of today
+
+  const due = new Date(dewDate);
+  due.setHours(0, 0, 0, 0); // Normalize to same-day comparison
+
+  return due < today;
+}
+
+
+
 
   return (
     <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
@@ -303,51 +339,106 @@ const handleTaskReorder = ({ source, destination }) => {
         </p>
         
         ) : nextTask ? (
-          <div className="w-full max-w-md text-center space-y-6">
-            <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-6 text-xl font-semibold transition cursor-default">
-              {nextTask.content}
-              {/* <hr className="border-gray-300 dark:border-[#A1A8B0] w-full mt-6" />
-              <div className="text-sm mt-5 font-normal">Example Description of Task</div>
-              <div className="flex items-center justify-between text-xs gap-2 font-normal mt-5 mb-[-.5rem]">
-              <div className = 'cursor-pointer'>Edit</div>
-              <div className="flex gap-1 item-center justify-center"><AlarmClock className="h-4 w-4"/>6/25/2025</div>
-              </div> */}
-            </div>
-            <div className="flex gap-4 justify-center">
-            <button
-            onClick={() => handleComplete(nextTask._id)}
-            className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
-          >
-            <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
-            Done
-          </button>
+          <div className="w-full max-w-md text-center space-y-6" >
+            <div
+    className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default"
+    onClick={() => setShowDescription(!showDescription)}
+  >
+    {nextTask.content}
+          <ChevronDown 
+          onClick={() => setShowDescription(!showDescription)}
+  className="transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-[#4F5962]/60"
+  style={{
+    transform: showDescription ? "rotateX(180deg)" : "rotateX(0deg)",
+    transformStyle: "preserve-3d",
+  }}
+/>
 
-              <button
-                onClick={() => handleSkip(nextTask._id)}
-                className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+    <AnimatePresence initial={false}>
+      {showDescription && (
+        <motion.div
+          key="description"
+          initial={{ height: 0, opacity: 0 }}
+          animate={{ height: "auto", opacity: 1 }}
+          exit={{ height: 0, opacity: 0 }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          onClick={(e) => e.stopPropagation()}
+          style={{ overflow: "hidden" }}
+        >
+          <hr className="border-gray-300 dark:border-[#A1A8B0] w-full mt-2" />
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ delay: 0.2, duration: 0.3 }}
+            className="text-sm mt-5 font-normal"
+          >
+            {nextTask.description ? (
+              nextTask.description
+            ) : (
+              <span className="dark:text-white/60 text-[#4F5962]/60 italic">
+                Click "Edit Task" to add a description.
+              </span>
+            )}
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: -4 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -4 }}
+            transition={{ delay: 0.3, duration: 0.3 }}
+            className="flex items-center justify-between text-xs gap-2 font-normal mt-5"
+          >
+            <div className="cursor-pointer" onClick={() => setIsEditTaskModalOpen(true)}>Edit Task</div>
+            <div className={`flex gap-1 items-center justify-center cursor-pointer ${
+    isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => setIsEditTaskModalOpen(true)}>
+              <AlarmClock className="h-4 w-4"  />
+              {nextTask.dewDate ? (
+                new Date(nextTask.dewDate).toLocaleDateString(undefined, {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })) : (
+                <span className="dark:text-white/60 text-[#4F5962]/60 italic">
+                  No Dew Date Set &nbsp;
+                </span>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </AnimatePresence>
+      </div>
+                <div className="flex gap-4 justify-center">
+                <button
+                onClick={() => handleComplete(nextTask._id)}
+                className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
               >
-                <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
-                Skip
+                <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+                Done
               </button>
 
-            </div>
+                  <button
+                    onClick={() => handleSkip(nextTask._id)}
+                    className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+                  >
+                    <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
+                    Skip
+                  </button>
 
-            <ProgressBar completedCount={completedCount} tasks={tasks} />
-          </div>
-        ) : (<div>
+                </div>
 
-              <div className="flex flex-col items-center justify-center mt-6 space-y-4">
-                <TaskDripBadge />
-
-                <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
-  All tasks complete! Chill Time.
-</div>
-
-
-
+                <ProgressBar completedCount={completedCount} tasks={tasks} />
               </div>
+            ) : (<div>
 
+                  <div className="flex flex-col items-center justify-center mt-6 space-y-4">
+                    <TaskDripBadge />
 
+                    <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
+                  All tasks complete! Chill Time.
+                </div>
+              </div>
           <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>
         )}
@@ -371,7 +462,7 @@ const handleTaskReorder = ({ source, destination }) => {
       <div
         {...provided.droppableProps}
         ref={provided.innerRef}
-        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-270px)] max-h-[calc(100vh-290px)]' : 'max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]' }`}
+        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-270px)] max-h-[calc(100vh-290px)]' : 'max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]' } relative`}
       >
         
         {tasks.map((task, index) => (
@@ -381,15 +472,39 @@ const handleTaskReorder = ({ source, destination }) => {
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 {...provided.dragHandleProps}
-                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50 line-through' : ''}  relative`}
+                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
               >
                 <input
                   type="checkbox"
                   checked={task.isComplete}
                   onChange={() => handleComplete(task._id)}
-                  className="cursor-pointer appearance-none w-5 h-5 mt-1 rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                  className="cursor-pointer appearance-none w-5 h-5 mt-[2.5px] rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
                 />
-                {task.content}
+                <div className={`flex flex-col w-full  `}>
+                <div className={`${task.isComplete ? 'line-through' : ''}`}>
+                  {task.content}
+                </div>
+                  {task.description && 
+                  <div className={`text-sm ${task.isComplete ? 'line-through' : ''}`}>
+                    <hr className="my-2"/>
+                    {task.description}
+                  </div>
+                  }
+                  <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
+                  {task.dewDate && (
+                    <div onClick={() => {setIsEditTaskModalOpen(true)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
+                      ) ? 'text-[#D66565]' : 'text-[#91989E] dark:text-[#A1A8B0]'}`}>
+                        <AlarmClock className="inline-block mr-1 w-4 h-4" />
+                      {new Date(task.dewDate).toLocaleDateString(undefined, {
+                        month: "short",
+                        day: "numeric",
+                        year: "numeric",
+                      })}
+                    </div>
+                  )}
+                  <div className="text-xs text-[#91989E] dark:text-[#A1A8B0] cursor-pointer" onClick={() => setIsEditTaskModalOpen(true)}>Edit Task</div>
+                  </div>
+                </div>
               </div>
             )}
           </Draggable>
@@ -511,7 +626,7 @@ const handleTaskReorder = ({ source, destination }) => {
     window.location.href = '/subscribe'; // or whatever your route is
   }}
 />
-<AITaskBreakdownModal token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask}/>
+<AITaskBreakdownModal taskLists={taskLists} token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask}/>
   <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => setShowFirstTimeModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
@@ -564,6 +679,14 @@ token={token}
     setTasks([]);
   }}
 />
+<EditTaskModal
+  isOpen={isEditTaskModalOpen}
+  onClose={() => setIsEditTaskModalOpen(false)}
+  task={nextTask}
+  onSubmit={handleUpdateTask}
+  setTasks={setTasks}
+/>
+
 
 <PWAInstallBanner />
 <PushNotificationBanner isSubscribedToPushNotifications={isSubscribedToPushNotifications} setIsSubscribedToPushNotifications={setIsSubscribedToPushNotifications}/>

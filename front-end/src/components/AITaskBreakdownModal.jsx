@@ -4,7 +4,7 @@ import { vibration } from '../utilities/vibration';
 import getRelevantIcon from '../utilities/getRelevantIcon';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 
-export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token }) {
+export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
@@ -48,7 +48,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
-        body: JSON.stringify({ name: taskList.title, creationPrompt:goal  }),
+        body: JSON.stringify({ name: taskList.title, creationPrompt:goal, order: taskLists.length}),
       });
   
       const newTaskList = await listRes.json();
@@ -68,6 +68,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           body: JSON.stringify({
             tasklistId: newTaskList._id,
             content: task.content,
+            description: task.description || '',
             order: task.order || 0, 
           }),
         });

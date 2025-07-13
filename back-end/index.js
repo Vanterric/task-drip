@@ -598,7 +598,7 @@ app.post('/snoozePush', async (req, res) => {
   
     if (!user.isPro && taskCount >= 5) return res.status(403).json({ error: 'Free tier limit' });
   
-    const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0 });
+    const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0, description: req.body.description || '' });
     user.lastActiveAt = new Date();
     user.save();
     res.json(task);
