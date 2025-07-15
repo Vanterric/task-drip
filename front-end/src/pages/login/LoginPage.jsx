@@ -7,6 +7,7 @@ import { ThemeContext } from "../../context/ThemeContext";
 import { testimonials } from "./testimonials";
 import { mapRefferer } from "./referrerMap";
 import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
+import SupademoEmbed from "../../components/SupaDemoEmbed";
 
 
 export default function LoginPage() {
@@ -120,9 +121,16 @@ useEffect(() => {
           }}
           className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white px-8 py-4 rounded-2xl text-lg font-semibold transition cursor-pointer"
         >
-          Try it free
+          Try it free!
         </button>
+        <div className="mt-6 text-[#4F5962] dark:text-white text-sm transition cursor-pointer hover:underline" onClick={() => {
+          document.getElementById("productDemo")?.scrollIntoView({ behavior: "smooth" });
+        }}>
+          View Product Demo
+        </div>
       </div>
+
+     
 
       <div className="w-full px-6 py-20 bg-white dark:bg-[#1C222C] transition flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto">
   {/* Visual Mockup */}
@@ -270,7 +278,7 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free
+        Try it Free!
       </button>
     </div>
 
@@ -296,7 +304,7 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free
+        Try it Free!
       </button>
     </div>
   </div>
@@ -305,7 +313,11 @@ useEffect(() => {
     No trials. No weird timers. Just use it. Upgrade if it helps.
   </p>
 </div>
-
+<div className="w-full max-w-6xl mx-auto mt-20 px-4" id="productDemo">
+  <div className="mt-5">
+    <SupademoEmbed />
+  </div>
+</div>
 
 <div className="w-full max-w-4xl mx-auto mt-32 px-4 relative">
   <div className="absolute bottom-[100px] right-[-500px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>

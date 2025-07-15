@@ -9,6 +9,11 @@ export const testimonials = [
       role: "ADHD Coach",
       quote:"DewList helps me get out of bed on difficult days. It has a beautiful, simple design that's easy to use and stops me getting distracted."
     },
+    {
+      name: 'Ruth',
+      role: "Real Estate Broker",
+      quote:"DewList makes is so easy to capture thoughts on the fly. Client follow-ups, personal errands, reminders to take care of myself - everything goes into my Dewlist."
+    },
   {
     name: "Davie",
     role: "CS Master's Student",
