@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
@@ -16,7 +16,7 @@ import { setLastActiveAt } from "../../utilities/setLastActiveAt";
 import getRelevantIcon from "../../utilities/getRelevantIcon";
 import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import EditTaskModal from "../../components/EditTaskModal";
 
 
@@ -39,6 +39,17 @@ export default function HomePage() {
   const [showDescription, setShowDescription] = useState(false);
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
+  const directionRef = useRef(1)
+  const [firstTask, setFirstTask] = useState(null);
+  const controls = useAnimation();
+  const [visibleTask, setVisibleTask] = useState(tasks[0]);
+  
+
+    useEffect(() => {
+      setVisibleTask(tasks[0]);
+    }, [tasks]);
+
+
   
 
   useEffect(() => {
@@ -56,8 +67,6 @@ export default function HomePage() {
   
         setTaskLists(lists);
         setActiveTaskList(lists[0]); // pick the first list
-        
-        setFinalTask(lists[0][-1])
         const resTasks = await fetch(
           `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${lists[0]._id}`,
           { headers }
@@ -65,6 +74,7 @@ export default function HomePage() {
         const taskData = await resTasks.json();
        const incompleteTasks = taskData.filter(t => !t.isComplete);
         setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setFirstTask(incompleteTasks[0])
         setTasks(taskData);
       } catch (err) {
         console.error("Fetch error:", err);
@@ -98,42 +108,132 @@ useEffect(() => {
   checkFirstTime();
 }, [user]);
 
+
+const swipeDistance = typeof window !== "undefined" ? window.innerWidth : 300;
+
+async function animateAndSwap(direction, swapFn) {
+  const swipeDistance = typeof window !== "undefined" ? window.innerWidth : 300;
+
+  // 1) animate current card out
+  await controls.start({
+    x: direction === "left" ? -swipeDistance : direction === "right" ? swipeDistance : 0,
+    y: direction === "up" ? -200 : 0,
+    opacity: 0,
+    transition: { duration: 0.3, ease: "easeInOut" },
+  });
+
+  // 2) unmount current card by forcing key change
+  await new Promise(resolve => requestAnimationFrame(() => resolve()));
+
+  // 3) swap the data (this remounts the new card)
+  setTimeout(() => swapFn(), 0);
+
+  // 4) position new card off-screen based on direction
+  controls.set({
+    x: direction === "left" ? swipeDistance : direction === "right" ? -swipeDistance : 0,
+    y: direction === "up" ? 20 : 0,
+    opacity: 0,
+  });
+
+  // 5) animate new card into view
+  controls.start({
+    x: 0,
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.3, ease: "easeInOut" },
+  });
+}
+
+
+
+
+
+
   const handleComplete = async (taskId) => {
+  animateAndSwap("up", async () => {
+    directionRef.current = 0;
     setLastActiveAt(user);
+    const task = tasks.find(t => t._id === taskId);
     const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
-    vibration('button-press')
+    vibration("button-press");
+
     const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${taskId}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify({ isComplete: !currentCompleteStatus }),
     });
-    vibration('task-completion')
+
+    vibration("task-completion");
+    if(task._id === firstTask?._id) setFirstTask(tasks.find(t => t._id !== taskId && !t.isComplete));
+    if(task._id === finalTask?._id) setFinalTask(tasks.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
     setTasks((prev) =>
-      prev.map((t) => (t._id === taskId ? { ...t, isComplete: !currentCompleteStatus } : t))
+      prev.map((t) =>
+        t._id === taskId ? { ...t, isComplete: !currentCompleteStatus } : t
+      )
     );
-  };
+  });
+};
+
 
   const handleSkip = (taskId) => {
+  animateAndSwap("left", () => {
     setLastActiveAt(user);
-    vibration('button-press')
+    vibration("button-press");
+
     if (finalTask && taskId === finalTask._id && !isSkippedThroughAlertShown) {
       setIsSkippedThroughAlertShown(true);
-      return
+      return;
     }
+
+    let index;
     if (isSkippedThroughAlertShown) {
       setIsSkippedThroughAlertShown(false);
+      index = tasks.findIndex((t) => t._id === finalTask._id);
+    } else {
+      index = tasks.findIndex((t) => t._id === taskId);
+    }
 
-    }    
-    const index = tasks.findIndex((t) => t._id === taskId);
     const reordered = [...tasks];
     const [skipped] = reordered.splice(index, 1);
     reordered.push(skipped);
     setTasks(reordered);
-  };
+  });
+};
+
+
+const handleGoBack = (taskId) => {
+  animateAndSwap("right", () => {
+    setLastActiveAt(user);
+    vibration("button-press");
+
+    const incomplete = tasks.filter((t) => !t.isComplete);
+    if (!incomplete.length) return;
+
+    const lastSkipped = incomplete[incomplete.length - 1];
+    let index;
+    if (firstTask && taskId === firstTask._id && !isSkippedThroughAlertShown) {
+      setIsSkippedThroughAlertShown(true);
+      return;
+    }
+    if (isSkippedThroughAlertShown) {
+      setIsSkippedThroughAlertShown(false);
+      index = tasks.findIndex((t) => t._id === finalTask._id);
+    } else {
+      index = tasks.findIndex((t) => t._id === lastSkipped._id);
+    }
+
+    const reordered = [...tasks];
+    const [taskToRestore] = reordered.splice(index, 1);
+    reordered.unshift(taskToRestore);
+    setTasks(reordered);
+  });
+};
+
+
 
   const nextTask = tasks.find((t) => !t.isComplete);
   const completedCount = tasks.filter((t) => t.isComplete).length;
@@ -234,11 +334,29 @@ function isPastDue(dewDate) {
   return due < today;
 }
 
+const handleDragEnd = (_, info) => {
+  const { x, y } = info.offset;
+
+  if (x < -100) {
+    directionRef.current = 1;
+    handleSkip(nextTask._id);
+  } else if (x > 100) {
+    directionRef.current = -1;
+    handleGoBack(nextTask._id);
+  } else if (y < -100) {
+    directionRef.current = 0;
+    if (isSkippedThroughAlertShown) return
+    handleComplete(nextTask._id);
+  }
+};
+
+
+
 
 
 
   return (
-    <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition">
+    <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition overflow-x-hidden">
       {wasDowngraded && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
           Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>setShowUpgradeModal(true)}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
@@ -308,12 +426,23 @@ function isPastDue(dewDate) {
           <p className="text-lg text-[#91989E]">Loading tasks...</p>
         ) : isSkippedThroughAlertShown && nextTask ? (
         <div className="w-full max-w-md text-center space-y-6">
+        <AnimatePresence mode="wait" initial={true}>
+            <motion.div
+              key={1}
+              drag
+              dragDirectionLock
+              dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+              onDragEnd={handleDragEnd}
+              animate={controls}
+              className="w-full max-w-md text-center space-y-6"
+            >
         <div className="bg-[#F6DFD3] dark:bg-[#2D3545] rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
-          </div> 
+          </div>
+           </motion.div>
+            </AnimatePresence>
           <div className="flex gap-4 justify-center">
             <button
-            onClick={() => handleComplete(nextTask._id)}
             className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
           >
             <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
@@ -340,7 +469,20 @@ function isPastDue(dewDate) {
         </p>
         
         ) : nextTask ? (
+          
           <div className="w-full max-w-md text-center space-y-6" >
+            <AnimatePresence mode="wait" initial={true}>
+            <motion.div
+              key={1}
+              drag
+              dragDirectionLock
+              dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
+              onDragEnd={handleDragEnd}
+              animate={controls}
+              
+              className="w-full max-w-md text-center space-y-6"
+            >
+
             <div
     className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default"
     onClick={() => setShowDescription(!showDescription)}
@@ -373,6 +515,7 @@ function isPastDue(dewDate) {
             exit={{ opacity: 0, y: -4 }}
             transition={{ delay: 0.2, duration: 0.3 }}
             className="text-sm mt-5 text-left font-normal whitespace-pre-line"
+            
           >
             {nextTask.description ? (
               nextTask.description
@@ -410,7 +553,9 @@ function isPastDue(dewDate) {
       )}
     </AnimatePresence>
       </div>
-                <div className="flex gap-4 justify-center">
+      </motion.div>
+      </AnimatePresence>
+                <motion.div layout className="flex gap-4 justify-center">
                 <button
                 onClick={() => handleComplete(nextTask._id)}
                 className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
@@ -427,10 +572,10 @@ function isPastDue(dewDate) {
                     Skip
                   </button>
 
-                </div>
-
-                <ProgressBar completedCount={completedCount} tasks={tasks} />
+                </motion.div>
+                <motion.div layout><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
               </div>
+              
             ) : (<div>
 
                   <div className="flex flex-col items-center justify-center mt-6 space-y-4">
@@ -563,6 +708,7 @@ function isPastDue(dewDate) {
     const taskData = await res.json();
         const incompleteTasks = taskData.filter(t => !t.isComplete);
         setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setFirstTask(incompleteTasks[0])
         setTasks(taskData);
     setIsSkippedThroughAlertShown(false);
     setTasks(taskData);
@@ -662,6 +808,7 @@ token={token}
     const taskData = await res.json();
         const incompleteTasks = taskData.filter(t => !t.isComplete);
         setFinalTask(incompleteTasks[incompleteTasks.length -1])
+        setFirstTask(incompleteTasks[0])
         setTasks(taskData);
     setIsSkippedThroughAlertShown(false);
     setTasks(taskData);
