@@ -126,7 +126,7 @@ async function animateAndSwap(direction, swapFn) {
   
 
   // 2) swap the data (this remounts the new card)
-  swapFn()
+  await swapFn()
 
   // 3) position new card off-screen based on direction
   controls.set({
@@ -135,8 +135,7 @@ async function animateAndSwap(direction, swapFn) {
     opacity: 0,
   });
 
-  // 4) small delay to ensure DOM updates
-  await new Promise((resolve) => setTimeout(resolve, 100));
+  
 
   // 5) animate new card into view
   controls.start({
