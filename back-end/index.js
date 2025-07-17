@@ -11,6 +11,8 @@ const Icon = require('./models/Icon');
 const app = express();
 const {Resend} = require('resend');
 const { OpenAI } = require('openai');
+const bcrypt = require('bcrypt');
+
 app.use(cors({
   origin: ['https://dewlist.app', 'http://localhost:5173'], // add your live and dev origins
 }));
@@ -322,6 +324,34 @@ const verifyToken = (req, res, next) => {
   app.get('/auth/verifyToken', verifyToken, (req, res) => {
     res.json({ valid: true, user: req.user });
   });
+
+  app.post("/auth/resetPassword", verifyToken, async (req, res) => {
+    console.log("Reset password request for user:", req.user.id);
+  const { password } = req.body;
+  
+
+  if (!password || password.length < 6) {
+    return res.status(400).json({ error: "Password must be at least 6 characters." });
+  }
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updatedUser = await User.findByIdAndUpdate(
+      req.user.id,
+      { password: hashedPassword },
+      { new: true }
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: "User not found." });
+    }
+
+    res.json({ message: "Password updated successfully." });
+  } catch (err) {
+    console.error("Reset password error:", err);
+    res.status(500).json({ error: "Something went wrong." });
+  }
+});
   
   app.post('/auth/request-link', async (req, res) => {
     const { email, referrer } = req.body;
@@ -376,6 +406,75 @@ const verifyToken = (req, res, next) => {
       res.status(500).json({ error: 'Something went wrong.' });
     }
   });
+
+  app.post('/auth/login', async (req, res) => {
+  const { email, password, referrer } = req.body;
+  const lowerCaseEmail = email.toLowerCase().trim();
+
+  try {
+    let user = await User.findOne({ email: lowerCaseEmail });
+
+    // If user doesn't exist, create them
+    if (!user) {
+      const userCount = await User.countDocuments();
+      const isFirstHundredUser = userCount < 100;
+
+      let proExpiresAt = isFirstHundredUser
+        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        : null;
+
+      if (referrer) {
+        proExpiresAt = new Date((proExpiresAt || Date.now()) + 30 * 24 * 60 * 60 * 1000);
+      }
+
+      const isPro = isFirstHundredUser || !!referrer;
+      const hashedPassword = await bcrypt.hash(password, 10);
+
+      user = await User.create({
+        email: lowerCaseEmail,
+        password: hashedPassword,
+        referrer: referrer || null,
+        proExpiresAt,
+        isPro,
+        isFirstHundredUser,
+      });
+    }
+
+    if (!user.password) {
+      return res.status(400).json({ error: 'No password set' });
+    }
+
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(401).json({ error: 'Incorrect password' });
+    }
+
+    const token = jwt.sign(
+      { email: user.email, id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    // Optionally store the session token (e.g. if used for magic links too)
+    user.magicToken = token;
+    await user.save();
+
+    res.json({
+      token,
+      user: {
+        email: user.email,
+        isPro: user.isPro,
+        isLifeTimePro: user.isLifeTimePro,
+        proExpiresAt: user.proExpiresAt,
+      },
+    });
+  } catch (err) {
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+});
+
+
   
 
 

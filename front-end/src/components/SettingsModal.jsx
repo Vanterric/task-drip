@@ -13,6 +13,9 @@ export default function SettingsModal({ isOpen, onClose }) {
   const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
     const [email, setEmail] = useState(user.email);
     const [theme, setTheme] = useState(isDarkMode ? "dark" : "light"); // 'light', 'dark', or 'system'
+    const [resetPassword, setResetPassword] = useState("");
+  const [status, setStatus] = useState("idle"); // 'idle', 'loading', 'success', 'error'
+  const [error, setError] = useState("");
 
   const handleSave = async () => {
     vibration("button-press");
@@ -32,6 +35,37 @@ export default function SettingsModal({ isOpen, onClose }) {
     setSaving(false);
     onClose();
   };
+
+  const handleResetPassword = async () => {
+  if (!resetPassword || resetPassword.trim().length < 6) {
+    setError("Password must be at least 6 characters.");
+    return;
+  }
+
+  try {
+    setStatus("loading");
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/resetPassword`, {
+      method: "POST",
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+      body: JSON.stringify({ password:resetPassword }),
+    });
+
+    const data = await res.json();
+
+    if (res.ok) {
+      setStatus("success");
+      // Optional: show success toast, redirect, or close modal
+    } else {
+      setStatus("error");
+      setError(data.error || "Something went wrong.");
+    }
+  } catch (err) {
+    console.error(err);
+    setStatus("error");
+    setError("Unable to connect to the server.");
+  }
+};
+
 
   const handleManageSubscription = async () => {
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/create-customer-portal-session`, {
@@ -99,9 +133,29 @@ export default function SettingsModal({ isOpen, onClose }) {
               <option value="system">System</option>
             </select>
           </div>
+          <hr className="mt-5"/>
+          <h2 className="text-lg font-bold mb-0 text-[#4F5962] dark:text-white cursor-default">Danger Zone</h2>
+          {/*Reset Password*/}
+          <div>
+            <label className="font-medium" htmlFor="reset-password">Reset Password</label>
+            <div>
+            <input
+              id="reset-password"
+              type="password"
+              value={resetPassword}
+              onChange={(e) => setResetPassword(e.target.value)}
+              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+            />
+            <button onClick={handleResetPassword} disabled={status === "loading"} className="mt-2 bg-[#D66565] text-white px-4 py-2 rounded-xl hover:bg-[#B94E4E] transition cursor-pointer">
+              {status === "loading" ? "Resetting..." : "Reset Password"}
+            </button>
+            {status === "error" && <p className="text-sm text-[#D66565] mt-1">{error}</p>}
+            {status === "success" && <p className="text-sm text-green-500 mt-1">Password reset successfully!</p>}
+            </div>
+          </div>
             {/*Delete Account*/}
             <div>
-            <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-4 transition cursor-pointer" onClick={()=>{window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
+            <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-2 transition cursor-pointer" onClick={()=>{window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
               Delete Account
             </p>
             </div>

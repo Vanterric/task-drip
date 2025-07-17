@@ -8,6 +8,8 @@ import { testimonials } from "./testimonials";
 import { mapRefferer } from "./referrerMap";
 import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import SupademoEmbed from "../../components/SupaDemoEmbed";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 
 export default function LoginPage() {
@@ -19,6 +21,13 @@ export default function LoginPage() {
   const [openIndex, setOpenIndex] = useState(null);
   const referrer = localStorage.getItem("dewlist_ref") || "";
   const [referrerName, setReferrerName] = useState("");
+  const [password, setPassword] = useState("");
+  const [selectedMagicLinkAuth, setSelectedMagicLinkAuth] = useState(false);
+  const [showPasswordIncorrect, setShowPasswordIncorrect] = useState(false);
+  const { setToken, setUser } = useAuth();
+  const navigate = useNavigate();
+  
+
 
   const faqs = [
   {
@@ -69,7 +78,7 @@ useEffect(() => {
     e.preventDefault();
     setStatus("loading");
     vibration("button-press");
-
+    if(email.trim() !== "" && selectedMagicLinkAuth === true){
     try {
       const res = await fetch(`${BACKEND_URL}/auth/request-link`, {
         method: "POST",
@@ -88,6 +97,41 @@ useEffect(() => {
       console.error(err);
       setStatus("error");
       setError("Unable to connect to server.");
+    }}
+    else if(email.trim() !== "" && password.trim() !== "" && selectedMagicLinkAuth === false){
+      try {
+        const res = await fetch(`${BACKEND_URL}/auth/login`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, password, referrer }),
+        });
+  
+        const data = await res.json();
+        if (res.ok) {
+          setToken(data.token);
+          setUser(data.user);
+          navigate("/app");
+        } else {
+          setStatus("error");
+          setError(data.error || "Something went wrong.");
+          if(data.error === "Incorrect password"){
+            setError("Incorrect password. \nTry again or login with magic link!");
+          }
+          else if(data.error === "No password set"){
+            setError("No password set. \nTry logging in with magic link! \n\n You can always set your password \nin the settings menu once you're logged in.");
+            setStatus("error");
+          }
+        }
+      } catch (err) {
+        console.error(err);
+        setStatus("error");
+        setError("Unable to connect to server.");
+        
+      }
+    }
+    else{
+      setStatus("error");
+      setError("Please fill in all fields.");
     }
   };
 
@@ -430,40 +474,79 @@ useEffect(() => {
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-2xl p-6 md:p-10 max-w-lg w-full">
             <h2 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white mb-4">
-              Welcome to DewList
+              Welcome to DewList!
             </h2>
             <p className="text-center text-[#91989E] mb-6">
-              We'll email you a magic login link. <br/>No passwords, no pressure.
+              Log in with a password or a magic link.
             </p>
-
-            {status === "success" ? (
-              <div className="flex flex-col items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-2xl">
-                <CheckCircle className="w-6 h-6" />
-                Magic link sent! <br/>
-                <span className="text-[12.5px]">Check your inbox (and spam, just in case)</span>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <input
-                  type="email"
-                  placeholder="you@email.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  required
-                  className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
-                />
-                <button
-                  type="submit"
-                  disabled={status === "loading"}
-                  className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 rounded-2xl text-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  {status === "loading" ? "Sending..." : "Send Magic Link"}
-                </button>
-                {status === "error" && (
-                  <p className="text-[#DF7C52] text-sm text-center">{error}</p>
-                )}
-              </form>
+            {showPasswordIncorrect && (
+              <p className="text-center text-[#D66565] mb-6">
+                Incorrect password. <br /> Try again or login with magic link!
+              </p>
             )}
+            {status === "success" ? (
+  <div className="flex flex-col items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-2xl">
+    <CheckCircle className="w-6 h-6" />
+    Magic link sent! <br />
+    <span className="text-[12.5px]">
+      Check your inbox (and spam, just in case)
+    </span>
+  </div>
+) : (
+  <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+    <input
+      type="email"
+      placeholder="you@email.com"
+      value={email}
+      onChange={(e) => setEmail(e.target.value)}
+      required
+      className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+    />
+
+    {!selectedMagicLinkAuth && (
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        required
+        className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+      />
+    )}
+
+    <button
+      type="submit"
+      disabled={status === "loading"}
+      className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 rounded-2xl text-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
+    >
+      {status === "loading"
+        ? selectedMagicLinkAuth
+          ? "Sending..."
+          : "Logging in..."
+        : selectedMagicLinkAuth
+        ? "Send Magic Link"
+        : "Get Started"}
+    </button>
+
+    {status === "error" && (
+      <p className="text-[#D66565] text-sm text-center whitespace-pre-line">{error}</p>
+    )}
+
+    <button
+      type="button"
+      onClick={() => {
+        vibration("button-press");
+        setSelectedMagicLinkAuth(!selectedMagicLinkAuth);
+      }}
+      className="text-sm text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition underline text-center cursor-pointer"
+    >
+      {selectedMagicLinkAuth
+        ? "Use password instead"
+        : "Login with magic link instead"}
+    </button>
+  </form>
+)}
+
 
             <p className="mt-6 text-xs text-[#91989E] text-center">
               By continuing, you agree to our <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" 

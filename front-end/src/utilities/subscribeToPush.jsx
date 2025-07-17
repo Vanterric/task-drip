@@ -3,8 +3,14 @@ import { urlBase64ToUint8Array } from './vapidUtils';
 export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivity', label='') => {
   if (!('serviceWorker' in navigator)) return false;
   if (!('PushManager' in window)) return false;
+  if (!('Notification' in window)) return false;
 
   try {
+    const permission = await Notification.requestPermission();
+    if (permission !== 'granted') {
+      console.warn('Notification permission denied:', permission);
+      return false;
+    }
     const registration = await navigator.serviceWorker.register('/sw.js');
 
     const subscription = await registration.pushManager.subscribe({

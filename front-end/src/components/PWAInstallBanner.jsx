@@ -74,7 +74,10 @@ export default function PWAInstallBanner() {
     setBannerType(null)
   }
 
-  if (!bannerType || bannerType === 'ios' || isFirstTimeUser) return null
+  if (!bannerType || isFirstTimeUser) return null
+
+  
+
 
   return (
     <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
@@ -94,6 +97,22 @@ export default function PWAInstallBanner() {
 </>
 
         )}
+        {bannerType === 'ios' && (
+  <>
+    <p className="font-semibold text-base cursor-default">
+      Add DewList to your home screen?
+    </p>
+    <p className="text-sm opacity-90 cursor-default">
+      Tap the <span className="font-semibold">Share</span> button at the bottom of Safari,
+      then choose <span className="font-semibold">“Add to Home Screen.”</span>
+    </p>
+    <p className="text-sm opacity-70 mt-1 cursor-default">
+      It’s the best way to use DewList — no tabs, just one tap.
+    </p>
+  </>
+)}
+
+
 
         {bannerType === 'postinstall' && (
           <>

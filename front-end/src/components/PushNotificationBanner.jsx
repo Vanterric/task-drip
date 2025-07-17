@@ -6,6 +6,10 @@ import { useAuth } from '../context/AuthContext';
 export default function PushNotificationBanner({ isSubscribedToPushNotifications, setIsSubscribedToPushNotifications }) {
   const [showBanner, setShowBanner] = useState(false);
   const {isFirstTimeUser} = useAuth();
+  const isInStandalone = () =>
+  window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+
+  
 
   const getDeviceLabel = () => {
     const platform = navigator.platform || '';
@@ -51,7 +55,8 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
     }
   };
 
-  if (!showBanner || device === 'ios' || device === 'mac' || isFirstTimeUser) return null;
+  if (!showBanner || device === 'mac' || isFirstTimeUser) return null;
+  if(!isInStandalone()) return null; 
 
   return (
     <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">

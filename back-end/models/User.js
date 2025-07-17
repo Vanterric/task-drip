@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: false },
   isPro: { type: Boolean, default: false },
   magicToken: { type: String }, // Short-lived token for login
   createdAt: { type: Date, default: Date.now },
