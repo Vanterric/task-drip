@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react";
 import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
+import { ChevronDown } from "lucide-react";
 
-export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTasks }) {
+export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists }) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dewDate, setDewDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
   const {token} = useAuth()
+  const [showAdvanced, setShowAdvanced] = useState(false);
+  const [selectedTaskList, setSelectedTaskList] = useState(taskList?._id || "");
 
+  console.log(`selectedTaskList: ${selectedTaskList}`)
 
   function fromDateInputStringToLocalLateNight(value) {
   const [year, month, day] = value.split("-").map(Number);
@@ -22,6 +26,10 @@ function toLocalDateInputString(date) {
   const day = String(d.getDate()).padStart(2, "0");
   return `${year}-${month}-${day}`;
 }
+
+useEffect(() => {
+  setSelectedTaskList(taskList?._id)
+}, [isOpen, taskList])
 
 
   useEffect(() => {
@@ -44,8 +52,12 @@ function toLocalDateInputString(date) {
       content: title,
       description,
       dewDate: dewDateObj ? dewDateObj.toISOString() : null,
+      tasklistId: selectedTaskList,
     });
     setSubmitting(false);
+    if (selectedTaskList !== taskList?._id) {
+      setTasks((prev) => prev.filter((t) => t._id !== task._id));
+    }
     onClose();
   };
 
@@ -83,7 +95,7 @@ function toLocalDateInputString(date) {
                 Delete Task
             </div>
         </div>
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4 max-h-[70vh] overflow-y-auto">
             <label className="text-[#91989E] dark:text-white block">
             Task Title
             <input
@@ -113,6 +125,26 @@ function toLocalDateInputString(date) {
             className="w-full mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
+        <div className="flex items-center justify-start text-xs mt-2 cursor-pointer select-none" onClick={() => {
+            vibration("button-press");
+            setShowAdvanced(!showAdvanced);
+        }}>
+          Advanced <ChevronDown className={`w-5 h-5 transition ${!showAdvanced ? "transform rotate-[-90deg]" : ""}`} />
+        </div>
+        {showAdvanced && <div>
+          <label className="text-[#91989E] dark:text-white block">
+          Task List
+          <select
+            value={selectedTaskList}
+            onChange={(e) => setSelectedTaskList(e.target.value)}
+            className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
+          >
+            {taskLists && taskLists.map((list) => (
+              <option key={list._id} value={list._id}>{list.name}</option>
+            ))}
+          </select>
+        </label>
+        </div>}
         <div className="flex items-center justify-end mt-2">
             
           <div className="flex gap-4 justify-end">

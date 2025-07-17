@@ -3,7 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
-import { AlarmClock, CheckCircle, ChevronDown, Clock, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -372,7 +372,7 @@ function isPastDue(dewDate) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ delay: 0.2, duration: 0.3 }}
-            className="text-sm mt-5 font-normal"
+            className="text-sm mt-5 text-left font-normal whitespace-pre-line"
           >
             {nextTask.description ? (
               nextTask.description
@@ -472,9 +472,16 @@ function isPastDue(dewDate) {
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                {...provided.dragHandleProps}
-                className={`flex flex-row gap-5 mt-5 p-4 justify-start items-start rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
+                className={` mt-5 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
               >
+                <div
+                {...provided.dragHandleProps}
+                className="w-4 h-6 opacity-40 hover:opacity-80 cursor-grab active:cursor-grabbing transition-opacity duration-200"
+                title="Drag to reorder"
+              >
+                <GripHorizontal className="w-4 h-4" />
+              </div>
+              <div className="flex flex-row gap-5 justify-start items-start w-full">
                 <input
                   type="checkbox"
                   checked={task.isComplete}
@@ -486,7 +493,7 @@ function isPastDue(dewDate) {
                   {task.content}
                 </div>
                   {task.description && 
-                  <div className={`text-sm ${task.isComplete ? 'line-through' : ''}`}>
+                  <div className={`text-sm whitespace-pre-line ${task.isComplete ? 'line-through' : ''}`}>
                     <hr className="my-2"/>
                     {task.description}
                   </div>
@@ -506,6 +513,7 @@ function isPastDue(dewDate) {
                   <div className="text-xs text-[#91989E] dark:text-[#A1A8B0] cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
                   </div>
                 </div>
+              </div>
               </div>
             )}
           </Draggable>
@@ -641,6 +649,7 @@ token={token}
   setTasks={setTasks}
   setFinalTask={setFinalTask}
   onSelectList={async (list) => {
+    vibration('button-press')
     setActiveTaskList(list);
 
     const res = await fetch(
@@ -686,6 +695,8 @@ token={token}
   task={selectedTask}
   onSubmit={handleUpdateTask}
   setTasks={setTasks}
+  taskList = {activeTaskList}
+  taskLists={taskLists}
 />
 
 

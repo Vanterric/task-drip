@@ -16,6 +16,8 @@ export default function SettingsModal({ isOpen, onClose }) {
     const [resetPassword, setResetPassword] = useState("");
   const [status, setStatus] = useState("idle"); // 'idle', 'loading', 'success', 'error'
   const [error, setError] = useState("");
+  
+
 
   const handleSave = async () => {
     vibration("button-press");
@@ -88,7 +90,7 @@ export default function SettingsModal({ isOpen, onClose }) {
           Settings
         </h2>
 
-        <div className="flex flex-col gap-4 text-[#4F5962] dark:text-white text-sm">
+        <div className="flex flex-col gap-4 text-[#4F5962] dark:text-white text-sm max-h-[50vh] overflow-y-auto">
 
           {/* Email */}
           <div>

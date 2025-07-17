@@ -1,5 +1,6 @@
 const TaskList = require('../models/TaskList');
 const Task = require('../models/Task');
+const User = require('../models/User');
 
 async function resetScheduledTaskLists() {
   const now = new Date();
@@ -23,6 +24,8 @@ async function resetScheduledTaskLists() {
 
   for (const list of allLists) {
     const { number, cadence, startDate, lastReset } = list.resetSchedule;
+    const user = await User.findById(list.userId);
+    if (!user || !user.isPro) continue;
 
     const start = new Date(startDate); // UTC
 

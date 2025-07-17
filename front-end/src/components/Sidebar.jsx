@@ -15,6 +15,7 @@ import ResetScheduleModal from "./ResetScheduleModal";
 import { subscribeToPush } from "../utilities/subscribeToPush";
 import SettingsModal from "./SettingsModal";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import { motion, useAnimation } from "framer-motion";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -34,7 +35,14 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
   const [draggedId, setDraggedId] = useState(null);
-
+  const controls = useAnimation();
+useEffect(() => {
+  if (isOpen) {
+    controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 25 } });
+  } else {
+    controls.start({ x: -288, transition: { type: "tween", duration: 0.2 } });
+  }
+}, [isOpen]);
 
 
 useEffect(() => {
@@ -267,17 +275,46 @@ useEffect(() => {
   />
 
     {/* SLIDING PANEL */}
-    <div
-    ref={panelRef}
-    onClick={(e) => {
-      e.stopPropagation(); 
-      setActiveKebab(null);
-    }}
-    className={`relative z-50 w-72 bg-white dark:bg-[#4F5962] h-full shadow-lg flex flex-col transform transition duration-300 ease-in-out ${
-      isOpen ? 'translate-x-0' : '-translate-x-full'
-    }`}
-    style={{ pointerEvents: 'auto', touchAction: "none"  }}
-  >
+    <motion.div
+  ref={panelRef}
+  onClick={(e) => {
+    e.stopPropagation();
+    setActiveKebab(null);
+  }}
+  className="relative z-50 w-72 pl-4 -ml-4 bg-white dark:bg-[#4F5962] h-full shadow-lg flex flex-col"
+  style={{
+    pointerEvents: 'auto',
+    touchAction: 'none'
+  }}
+  drag="x"
+  dragDirectionLock
+  dragConstraints={{ left: -280, right: 0 }}
+  dragElastic={{ left: 0.2, right: 0 }} 
+  onDrag={(event, info) => {
+    if (info.point.x > 0) {
+      controls.start({
+        x: 0,
+        transition: { type: "tween", duration: 0.01 }
+      });
+    }
+  }}
+  onDragEnd={(e, info) => {
+    if (info.offset.x < -60) {
+      onClose();
+    } else {
+      controls.start({
+        x: 0,
+        transition: {
+          type: "spring",
+          stiffness: 150,
+          damping: 25
+        }
+      });
+    }
+  }}
+  animate={controls}
+  initial={false}
+>
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
           <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {dewListIcon} className="h-8 w-8 cursor-default"/>DewList {user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
@@ -447,7 +484,7 @@ useEffect(() => {
           </div>
           <div onClick={()=>setIsFeedbackModalOpen(true)} className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer mt-4 text-xs text-[#91989E] flex justify-center space-x-2 text-center">Got thoughts? We want to hear them! DewList only adds what real people ask for.</div>
         </div>
-      </div>
+      </motion.div>
 
     </div>
     <DeleteTaskListModal

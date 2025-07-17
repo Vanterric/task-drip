@@ -80,6 +80,8 @@ if (resetUserIds.length > 0) {
     });
 
     for (const user of resetUsers) {
+      if (!user.isPro) continue; // Only pro users get reset notifications
+
       const resetSubs = user.pushSubscriptions.filter(sub => sub.type === 'reset');
 
       for (const sub of resetSubs) {
