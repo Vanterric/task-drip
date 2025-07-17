@@ -122,18 +122,21 @@ async function animateAndSwap(direction, swapFn) {
     transition: { duration: 0.3, ease: "easeInOut" },
   });
 
-  // 2) unmount current card by forcing key change
-  await new Promise(resolve => requestAnimationFrame(() => resolve()));
+ 
+  
 
-  // 3) swap the data (this remounts the new card)
-  setTimeout(() => swapFn(), 0);
+  // 2) swap the data (this remounts the new card)
+  swapFn()
 
-  // 4) position new card off-screen based on direction
+  // 3) position new card off-screen based on direction
   controls.set({
     x: direction === "left" ? swipeDistance : direction === "right" ? -swipeDistance : 0,
     y: direction === "up" ? 20 : 0,
     opacity: 0,
   });
+
+  // 4) small delay to ensure DOM updates
+  await new Promise((resolve) => setTimeout(resolve, 100));
 
   // 5) animate new card into view
   controls.start({
