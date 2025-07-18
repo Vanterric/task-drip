@@ -481,7 +481,7 @@ const handleDragEnd = (_, info) => {
               dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
               onDragEnd={handleDragEnd}
               animate={controls}
-              
+
               className="w-full max-w-md text-center space-y-6"
             >
 
@@ -516,8 +516,7 @@ const handleDragEnd = (_, info) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ delay: 0.2, duration: 0.3 }}
-            className="text-sm mt-5 text-left font-normal whitespace-pre-line"
-            
+            className="text-sm mt-5 text-left font-normal whitespace-pre-line max-h-[calc(100vh-450px)] overflow-y-auto"
           >
             {nextTask.description ? (
               nextTask.description
@@ -640,9 +639,11 @@ const handleDragEnd = (_, info) => {
                   {task.content}
                 </div>
                   {task.description && 
-                  <div className={`text-sm whitespace-pre-line ${task.isComplete ? 'line-through' : ''}`}>
+                  <div className={`text-sm whitespace-pre-line  ${task.isComplete ? 'line-through' : ''}`}>
                     <hr className="my-2"/>
+                    <div className="max-h-[calc(100vh-450px)] overflow-y-auto">
                     {task.description}
+                    </div>
                   </div>
                   }
                   <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
