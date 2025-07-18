@@ -54,7 +54,6 @@ const ReferrerDashboard = () => {
         return createdAt.getMonth() === lastMonth.getMonth() && createdAt.getFullYear() === lastMonth.getFullYear();
       }).length);
       setActiveUsersThisMonth(referredUsers.filter(user => {
-        console.log(user.lastActiveAt);
         if (!user.lastActiveAt) return false;
         const lastActive = new Date(user.lastActiveAt);
         const now = new Date();

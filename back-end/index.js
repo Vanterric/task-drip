@@ -384,6 +384,11 @@ const verifyToken = (req, res, next) => {
         isPro: isPro,
         isFirstHundredUser: isFirstHundredUser,
       });
+
+      const firstTaskList = await TaskList.create({ name: "Getting Started", userId: user._id, icon:"droplet", order: 0 });
+      await Task.create({ content: "🌱 Create My DewList Account 🌱", description: "If you're seeing this, you can go ahead and check this one off your list 😉", tasklistId: firstTaskList._id });
+      await Task.create({ content: "🌿 Create My First List 🌿", description: `To create a new task list, tap the menu button (☰) at the top left of the screen, then click "Add New Task List" at the top of the sidebar.\n\nExample Lists:\n☀️ Morning Routine\n🛁 Self-Care Ritual\n🛒 Groceries`, tasklistId: firstTaskList._id });
+      await Task.create({ content: "🌳 Add 3-5 Tasks to My List 🌳", description: `To add a new task to your list, first navigate to your list by clicking on it in the sidebar, then tap the “Add Task” button at the bottom center of your screen.\n\nExample Tasks:\n☀️ Make the bed\n🛁 Put on moisturizer\n🛒 Buy oat milk`, tasklistId: firstTaskList._id });
     }
   
       const token = jwt.sign(
@@ -438,6 +443,10 @@ const verifyToken = (req, res, next) => {
         isPro,
         isFirstHundredUser,
       });
+      const firstTaskList = await TaskList.create({ name: "Getting Started", userId: user._id, icon:"droplet", order: 0 });
+      await Task.create({ content: "🌱 Create My DewList Account 🌱", description: "If you're seeing this, you can go ahead and check this one off your list 😉", tasklistId: firstTaskList._id });
+      await Task.create({ content: "🌿 Create My First List 🌿", description: `To create a new task list, tap the menu button (☰) at the top left of the screen, then click "Add New Task List" at the top of the sidebar.\n\nExample Lists:\n☀️ Morning Routine\n🛁 Self-Care Ritual\n🛒 Groceries`, tasklistId: firstTaskList._id });
+      await Task.create({ content: "🌳 Add 3-5 Tasks to My List 🌳", description: `To add a new task to your list, first navigate to your list by clicking on it in the sidebar, then tap the “Add Task” button at the bottom center of your screen.\n\nExample Tasks:\n☀️ Make the bed\n🛁 Put on moisturizer\n🛒 Buy oat milk`, tasklistId: firstTaskList._id });
     }
 
     if (!user.password) {
