@@ -852,7 +852,8 @@ app.post('/create-customer-portal-session', async (req, res) => {
 
   app.post('/ai/breakdown', verifyToken, async (req, res) => {
     const { goal } = req.body;
-  
+    const user = await User.findById(req.user.id);
+    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
     if (!goal || goal.length < 5) {
       return res.status(400).json({ error: 'Invalid goal' });
     }
@@ -937,7 +938,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   const resend = new Resend(process.env.RESEND_API_KEY);
   app.post("/sendFeedback", verifyToken, async (req, res) => {
   const { type, message } = req.body;
-
+  const user = await User.findById(req.user.id);
   if (!message || !type) {
     return res.status(400).json({ error: "Missing feedback type or message." });
   }
@@ -952,7 +953,8 @@ app.post('/create-customer-portal-session', async (req, res) => {
           <h2 style="color: #4C6CA8; margin-bottom: 12px;">New Feedback Submitted for DewList</h2>
 
           <div style="background: white; border-radius: 12px; padding: 16px; border: 1px solid #E0ECFC;">
-            <p style="margin: 0 0 8px;"><strong>Type:</strong> ${type}</p>
+          <p style="margin: 0 0 8px;"><strong>From:</strong> ${user.email}</p>
+          <p style="margin: 0 0 8px;"><strong>Type:</strong> ${type}</p>
             <p style="margin: 0;"><strong>Message:</strong></p>
             <div style="margin-top: 6px; padding-left: 8px; border-left: 3px solid #4C6CA8; color: #333;">
               ${message.replace(/\n/g, "<br/>")}
