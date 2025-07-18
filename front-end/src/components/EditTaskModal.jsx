@@ -13,8 +13,6 @@ export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTask
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedTaskList, setSelectedTaskList] = useState(taskList?._id || "");
 
-  console.log(`selectedTaskList: ${selectedTaskList}`)
-
   function fromDateInputStringToLocalLateNight(value) {
   const [year, month, day] = value.split("-").map(Number);
   return new Date(year, month - 1, day, 23, 59); // 11:59 PM local time

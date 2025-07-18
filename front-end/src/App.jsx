@@ -7,6 +7,7 @@ import SubscribePage from "./pages/subscribe/SubscribePage";
 import { useEffect, useState } from "react";
 import InAppBrowserBanner from "./components/InAppBrowserBanner";
 import ReferrerDashboard from "./pages/referrer-dashboard/ReferrerDashboard";
+import { consoleMessageToCuriousUsers } from "./utilities/consoleMessageToCuriousUsers";
 
 function App() {
 
@@ -16,7 +17,7 @@ function App() {
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
-          console.log('✅ Service worker registered', reg);
+          //console.log('✅ Service worker registered', reg);
         })
         .catch((err) => {
           console.error('❌ Service worker registration failed')
@@ -26,7 +27,9 @@ function App() {
 }, [])
 
 
-
+setTimeout(() => {
+  consoleMessageToCuriousUsers();
+}, 3000);
 
 const location = window.location;
 
