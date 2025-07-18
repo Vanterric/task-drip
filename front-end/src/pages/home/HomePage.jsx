@@ -34,9 +34,9 @@ export default function HomePage() {
   const [finalTask, setFinalTask] = useState(null);
   const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
-  const [viewType, setViewType] = useState('one-task'); // 'one-task' or 'list'
+  const [viewType, setViewType] = useState(localStorage.getItem("defaultView") || 'one-task'); // 'one-task' or 'list'
   const [draggedId, setDraggedId] = useState(null);
-  const [showDescription, setShowDescription] = useState(false);
+  const [showDescription, setShowDescription] = useState(localStorage.getItem("defaultTaskState") === 'expanded');
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const directionRef = useRef(1)

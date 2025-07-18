@@ -16,13 +16,24 @@ export default function SettingsModal({ isOpen, onClose }) {
     const [resetPassword, setResetPassword] = useState("");
   const [status, setStatus] = useState("idle"); // 'idle', 'loading', 'success', 'error'
   const [error, setError] = useState("");
+    const [defaultView, setDefaultView] = useState(localStorage.getItem("defaultView") || "one-task"); // 'list' or 'one-task'
+    const [defaultTaskState, setDefaultTaskState] = useState(localStorage.getItem("defaultTaskState") || "collapsed"); // 'collapsed' or 'expanded'
   
 
 
   const handleSave = async () => {
     vibration("button-press");
     setSaving(true);
+    if (!email || !email.includes("@")) {
+      setSaving(false);
+      setStatus("error");
+      setError("Please enter a valid email.");
+      return;
+    }
     theme === "system" ? setIsDarkMode(systemTheme === "dark") : setIsDarkMode(theme === "dark");
+    defaultView && localStorage.setItem("defaultView", defaultView);
+    defaultTaskState && localStorage.setItem("defaultTaskState", defaultTaskState);
+    if(email !== user.email){
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/changeEmail`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
@@ -33,6 +44,14 @@ export default function SettingsModal({ isOpen, onClose }) {
         const error = await res.json();
         alert(`Error saving settings: ${error.error}`);
         return;
+    }
+  }
+    if(resetPassword.trim()!==""){
+      await handleResetPassword();
+    }
+    else{
+      setStatus("idle");
+      setError("");
     }
     setSaving(false);
     onClose();
@@ -103,6 +122,21 @@ export default function SettingsModal({ isOpen, onClose }) {
               className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
             />
           </div>
+          {/*Reset Password*/}
+          <div>
+            <label className="font-medium" htmlFor="reset-password">Set New Password</label>
+            <div>
+            <input
+              id="reset-password"
+              type="password"
+              value={resetPassword}
+              onChange={(e) => setResetPassword(e.target.value)}
+              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+            />
+            {status === "error" && <p className="text-sm text-[#D66565] mt-1">{error}</p>}
+            {status === "success" && <p className="text-sm text-green-500 mt-1">Password reset successfully!</p>}
+            </div>
+          </div>
 
           {/* Subscription */}
           <div>
@@ -114,6 +148,38 @@ export default function SettingsModal({ isOpen, onClose }) {
                 Upgrade
               </button>}
             </div>
+          </div>
+
+          {/*Default View (List or One-Task)*/}
+          <div>
+            <label className="font-medium">Default View</label>
+            <select
+              value={defaultView}
+              onChange={(e) => {
+                vibration("button-press");
+                setDefaultView(e.target.value);
+              }}
+              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
+            >
+              <option value="list">List</option>
+              <option value="one-task">One Task</option>
+            </select>
+          </div>
+
+          {/*Default Task State (Collapsed or Expanded)*/}
+          <div>
+            <label className="font-medium">Default Task State</label>
+            <select
+              value={defaultTaskState}
+              onChange={(e) => {
+                vibration("button-press");
+                setDefaultTaskState(e.target.value);
+              }}
+              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
+            >
+              <option value="collapsed">Collapsed</option>
+              <option value="expanded">Expanded</option>
+            </select>
           </div>
 
           {/* Theme dropdown */}
@@ -137,24 +203,7 @@ export default function SettingsModal({ isOpen, onClose }) {
           </div>
           <hr className="mt-5"/>
           <h2 className="text-lg font-bold mb-0 text-[#4F5962] dark:text-white cursor-default">Danger Zone</h2>
-          {/*Reset Password*/}
-          <div>
-            <label className="font-medium" htmlFor="reset-password">Reset Password</label>
-            <div>
-            <input
-              id="reset-password"
-              type="password"
-              value={resetPassword}
-              onChange={(e) => setResetPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
-            />
-            <button onClick={handleResetPassword} disabled={status === "loading"} className="mt-2 bg-[#D66565] text-white px-4 py-2 rounded-xl hover:bg-[#B94E4E] transition cursor-pointer">
-              {status === "loading" ? "Resetting..." : "Reset Password"}
-            </button>
-            {status === "error" && <p className="text-sm text-[#D66565] mt-1">{error}</p>}
-            {status === "success" && <p className="text-sm text-green-500 mt-1">Password reset successfully!</p>}
-            </div>
-          </div>
+          
             {/*Delete Account*/}
             <div>
             <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-2 transition cursor-pointer" onClick={()=>{window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
