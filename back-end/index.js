@@ -714,7 +714,7 @@ app.post('/snoozePush', async (req, res) => {
 
   app.put('/tasks/:id', verifyToken, async (req, res) => {
   try {
-    const allowedFields = ['content', 'isComplete', 'order']; // whitelist keys
+    const allowedFields = ['content', 'isComplete', 'order', 'timeEstimate']; // whitelist keys
     const updates = Object.fromEntries(
       Object.entries(req.body).filter(([key]) => allowedFields.includes(key))
     );

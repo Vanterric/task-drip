@@ -486,11 +486,14 @@ const handleDragEnd = (_, info) => {
             >
 
             <div
-    className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default"
+    className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default flex-col flex"
     onClick={() => setShowDescription(!showDescription)}
   >
     {nextTask.content}
-          <ChevronDown 
+    <span className="text-xs text-[#91989E] dark:text-[#A1A8B0] ml-2">
+      {nextTask.timeEstimate ? `${nextTask.timeEstimate} min` : ''}
+    </span>
+          <ChevronDown
           onClick={() => setShowDescription(!showDescription)}
   className="transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-[#4F5962]/60"
   style={{
@@ -535,20 +538,16 @@ const handleDragEnd = (_, info) => {
             className="flex items-center justify-between text-xs gap-2 font-normal mt-5"
           >
             <div className="cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
-            <div className={`flex gap-1 items-center justify-center cursor-pointer ${
+            {nextTask.dewDate ? <div className={`flex gap-1 items-center justify-center cursor-pointer ${
     isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>
               <AlarmClock className="h-4 w-4"  />
-              {nextTask.dewDate ? (
+              {
                 new Date(nextTask.dewDate).toLocaleDateString(undefined, {
                   month: "short",
                   day: "numeric",
                   year: "numeric",
-                })) : (
-                <span className="dark:text-white/60 text-[#4F5962]/60 italic">
-                  No Dew Date Set &nbsp;
-                </span>
-              )}
-            </div>
+                })}
+            </div> : null}
           </motion.div>
         </motion.div>
       )}
@@ -637,6 +636,9 @@ const handleDragEnd = (_, info) => {
                 <div className={`flex flex-col w-full  `}>
                 <div className={`${task.isComplete ? 'line-through' : ''}`}>
                   {task.content}
+                  <span className="text-xs text-[#91989E] dark:text-[#A1A8B0] ml-2">
+                    {task.timeEstimate ? `${task.timeEstimate} min` : ''}
+                  </span>
                 </div>
                   {task.description && 
                   <div className={`text-sm whitespace-pre-line  ${task.isComplete ? 'line-through' : ''}`}>

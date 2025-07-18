@@ -8,6 +8,7 @@ const TaskSchema = new mongoose.Schema({
   order: { type: Number, default: 0 },
   description: { type: String, default: '' },
   dewDate: { type: Date, default: null },
+  timeEstimate: { type: Number, default: null }, // in minutes
 });
 
 module.exports = mongoose.model('Task', TaskSchema);
