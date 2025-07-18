@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
-import { Cog, LogOut, LucideCalendarCog, Moon, Pencil, Plus, Settings, Sun, Trash2 } from "lucide-react";
+import { ChartArea, Cog, Edit, Edit3, LogOut, LucideCalendarCog, Moon, Pencil, Plus, Settings, Sun, Trash2 } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
@@ -316,7 +316,7 @@ useEffect(() => {
   initial={false}
 >
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
-          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {dewListIcon} className="h-8 w-8 cursor-default"/>DewList {user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
+          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
           <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (
@@ -327,16 +327,58 @@ useEffect(() => {
           </button>
         </div>
         {user.isReferrer ? 
-        <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-center transition`}>
-          <div className="text-sm text-[#4C6CA8] dark:text-[#90A9D6] hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] cursor-pointer transition" onClick={()=>window.location.href=`/referrer-dashboard`}>Referrer Dashboard</div>
+        <div className={`pt-6 pl-4 gap-3 dark:text-white text-[#4F5962] flex items-center justify-start transition`}>
+          <ChartArea className="w-5 h-5"/>
+          <div className="text-sm hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] cursor-pointer transition" onClick={()=>window.location.href=`/referrer-dashboard`}>Referrer Dashboard</div>
         </div>
         :
         null}
+        {showInput ? (
+            <div className="mt-4 space-y-2 px-4">
+              <input
+                type="text"
+                value={newListName}
+                onChange={(e) => setNewListName(e.target.value)}
+                placeholder="New list name"
+                className="w-full text-sm px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] dark:border-white"
+              />
+              <div className="flex gap-2">
+                <button
+                  onClick={handleAdd}
+                  className="bg-[#4C6CA8] text-sm text-white px-4 py-1 rounded hover:bg-[#3A5D91] cursor-pointer"
+                >
+                  Add
+                </button>
+                <button
+                  onClick={() => {
+                    vibration('button-press');
+                    setShowInput(false);
+                    setNewListName("");
+                  }}
+                  className="text-sm text-[#91989E] hover:text-[#4F5962] cursor-pointer transition dark:hover:text-white"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              
+              className="mt-5 flex pl-4 items-center gap-3 text-sm dark:text-white text-[#4F5962] rounded-full transition"
+            >
+              <Edit className="w-5 h-5 " />
+              <div className="cursor-pointer hover:text-[#3A5D91] dark:hover:text-[#D4E3FF]" onClick={() => {vibration('button-press'); setShowInput(true)}}>
+                Add New Task List
+              </div>
+            </button>
+
+          )}
         {/* Scrollable task list */}
+        <label htmlFor="tasklists" className="pl-4 pt-4 text-[#91989E]">Task Lists</label>
         <DragDropContext onDragEnd={handleListReorder} >
           <Droppable droppableId="taskLists" direction="vertical">
             {(provided) => (
-        <div ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-y-auto px-4 py-2 space-y-2">
+        <div ref={provided.innerRef} {...provided.droppableProps} className="flex-1 overflow-y-auto px-4 pb-2 space-y-2">
           {taskLists.map((list) => (
             <Draggable key={list._id} draggableId={list._id} index={taskLists.indexOf(list)} >
           {(provided, snapshot) => {
@@ -351,18 +393,18 @@ useEffect(() => {
             className={`flex justify-between items-center w-full bg-white dark:bg-[#4F5962] rounded-lg ${isSelected ? 'shadow-lg' : ''}`}
             >
               <div className="cursor-pointer" onClick={() => {setListToEdit(list);setIsIconPickerModalOpen(true); vibration('button-press')}}>
-                <LucideIcon icon = {list.icon} size={30} />
+                <LucideIcon icon = {list.icon} size={20} />
                 </div>
             <div
               onClick={() => {
                 setTimeout(() => onClose(), 300);
                 onSelectList(list);
               }}
-              className="cursor-pointer text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.25)] text-[#4F5962] dark:text-white transition"
+              className="cursor-pointer text-sm text-left w-full px-3 py-2 rounded-lg hover:bg-[rgba(76,108,168,0.25)] text-[#4F5962] dark:text-white transition overflow-hidden text-ellipsis whitespace-nowrap"
             >
               {list.name}
             </div>
-          
+            <div className="relative">
             <button
               onClick={(e) => {e.stopPropagation();vibration('button-press');setActiveKebab(list._id)}}
               className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition"
@@ -371,7 +413,7 @@ useEffect(() => {
             </button>
           
             {activeKebab === list._id && (
-              <div className="absolute right-4 mt-10 w-36 bg-white shadow-lg rounded-xl text-sm dark:bg-[#4F5962] z-50">
+              <div className="absolute right-4 mt-[-30px] w-36 bg-white shadow-lg rounded-xl text-sm dark:bg-[#4F5962] z-50">
                   <button
                     className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
@@ -416,50 +458,14 @@ useEffect(() => {
                 </button>
               </div>
             )}
+            </div>
           </div>
           )}}
             </Draggable>
           
           ))}
           {provided.placeholder}
-          {showInput ? (
-            <div className="mt-4 space-y-2">
-              <input
-                type="text"
-                value={newListName}
-                onChange={(e) => setNewListName(e.target.value)}
-                placeholder="New list name"
-                className="w-full px-3 py-2 rounded-lg border border-[#4F596254] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] dark:border-white"
-              />
-              <div className="flex gap-2">
-                <button
-                  onClick={handleAdd}
-                  className="bg-[#4C6CA8] text-white px-4 py-1 rounded hover:bg-[#3A5D91] cursor-pointer"
-                >
-                  Add
-                </button>
-                <button
-                  onClick={() => {
-                    vibration('button-press');
-                    setShowInput(false);
-                    setNewListName("");
-                  }}
-                  className="text-sm text-[#91989E] hover:text-[#4F5962] cursor-pointer transition dark:hover:text-white"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          ) : (
-            <button
-              onClick={() => {vibration('button-press'); setShowInput(true)}}
-              className="mt-4 flex items-center gap-2 text-sm text-[#4C6CA8] dark:text-[#90A9D6] hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] font-medium px-3 py-2 rounded-full  transition cursor-pointer"
-            >
-              <Plus className="w-4 h-4 " />
-              Add New Task List
-            </button>
-
-          )}
+          
         </div>
             )}
         </Droppable>
@@ -473,10 +479,12 @@ useEffect(() => {
         <div className="p-4 border-t border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)]">
           <button
             className="cursor-pointer w-full flex justify-center items-center gap-2 text-[#D66565] hover:text-[#B94E4E] text-sm font-medium py-2 rounded transition"
-            onClick={()=>{vibration('button-press'); logout()}}
+            
           >
             <LogOut className="w-4 h-4" />
+            <div onClick={()=>{vibration('button-press'); logout()}}>
             Logout
+            </div>
           </button>
           <div className="mt-4 text-xs text-[#91989E] flex justify-center space-x-2 ">
             <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Privacy Policy</a>
