@@ -20,6 +20,7 @@ app.use(cors({
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
 const { systemPromptTaskBreakdown } = require('./system-prompts/systemPromptTaskBreakdown');
 const saveCreationPrompt = require('./utils/saveCreationPrompt');
+const { systemPromptPolishTask } = require('./system-prompts/systemPromptPolishTask');
 
 
 mongoose.connect(process.env.MONGO_URI)
@@ -647,8 +648,7 @@ app.post('/snoozePush', async (req, res) => {
 
     const { name, icon = "clipboard-check" } = req.body;
   
-    const list = await TaskList.create({ userId: req.user.id, name, icon, order });
-    await saveCreationPrompt(list._id, creationPrompt);
+    const list = await TaskList.create({ userId: req.user.id, name, icon, order, creationPrompt: creationPrompt || null });
     user.lastActiveAt = new Date();
     user.save();
     res.json(list);
@@ -698,15 +698,16 @@ app.post('/snoozePush', async (req, res) => {
     const tasks = await Task.find({ tasklistId }).sort({ order: 1 });
     res.json(tasks);
   });
-
+    
   app.post('/tasks', verifyToken, async (req, res) => {
     const tasklistId = req.body.tasklistId;
     const user = await User.findById(req.user.id);
     const taskCount = await Task.countDocuments({ tasklistId });
-  
+    console.log(`req.body:`, req.body);
+    console.log(`req.body.content:`, req.body.content);
     if (!user.isPro && taskCount >= 5) return res.status(403).json({ error: 'Free tier limit' });
   
-    const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0, description: req.body.description || '' });
+    const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0, description: req.body.description || '', timeEstimate: req.body.timeEstimate || null, dewDate: req.body.dewDate || null });
     user.lastActiveAt = new Date();
     user.save();
     res.json(task);
@@ -859,7 +860,9 @@ app.post('/create-customer-portal-session', async (req, res) => {
     }
   
     try {
-      const prompt = `Here is the user's goal:
+      const prompt = `Today's date is ${new Date().toLocaleDateString()}. The day is ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}.
+      
+      Here is the user's goal:
       Goal: "${goal}"
 `;
   const response = await openai.chat.completions.create({
@@ -878,6 +881,40 @@ app.post('/create-customer-portal-session', async (req, res) => {
     } catch (err) {
       console.error('OpenAI error:', err);
       res.status(500).json({ error: 'AI breakdown failed.' });
+    }
+  });
+
+  // polish task endpoint
+  app.post('/ai/polish', verifyToken, async (req, res) => {
+    const { task } = req.body;
+    const user = await User.findById(req.user.id);
+    console.log("currentTasks:", req.body.currentTasks);
+    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!task || task.length < 5) {
+      return res.status(400).json({ error: 'Invalid task' });
+    }
+    try {
+      const prompt = `Today's date is ${new Date().toLocaleDateString()}. The day is ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}.
+      Here is the user's current tasklist details (be sure to pay particular attention to the creationPrompt. It may have details that will help determine the dewDate):
+      ${req.body.currentTaskList || '(empty)'}
+      Here are the tasks within that list (if any):
+      ${req.body.currentTasks || '(none)'}
+      Here is the user's task that needs polishing (it won't necessarily be going at the end of the task list, so consider that):
+      Task: "${task}"`;
+      const response = await openai.chat.completions.create({
+        model: 'gpt-3.5-turbo',
+        messages: [
+          { role: 'system', content: systemPromptPolishTask},
+          { role: 'user', content: prompt },
+        ],
+        temperature: 0.5,
+      });
+      const polished = response.choices?.[0]?.message?.content?.trim();
+      console.log('AI polish result:', polished);
+      res.json({ polished });
+    } catch (err) {
+      console.error('OpenAI error:', err);
+      res.status(500).json({ error: 'AI polish failed.' });
     }
   });
 

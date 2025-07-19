@@ -40,6 +40,8 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       });
   
       const { taskList } = await res.json();
+
+      console.log("goal:", goal);
   
       // 2. Create new task list
       const listRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
@@ -69,6 +71,8 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
             tasklistId: newTaskList._id,
             content: task.content,
             description: task.description || '',
+            dewDate: new Date(`${task.dewDate}T12:00:00`) || null,
+            timeEstimate: task.timeEstimate || null,
             order: task.order || 0, 
           }),
         });

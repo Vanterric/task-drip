@@ -18,6 +18,8 @@ import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import EditTaskModal from "../../components/EditTaskModal";
+import { ColorContext } from "../../context/ColorContext";
+import { useContext } from "react";
 
 
 export default function HomePage() {
@@ -43,7 +45,7 @@ export default function HomePage() {
   const [firstTask, setFirstTask] = useState(null);
   const controls = useAnimation();
   const [visibleTask, setVisibleTask] = useState(tasks[0]);
-  
+   const {colors} = useContext(ColorContext)
 
     useEffect(() => {
       setVisibleTask(tasks[0]);
@@ -358,7 +360,7 @@ const handleDragEnd = (_, info) => {
 
 
   return (
-    <div className="min-h-screen bg-[#FAECE5] flex flex-col relative text-[#4F5962] dark:text-white dark:bg-[#212732] transition overflow-x-hidden">
+    <div className={`min-h-screen bg-background-light flex flex-col relative text-text-primary  dark:text-text-darkprimary dark:bg-background-dark transition overflow-x-hidden`}>
       {wasDowngraded && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
           Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>setShowUpgradeModal(true)}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
@@ -391,7 +393,7 @@ const handleDragEnd = (_, info) => {
   {/* Left: Branding */}
   <div className="flex items-center space-x-2">
     <button
-      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-white dark:bg-[#4F5962] shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6] transition cursor-pointer`}
+      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-background-card dark:bg-background-darkcard shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring transition cursor-pointer`}
       onClick={() => {vibration('button-press'); setShowSidebar(true)}}
     >
       <Menu size={24}  />
@@ -408,9 +410,9 @@ const handleDragEnd = (_, info) => {
     {activeTaskList ? activeTaskList.name : ''}
   </h1>
   {activeTaskList?.resetSchedule && activeTaskList?.resetSchedule?.number && (
-    <div className="ml-4 text-sm text-[#91989E] dark:text-[#A1A8B0] cursor-default text-right">
+    <div className="ml-4 text-sm text-text-secondary cursor-default text-right">
       {activeTaskList.resetSchedule.startDate && (
-        <span className="ml-2 text-xs text-[#4BAF8E] dark:text-[#A1A8B0]">
+        <span className="ml-2 text-xs ">
           {formatResetSchedule(activeTaskList.resetSchedule)}
         </span>
       )}
@@ -425,7 +427,7 @@ const handleDragEnd = (_, info) => {
       /* One-Task View */
       (<div className="flex-grow flex flex-col items-center justify-center px-4">
         {loading ? (
-          <p className="text-lg text-[#91989E]">Loading tasks...</p>
+          <p className="text-lg text-text-secondary">Loading tasks...</p>
         ) : isSkippedThroughAlertShown && nextTask ? (
         <div className="w-full max-w-md text-center space-y-6">
         <AnimatePresence mode="wait" initial={true}>
@@ -438,24 +440,24 @@ const handleDragEnd = (_, info) => {
               animate={controls}
               className="w-full max-w-md text-center space-y-6"
             >
-        <div className="bg-[#F6DFD3] dark:bg-[#2D3545] rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
+        <div className="bg-background-insetcard dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
           </div>
            </motion.div>
             </AnimatePresence>
           <div className="flex gap-4 justify-center">
             <button
-            className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+            className="cursor-pointer group flex items-center gap-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
           >
-            <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+            <CheckCircle className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
             Done
           </button>
 
               <button
                 onClick={() => handleSkip(nextTask._id)}
-                className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+                className="cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-primaryhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
               >
-                <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
+                <RefreshCw className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-180" />
                 Skip
               </button>
 
@@ -464,7 +466,7 @@ const handleDragEnd = (_, info) => {
             <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>)
         : !activeTaskList || tasks.length === 0 ? (
-          <p className="text-lg text-[#91989E] text-center cursor-default">
+          <p className="text-lg text-text-secondary text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
             : "No tasks here yet. Tap Add Task to add your first."}
@@ -486,16 +488,16 @@ const handleDragEnd = (_, info) => {
             >
 
             <div
-    className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default flex-col flex"
+    className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default flex-col flex"
     onClick={() => setShowDescription(!showDescription)}
   >
     {nextTask.content}
-    <span className="text-xs text-[#91989E] dark:text-[#A1A8B0] ml-2">
+    <span className={`text-xs dark:text-text-darkinfo text-text-info ml-2`}>
       {nextTask.timeEstimate ? `${nextTask.timeEstimate} min` : ''}
     </span>
           <ChevronDown
           onClick={() => setShowDescription(!showDescription)}
-  className="transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-[#4F5962]/60"
+  className={`transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-[${colors.text.info}]`}
   style={{
     transform: showDescription ? "rotateX(180deg)" : "rotateX(0deg)",
     transformStyle: "preserve-3d",
@@ -537,8 +539,8 @@ const handleDragEnd = (_, info) => {
             transition={{ delay: 0.3, duration: 0.3 }}
             className="flex items-center justify-between text-xs gap-2 font-normal mt-5"
           >
-            <div className="cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
-            {nextTask.dewDate ? <div className={`flex gap-1 items-center justify-center cursor-pointer ${
+            <div className={`cursor-pointer text-text-info dark:text-text-darkinfo`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
+            {nextTask.dewDate ? <div className={`flex gap-1 text-text-info dark:text-text-darkinfo items-center justify-center cursor-pointer ${
     isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>
               <AlarmClock className="h-4 w-4"  />
               {
@@ -558,17 +560,17 @@ const handleDragEnd = (_, info) => {
                 <motion.div layout className="flex gap-4 justify-center">
                 <button
                 onClick={() => handleComplete(nextTask._id)}
-                className="cursor-pointer group flex items-center gap-2 bg-[#4BAF8E] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+                className="cursor-pointer group flex items-center gap-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring"
               >
-                <CheckCircle className="w-5 h-5 text-white transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+                <CheckCircle className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
                 Done
               </button>
 
                   <button
                     onClick={() => handleSkip(nextTask._id)}
-                    className="cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-xl shadow-md hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+                    className="cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-primaryhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring"
                   >
-                    <RefreshCw className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-180" />
+                    <RefreshCw className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-180" />
                     Skip
                   </button>
 
@@ -581,7 +583,7 @@ const handleDragEnd = (_, info) => {
                   <div className="flex flex-col items-center justify-center mt-6 space-y-4">
                     <TaskDripBadge />
 
-                    <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
+                    <div className="text-center text-accent-success text-xl font-semibold tracking-wide cursor-default">
                   All tasks complete! Chill Time.
                 </div>
               </div>
@@ -595,7 +597,7 @@ const handleDragEnd = (_, info) => {
           {tasks.length > 0 && tasks.every((task) => task.isComplete) && (
             <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2">
               <TaskDripBadge />
-              <div className="text-center text-[#4BAF8E] text-xl font-semibold tracking-wide cursor-default">
+              <div className="text-center text-accent-success text-xl font-semibold tracking-wide cursor-default">
                 All tasks complete! Chill Time.
               </div>
             </div>
@@ -617,7 +619,7 @@ const handleDragEnd = (_, info) => {
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                className={` mt-5 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-white dark:bg-[#4F5962] w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
+                className={` mt-5 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-background-card dark:bg-background-darkcard w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
               >
                 <div
                 {...provided.dragHandleProps}
@@ -631,12 +633,12 @@ const handleDragEnd = (_, info) => {
                   type="checkbox"
                   checked={task.isComplete}
                   onChange={() => handleComplete(task._id)}
-                  className="cursor-pointer appearance-none w-5 h-5 mt-[2.5px] rounded-sm border shrink-0 border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                  className="cursor-pointer appearance-none w-5 h-5 mt-[2.5px] rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
                 />
                 <div className={`flex flex-col w-full  `}>
                 <div className={`${task.isComplete ? 'line-through' : ''}`}>
                   {task.content}
-                  <span className="text-xs text-[#91989E] dark:text-[#A1A8B0] ml-2">
+                  <span className="text-xs text-text-info text-text-darkinfo ml-2">
                     {task.timeEstimate ? `${task.timeEstimate} min` : ''}
                   </span>
                 </div>
@@ -651,7 +653,7 @@ const handleDragEnd = (_, info) => {
                   <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
                   {task.dewDate && (
                     <div onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
-                      ) ? 'text-[#D66565]' : 'text-[#91989E] dark:text-[#A1A8B0]'}`}>
+                      ) ? 'text-accent-destructive' : 'text-text-info dark:text-text-darkinfo'}`}>
                         <AlarmClock className="inline-block mr-1 w-4 h-4" />
                       {new Date(task.dewDate).toLocaleDateString(undefined, {
                         month: "short",
@@ -660,7 +662,7 @@ const handleDragEnd = (_, info) => {
                       })}
                     </div>
                   )}
-                  <div className="text-xs text-[#91989E] dark:text-[#A1A8B0] cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
+                  <div className="text-xs text-text-info dark:text-text-darkinfo cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
                   </div>
                 </div>
               </div>
@@ -678,13 +680,13 @@ const handleDragEnd = (_, info) => {
 
       <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
 <button
-  className= {`cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onClick={() => {vibration('button-press'); if (user.isPro) {setShowAIModal(true)} else {setShowUpgradeModal(true)}}}
 >
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button>
       <button
-  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onClick={() => {
     vibration('button-press');
     if (tasks.length >= 5 && !user.isPro) {
@@ -694,11 +696,11 @@ const handleDragEnd = (_, info) => {
     setShowAddModal(true);
   }}
 >
-  <Plus className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-90" />
+  <Plus className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-90" />
   Add Task
 </button>
 <button
-  className= {`cursor-pointer group flex items-center gap-2 bg-[#4C6CA8] text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-[#3A5D91] hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#90A9D6]`}
+  className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onClick={() => {vibration('button-press'); 
   const resetTaskDetails = async (list)=>{
     setActiveTaskList(list);
@@ -723,12 +725,12 @@ const handleDragEnd = (_, info) => {
 >
 <div className="relative w-5 h-5 group">
   <List
-    className={`absolute top-0 left-0 w-5 h-5 text-white transition-all duration-300 ease-in-out
+    className={`absolute top-0 left-0 w-5 h-5 text-text-darkprimary transition-all duration-300 ease-in-out
       ${viewType === 'one-task' ? 'opacity-100 scale-100 rotate-0 group-hover:rotate-[-12deg] group-hover:scale-110' : 'opacity-0 scale-90 rotate-6'}
     `}
   />
   <LayoutPanelTop
-    className={`absolute top-0 left-0 w-5 h-5 text-white transition-all duration-300 ease-in-out
+    className={`absolute top-0 left-0 w-5 h-5 text-text-darkprimary transition-all duration-300 ease-in-out
       ${viewType !== 'one-task' ? 'opacity-100 scale-100 rotate-0 group-hover:rotate-[-12deg] group-hover:scale-110' : 'opacity-0 scale-90 -rotate-6'}
     `}
   />
@@ -742,6 +744,8 @@ const handleDragEnd = (_, info) => {
 <AddTaskModal
   isOpen={showAddModal}
   onClose={() => setShowAddModal(false)}
+  taskList={activeTaskList}
+  tasks={tasks}
   onSubmit={async (text) => {
     let activeList = activeTaskList;
     const headers = {
@@ -759,14 +763,17 @@ const handleDragEnd = (_, info) => {
       activeList = await listRes.json();
       setActiveTaskList(activeList);
     }
-  
+    console.log("Text to add:", text);
     // Step 2: Create the task using the newly created or existing list
     const taskRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
       method: "POST",
       headers,
       body: JSON.stringify({
         tasklistId: activeList._id,
-        content: text,
+        content: text.content || "",
+        description: text.description || "",
+        timeEstimate: text.timeEstimate || null,
+        dewDate: new Date(`${text.dewDate}T12:00:00`) || null,
         order: tasks.length + 1, // append to end
       }),
     });
