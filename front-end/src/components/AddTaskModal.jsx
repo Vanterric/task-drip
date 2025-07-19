@@ -71,7 +71,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
+    <div className="fixed inset-0 bg-black/30 flex w-full items-center justify-center z-50 backdrop-blur-sm">
       <AnimatePresence>
       <motion.div
       layout
@@ -79,7 +79,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}>
-      <div className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
+      <div className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-xl p-6 max-w-md mx-4">
         <h2 className="text-xl font-bold mb-4 text-text-primary dark:text-text-darkprimary cursor-default">Add a new task</h2>
         <p className="text-sm text-text-primary dark:text-text-darkprimary mb-4 cursor-default">
           {dailyPromptMap[dayOfWeek]}
