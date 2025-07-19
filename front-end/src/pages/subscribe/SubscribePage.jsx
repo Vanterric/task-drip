@@ -4,6 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { vibration } from '../../utilities/vibration';
+import dewlistLogo from '../../assets/DewList_Logo.png';
 
 const plans = {
   monthly: { label: 'Monthly', price: '$5/mo', stripePriceId: 'monthly' },
@@ -107,9 +108,10 @@ export default function SubscribePage() {
       <div className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
         {!subscribed ? (
           <>
-            <h1 className="text-2xl font-bold text-center text-yellow-500 dark:text-yellow-300 cursor-default mb-2">DewList Pro</h1>
-            <p className="text-sm text-center text-[#91989E] cursor-default">
-              Upgrade to pro to get unlimited tasks, <br/> unlimited lists, AI-powered breakdowns, and more.
+          <img src={dewlistLogo} alt="DewList Logo" className="w-16 h-16 mx-auto mb-4" />
+            <h1 className="text-2xl font-bold text-center border rounded-full border-yellow-500 dark:border-yellow-300 mx-auto w-fit px-4 py-1 text-yellow-500 dark:text-yellow-300 cursor-default mb-2">DewList Pro</h1>
+            <p className="text-sm text-center text-text-info dark:text-text-darkinfo cursor-default">
+              Go pro to get unlimited tasks, <br/> unlimited lists, AI features, and more.
             </p>
 
             <div className="flex justify-center gap-2">
@@ -117,14 +119,14 @@ export default function SubscribePage() {
                 <button
                   key={key}
                   onClick={() => {vibration('button-press'); setSelectedPlan(key)}}
-                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border transition cursor-pointer
+                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border flex flex-col w-md  transition cursor-pointer
                     ${selectedPlan === key
-                      ? 'bg-[#4C6CA8] text-white'
-                      : 'bg-white dark:bg-[#4F5962] border-[#4C6CA8] text-[#90A9D6]'}`}
+                      ? 'bg-accent-primary text-text-darkprimary font-semibold dark:border-text-darkprimary border-text-primary'
+                      : 'bg-white text-accent-primary border-accent-primary dark:bg-background-darkcard dark:border-accent-focusring dark:text-accent-focusring'}`}
 
                 >
                   {plan.label}
-                  <span className="ml-1 text-xs text-[#91989E]">{plan.price}</span>
+                  <span className={`ml-1 text-xs font-normal dark:text-text-darkinfo ${selectedPlan === key ? 'text-text-darkinfo' : 'text-text-info'}`}>{plan.price}</span>
                 </button>
               ))}
             </div>
@@ -151,7 +153,7 @@ export default function SubscribePage() {
           </form>
 
 
-            <p className="text-xs text-center text-[#91989E]">
+            <p className="text-xs text-center dark:text-text-darkinfo text-text-info cursor-default">
               {selectedPlan === 'lifetime'
                 ? 'Secure one-time payment powered by Stripe.'
                 : 'You’ll be redirected to Stripe for secure subscription checkout.'}
@@ -161,7 +163,7 @@ export default function SubscribePage() {
           <div className="text-center space-y-6">
             <CheckCircle className="w-12 h-12 mx-auto text-[#6DBF67]" />
             <h2 className="text-xl font-semibold text-[#4F5962] dark:text-white mb-2 cursor-default">Success!</h2>
-            <p className="text-sm text-[#91989E] cursor-default">
+            <p className="text-sm text-text-info dark:text-text-darkinfo cursor-default">
               Your upgrade was successful. <br/> You can now enjoy all DewList Pro features.
             </p>
             <button
