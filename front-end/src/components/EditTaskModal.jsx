@@ -10,7 +10,7 @@ export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTask
   const [dewDate, setDewDate] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [showConfirmDelete, setShowConfirmDelete] = useState(false);
-  const {token} = useAuth()
+  const {token, user} = useAuth()
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedTaskList, setSelectedTaskList] = useState(taskList?._id || "");
   const [timeEstimate, setTimeEstimate] = useState(task?.timeEstimate ?? "");
@@ -130,8 +130,8 @@ useEffect(() => {
           />
         </label>
         
-        <div className="flex items-center justify-start text-xs mt-2  select-none" >
-          <div className="cursor-pointer" onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}}>Advanced</div> <ChevronDown  onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}} className={`cursor-pointer w-5 h-5 transition ${!showAdvanced ? "transform rotate-[-90deg]" : ""}`} />
+        <div className="flex items-center gap-1 justify-start text-xs mt-2  select-none" >
+          <div className="cursor-pointer" onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}}>Advanced</div> <span className="text-yellow-500 dark:text-yellow-300 text-[10px] border px-[8px] rounded-full py-[2px]">Pro</span> <ChevronDown  onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}} className={`cursor-pointer w-5 h-5 transition ${!showAdvanced ? "transform rotate-[-90deg]" : ""}`} />
         </div>
         <motion.div layout className={`relative ${showAdvanced ? 'overflow-y-auto' : ''}`}>
         <AnimatePresence initial={false}>
@@ -151,7 +151,8 @@ useEffect(() => {
             placeholder="No Time Estimate Set"
             value={timeEstimate}
             onChange={(e) => setTimeEstimate(e.target.value)}
-            className="w-full mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
+            disabled={!user.isPro}
+            className="w-full disabled:opacity-50 mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
           <label className="text-[#91989E] dark:text-white block">
@@ -160,7 +161,8 @@ useEffect(() => {
             type="date"
             value={dewDate}
             onChange={(e) => setDewDate(e.target.value)}
-            className="w-full mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
+            disabled={!user.isPro}
+            className="w-full disabled:opacity-50 mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
         
@@ -169,7 +171,8 @@ useEffect(() => {
           <select
             value={selectedTaskList}
             onChange={(e) => setSelectedTaskList(e.target.value)}
-            className="mt-1 w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
+            disabled={!user.isPro}
+            className="mt-1 w-full disabled:opacity-50 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
           >
             {taskLists && taskLists.map((list) => (
               <option key={list._id} value={list._id}>{list.name}</option>
@@ -210,8 +213,9 @@ useEffect(() => {
       <h3 className="text-lg font-semibold text-[#4F5962] dark:text-white">
         Delete this task?
       </h3>
-      <p className="text-sm text-[#91989E] dark:text-white mt-2">
-        This action is <span className="font-semibold text-[#D66565]">irreversible</span>.
+      <p className="text-sm text-text-info dark:text-text-darkinfo mt-2">
+        This will delete <span className="font-semibold text-text-primary dark:text-text-darkprimary">"{task.content}"</span>.<br/>
+        <span className="font-semibold text-[#D66565]">This cannot be undone.</span>
       </p>
       <div className="flex gap-4 justify-center mt-6">
         <button

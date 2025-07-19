@@ -7,6 +7,7 @@ import { ChartArea, Cog, Edit, Edit3, LogOut, LucideCalendarCog, Moon, Pencil, P
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
+import dewListGold from "../assets/DewListGold.png";
 import FeedbackModal from "./FeedbackModal";
 import LucideIcon from "./LucideIcon";
 import IconPickerModal from "./IconPickerModal";
@@ -316,7 +317,7 @@ useEffect(() => {
   initial={false}
 >
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
-          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
+          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {user.isPro? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
           <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (

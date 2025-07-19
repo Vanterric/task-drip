@@ -19,8 +19,9 @@ const [resetTime, setResetTime] = useState(initialResetTime);
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
       <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
-        <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default">
+        <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default flex items-center gap-2">
           Set Reset Schedule
+          <span className="text-yellow-500 dark:text-yellow-300 border text-xs py-[2px] px-2 rounded-full">Pro</span>
         </h2>
         <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
           Want a fresh start? Choose how often to reset tasks in <strong>{taskList.name}</strong>. They’ll be marked incomplete again, on your schedule

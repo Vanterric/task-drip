@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { vibration } from '../../utilities/vibration';
-import dewlistLogo from '../../assets/DewList_Logo.png';
+import dewlistLogo from '../../assets/DewListGold.png';
 
 const plans = {
   monthly: { label: 'Monthly', price: '$5/mo', stripePriceId: 'monthly' },
@@ -119,9 +119,9 @@ export default function SubscribePage() {
                 <button
                   key={key}
                   onClick={() => {vibration('button-press'); setSelectedPlan(key)}}
-                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border flex flex-col w-md  transition cursor-pointer
+                  className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border flex flex-col w-md  transition cursor-pointer outline-none focus:ring-2
                     ${selectedPlan === key
-                      ? 'bg-accent-primary text-text-darkprimary font-semibold dark:border-text-darkprimary border-text-primary'
+                      ? 'bg-accent-primary text-yellow-300 font-semibold dark:border-yellow-300 border-yellow-500'
                       : 'bg-white text-accent-primary border-accent-primary dark:bg-background-darkcard dark:border-accent-focusring dark:text-accent-focusring'}`}
 
                 >
@@ -142,7 +142,7 @@ export default function SubscribePage() {
             <button
               type="submit"
               disabled={!stripe || loading}
-              className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer"
+              className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer outline-none focus:ring-2 focus:ring-accent-focusring"
             >
               {loading
                 ? 'Processing...'

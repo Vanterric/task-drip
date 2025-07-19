@@ -3,6 +3,7 @@ import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
+import DewListGold from "../../assets/DewListGold.png";
 import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
@@ -372,7 +373,7 @@ const handleDragEnd = (_, info) => {
           </button>
         </div>
       )}
-      {isFirst100User && (
+      {isFirst100User && isFirstTimeUser && user.isPro && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
           🎉 Whoa, look at you! You're one of the first 100 people to try DewList. 
           To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered breakdowns.
@@ -398,10 +399,7 @@ const handleDragEnd = (_, info) => {
     >
       <Menu size={24}  />
     </button>
-    <div className="flex items-center  font-semibold text-base tracking-wide">
-      <div className="max-[400px]:hidden cursor-default">DewList</div>
-      <img className="h-5 w-5 ml-2 max-[400px]:ml-0" alt="DewList Logo" src={DewListIcon}/>
-    </div>
+    
   </div>
 
   {/* Right: Active task list name */}
@@ -593,7 +591,7 @@ const handleDragEnd = (_, info) => {
       </div>) : 
       /* List View */
       (
-        <div className="max-[500px]:mt-20 mt-25">
+        <div className="max-[500px]:mt-20 mt-25 ">
           {tasks.length > 0 && tasks.every((task) => task.isComplete) && (
             <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2">
               <TaskDripBadge />
@@ -603,7 +601,14 @@ const handleDragEnd = (_, info) => {
             </div>
           )}
         <DragDropContext onDragEnd={handleTaskReorder} >
-          
+         { !activeTaskList || tasks.length === 0 ? (
+          <p className="text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-160px)] h-[calc(100vh-200px)] mx-2 items-center justify-center">
+          {!activeTaskList
+            ? "No lists yet. Tap the menu to create one."
+            : "No tasks here yet. Tap Add Task to add your first."}
+        </p>
+        
+        ) : null}
 
   <Droppable droppableId="taskListArea">
     {(provided) => (

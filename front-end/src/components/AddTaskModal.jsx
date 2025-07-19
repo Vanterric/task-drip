@@ -113,7 +113,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             disabled={!user.isPro}
             title={!user.isPro ? "Polish it is a Pro feature. Upgrade to unlock!" : "Polish it"}
             />
-          Polish it <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => setShowPolishItInfo(!showPolishItInfo)} />
+          Polish it <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => setShowPolishItInfo(!showPolishItInfo)} />
         </div>
           
           <div className="flex gap-4 justify-end">

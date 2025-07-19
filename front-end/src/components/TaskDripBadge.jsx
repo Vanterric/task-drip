@@ -1,12 +1,15 @@
-import DewListIcon from "../assets/DewList_Icon.png";
+import DewListIcon from "../assets/DewList_Logo.png";
+import DewListGold from "../assets/DewListGold.png";
+import { useAuth } from "../context/AuthContext";
 
 export default function TaskDripBadge() {
+  const {user} = useAuth();
   return (
-    <div className="relative group w-28 h-28 rounded-full bg-gradient-to-br from-yellow-300 to-yellow-500 shadow-[inset_2px_2px_8px_rgba(255,255,255,0.3),_0_4px_12px_rgba(0,0,0,0.2)] border-[6px] border-yellow-200 animate-medal-in transform transition-transform duration-300 ">
-  
+    <div className={`relative group w-28 h-28 rounded-full bg-gradient-to-br ${user.isPro ? 'from-yellow-100 to-yellow-300' : 'from-yellow-300 to-yellow-500'} shadow-[inset_2px_2px_8px_rgba(255,255,255,0.3),_0_4px_12px_rgba(0,0,0,0.2)] border-[6px] ${user.isPro ? 'border-yellow-300' : 'border-yellow-200'} animate-medal-in transform transition-transform duration-300 `}>
+
       {/* Droplet center */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <img src={DewListIcon} alt="DewList Logo" className="w-10 h-10"  />
+        <img src={user.isPro ? DewListGold : DewListIcon} alt="DewList Logo" className="w-15 h-15"  />
       </div>
 
       {/* Sparkle flare */}
