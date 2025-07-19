@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
 import getRelevantIcon from '../utilities/getRelevantIcon';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
+import { safeParsePolished } from '../utilities/safeParsePolished';
 
 export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
   if (!isOpen) return null;
@@ -40,8 +41,8 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       });
   
       const { taskList } = await res.json();
+      const polishedTaskList = safeParsePolished(taskList);
 
-      console.log("goal:", goal);
   
       // 2. Create new task list
       const listRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
@@ -50,7 +51,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
-        body: JSON.stringify({ name: taskList.title, creationPrompt:goal, order: taskLists.length}),
+        body: JSON.stringify({ name: polishedTaskList.title, creationPrompt:goal, order: taskLists.length}),
       });
   
       const newTaskList = await listRes.json();
@@ -60,7 +61,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       }
   
       // 3. Create tasks in that list
-      for (const task of taskList.tasks) {
+      for (const task of polishedTaskList.tasks) {
         await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
           method: 'POST',
           headers: {

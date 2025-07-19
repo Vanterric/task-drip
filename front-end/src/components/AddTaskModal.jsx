@@ -5,6 +5,7 @@ import { useContext } from "react";
 import { ColorContext } from "../context/ColorContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
+import { safeParsePolished } from "../utilities/safeParsePolished";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, tasks }) {
   const [taskText, setTaskText] = useState("");
@@ -27,12 +28,16 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
     const today = new Date();
     const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
 
-  const handleSubmit = async (e) => {
+  
+
+
+  
+  
+    const handleSubmit = async (e) => {
     e.preventDefault();
     if (!taskText.trim()) return;
     vibration('button-press')
     setSubmitting(true);
-    console.log("current taskList:", taskList);
     if(polishItSelected) {
       try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/polish`, {
@@ -45,8 +50,8 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
         });
         if (response.ok) {
           const data = await response.json();
-          console.log('Polished task data:', data.polished);
-          await onSubmit(JSON.parse(data.polished));
+          const polished = safeParsePolished(data.polished);
+          await onSubmit(polished);
         } else {
           console.error('Failed to polish task');
           await onSubmit({ content: taskText }); // Fallback to original text

@@ -492,7 +492,7 @@ const handleDragEnd = (_, info) => {
     onClick={() => setShowDescription(!showDescription)}
   >
     {nextTask.content}
-    <span className={`text-xs dark:text-text-darkinfo text-text-info ml-2`}>
+    <span className={`text-xs dark:text-text-darkinfo text-text-info mt-1`}>
       {nextTask.timeEstimate ? `${nextTask.timeEstimate} min` : ''}
     </span>
           <ChevronDown
@@ -763,7 +763,6 @@ const handleDragEnd = (_, info) => {
       activeList = await listRes.json();
       setActiveTaskList(activeList);
     }
-    console.log("Text to add:", text);
     // Step 2: Create the task using the newly created or existing list
     const taskRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
       method: "POST",
