@@ -17,6 +17,7 @@ import { subscribeToPush } from "../utilities/subscribeToPush";
 import SettingsModal from "./SettingsModal";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { motion, useAnimation } from "framer-motion";
+import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -169,7 +170,7 @@ useEffect(() => {
 
       if (permission === 'granted') {
         const device = getDeviceLabel();
-        const success = await subscribeToPush(device, 'reset', taskListLabel);
+        const success = await subscribeToPush(device, 'reset', taskListLabel, taskListId);
         if (!success) console.warn("Failed to subscribe for reset notifications");
       } else {
         console.warn("Notification permission was denied or dismissed.");
@@ -182,6 +183,46 @@ useEffect(() => {
       console.error("Error setting reset schedule:", error);
     }
   }
+
+  const handleClearResetSchedule = async (taskListId) => {
+  try {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    };
+
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${taskListId}`, {
+      method: "PUT",
+      headers,
+      body: JSON.stringify({
+        resetSchedule: {
+          number: null,
+          cadence: null,
+          startDate: null,
+          lastReset: null,
+        },
+      }),
+    });
+
+    if (!res.ok) throw new Error("Failed to clear reset schedule");
+
+    const updatedList = await res.json();
+    setTaskLists((prev) =>
+      prev.map((list) => (list._id === updatedList._id ? updatedList : list))
+    );
+
+    if (activeTaskList?._id === updatedList._id) {
+      setActiveTaskList(updatedList);
+    }
+
+    await unsubscribeFromPush('reset', taskListId);
+    refetchTaskListsOrUpdateUI();
+    setIsResetScheduleModalOpen(false);
+  } catch (error) {
+    console.error("Error clearing reset schedule:", error);
+  }
+};
+
 
 
   const refetchTaskListsOrUpdateUI = async () => {
@@ -551,7 +592,7 @@ if (activeTaskList?._id === listToDelete._id) {
         setTasks(taskData);}}
 />
 <SettingsModal isOpen={isSettingsModalOpen} onClose={() => setIsSettingsModalOpen(false)} />
-{isResetScheduleModalOpen ? <ResetScheduleModal onClose={()=>setIsResetScheduleModalOpen(false)} onSubmit={handleSetResetSchedule} taskList = {listToEdit}/> : null}
+{isResetScheduleModalOpen ? <ResetScheduleModal handleClearResetSchedule={handleClearResetSchedule} onClose={()=>setIsResetScheduleModalOpen(false)} onSubmit={handleSetResetSchedule} taskList = {listToEdit}/> : null}
 {isIconPickerModalOpen ? <IconPickerModal listName={listToEdit.name} onSubmit={(listId, icon)=>{handleUpdateIcon(listId, icon, token, setTaskLists);}} onClose={()=>setIsIconPickerModalOpen(false)} listId={listToEdit._id} currentIcon = {listToEdit.icon}/>:null}
 
 {isFeedbackModalOpen ? <FeedbackModal onClose={()=>setIsFeedbackModalOpen(false)}/>:null}

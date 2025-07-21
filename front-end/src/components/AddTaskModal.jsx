@@ -85,6 +85,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
           {dailyPromptMap[dayOfWeek]}
         </p>
         <form className="flex flex-col gap-4">
+          <div>
           <input
             type="text"
             value={taskText}
@@ -92,6 +93,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             placeholder="What's your next move?"
             className="w-full px-4 py-3 border border-text-secondary dark:border-text-darksecondary rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-focusring"
           />
+          </div>
           {showPolishItInfo && (
             <motion.div
             initial={{ opacity: 0, height: 0 }}

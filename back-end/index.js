@@ -546,15 +546,21 @@ app.post('/subscribe', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
+    console.log('Subscribing user:', user.email);
+    console.log('Subscribing with payload:', req.body);
+    console.log('Subscribing with device:', req.body.device);
+    console.log('Subscribing with type:', req.body.type);
+    console.log('Subscribing with label:', req.body.label);
+    console.log('Subscribing with listId:', req.body.listId);
 
-    const { device, type = 'inactivity', label, ...subscription } = req.body;
+    const { device, type = 'inactivity', label, listId, ...subscription } = req.body;
 
     const alreadyExists = user.pushSubscriptions.some(
       (sub) => sub.endpoint === subscription.endpoint && sub.type === type
     );
 
     if (!alreadyExists) {
-      user.pushSubscriptions.push({ ...subscription, device, type, label });
+      user.pushSubscriptions.push({ ...subscription, device, type, label, listId });
       await user.save();
     }
 
@@ -564,6 +570,39 @@ app.post('/subscribe', verifyToken, async (req, res) => {
     res.status(500).json({ error: 'Failed to save subscription' });
   }
 });
+
+app.post('/unsubscribe', verifyToken, async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    console.log('Unsubscribing user:', user.email);
+    console.log('Unsubscribing from endpoint:', req.body.endpoint);
+    console.log('Unsubscribing from type:', req.body.type);
+    console.log('Unsubscribing from listId:', req.body.listId);
+
+    const { endpoint, type = 'reset', listId } = req.body;
+
+    const before = user.pushSubscriptions.length;
+    console.log('Number of subscriptions before:', before);
+
+    user.pushSubscriptions = user.pushSubscriptions.filter((sub) => {
+      if (listId) return sub.listId !== listId || sub.type !== type;
+      return sub.endpoint !== endpoint || sub.type !== type;
+    });
+
+    if (user.pushSubscriptions.length < before) {
+      await user.save();
+      return res.json({ success: true });
+    }
+
+    res.status(404).json({ error: 'No matching subscriptions found' });
+  } catch (err) {
+    console.error('Error unsubscribing:', err);
+    res.status(500).json({ error: 'Failed to unsubscribe' });
+  }
+});
+
+
 
 app.post('/snoozePush', async (req, res) => {
   console.log('✅ Snoozed push for user', req.body.userId);

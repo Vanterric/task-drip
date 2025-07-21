@@ -26,7 +26,8 @@ const UserSchema = new mongoose.Schema({
       enum: ['inactivity', 'reset', 'all'], // extensible
       default: 'inactivity'
     },
-    label: String // optional label for the subscription
+    label: String, // optional label for the subscription
+    listId: {type: String , default: null} // ID of the task list this subscription is for
   }
 ],
   lastActiveAt: { type: Date, default: Date.now }, 

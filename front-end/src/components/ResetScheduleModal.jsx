@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { vibration } from "../utilities/vibration";
 
-export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList }) {
+export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList, handleClearResetSchedule }) {
   const [number, setNumber] = useState(taskList.resetSchedule?.number || 1);
   const [cadence, setCadence] = useState(taskList.resetSchedule?.cadence || "days");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
@@ -103,7 +103,7 @@ const [resetTime, setResetTime] = useState(initialResetTime);
               Get notifications when tasks are reset?
             </label>
             <p className="text-xs text-[#91989E] dark:text-[#B0B0B0]">
-              You’ll receive a notification when tasks are reset, so you can stay on top of your schedule.
+              You’ll receive a notification on this device when tasks are reset, so you can stay on top of your schedule.
             </p>
             <div className="flex items-center gap-2 mt-2">
               <input
@@ -114,12 +114,15 @@ const [resetTime, setResetTime] = useState(initialResetTime);
                   vibration('button-press');
                   setIsNotificationsEnabled(e.target.checked);
                 }}
-                className="appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                className="cursor-pointer appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
               />
               <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-pointer">
-                Yes, notify me
+                Yes, notify me on this device.
               </label>
               </div>
+              <span onClick={() => handleClearResetSchedule(taskList._id)} className="text-xs text-accent-destructive hover:text-accent-destructivehover w-fit mt-3 cursor-pointer transition">
+                Clear Reset Schedule
+              </span>
           </div>
 
           <div className="flex gap-4 justify-end pt-2">
