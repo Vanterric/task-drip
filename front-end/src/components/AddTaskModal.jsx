@@ -95,7 +95,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             className="w-full px-4 py-3 border border-text-secondary dark:border-text-darksecondary rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-focusring"
           />
           <div>
-            <VoiceCaptureButton setState={setTaskText} />
+            {user.isPro && <VoiceCaptureButton setState={setTaskText} />}
           </div>
           </div>
           {showPolishItInfo && (

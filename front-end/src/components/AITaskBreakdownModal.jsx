@@ -5,11 +5,13 @@ import getRelevantIcon from '../utilities/getRelevantIcon';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 import { safeParsePolished } from '../utilities/safeParsePolished';
 import VoiceCaptureButton from './VoiceCaptureButton';
+import { useAuth } from '../context/AuthContext';
 
 export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
+  const { user } = useAuth();
   const dailyPromptMap = {
   "Monday": "Happy Monday! What's one thing you could do today to start the week feeling grounded and clear?",
   "Tuesday": "Hey, it’s Tuesday. What's cluttering your head because it's missing a start cue?",
@@ -138,7 +140,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         placeholder="e.g. Plan my startup launch"
         ></textarea>
         <div className='absolute bottom-4 right-2'>
-        <VoiceCaptureButton setState={setGoal} />
+        {user.isPro && <VoiceCaptureButton setState={setGoal} />}
         </div>
         </div>
         <button
