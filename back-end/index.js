@@ -12,6 +12,13 @@ const app = express();
 const {Resend} = require('resend');
 const { OpenAI } = require('openai');
 const bcrypt = require('bcrypt');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const upload = multer({ dest: 'uploads/' }); 
+const { promisify } = require('util');
+const rename = promisify(fs.rename);
+const unlink = promisify(fs.unlink);
 
 app.use(cors({
   origin: ['https://dewlist.app', 'http://localhost:5173'], // add your live and dev origins
@@ -956,6 +963,40 @@ app.post('/create-customer-portal-session', async (req, res) => {
       res.status(500).json({ error: 'AI polish failed.' });
     }
   });
+
+  app.post('/ai/transcribe', verifyToken, upload.single('audio'), async (req, res) => {
+  const user = await User.findById(req.user.id);
+  if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+
+  const filePath = req.file?.path;
+  const originalName = req.file?.originalname;
+
+  if (!filePath || !originalName) {
+    return res.status(400).json({ error: 'Audio file is required.' });
+  }
+
+  const extension = path.extname(originalName) || '.webm'; // fallback
+  const newPath = `${filePath}${extension}`;
+
+  try {
+    await rename(filePath, newPath); // Add the extension
+
+    const transcription = await openai.audio.transcriptions.create({
+      file: fs.createReadStream(newPath),
+      model: 'whisper-1',
+      response_format: 'text',
+      language: 'en',
+    });
+
+    res.json({ text: transcription });
+  } catch (err) {
+    console.error('Transcription error:', err);
+    res.status(500).json({ error: 'Transcription failed.' });
+  } finally {
+    unlink(filePath).catch(() => {}); // In case rename fails
+    unlink(newPath).catch(() => {});
+  }
+});
 
   // semantically choose an icon
   app.get('/icon', async (req, res) => {

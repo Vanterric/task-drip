@@ -4,6 +4,7 @@ import { vibration } from '../utilities/vibration';
 import getRelevantIcon from '../utilities/getRelevantIcon';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 import { safeParsePolished } from '../utilities/safeParsePolished';
+import VoiceCaptureButton from './VoiceCaptureButton';
 
 export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
   if (!isOpen) return null;
@@ -128,7 +129,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
           {dailyPromptMap[dayOfWeek]}
         </p>
-
+        <div className='relative'>
         <textarea
         disabled={loading}
         className="w-full border border-[#4F596254] dark:border-white rounded-lg p-3 text-sm text-[#4F5962] dark:text-white focus:outline-none focus:ring-2 focus:ring-[#4C6CA8] resize-none min-h-[100px] disabled:opacity-50"
@@ -136,7 +137,10 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
         onChange={(e) => setGoal(e.target.value)}
         placeholder="e.g. Plan my startup launch"
         ></textarea>
-
+        <div className='absolute bottom-4 right-2'>
+        <VoiceCaptureButton setState={setGoal} />
+        </div>
+        </div>
         <button
         disabled={loading}
         onClick={handleSubmit}

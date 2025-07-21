@@ -6,6 +6,7 @@ import { ColorContext } from "../context/ColorContext";
 import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { safeParsePolished } from "../utilities/safeParsePolished";
+import VoiceCaptureButton from "./VoiceCaptureButton";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, tasks }) {
   const [taskText, setTaskText] = useState("");
@@ -85,7 +86,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
           {dailyPromptMap[dayOfWeek]}
         </p>
         <form className="flex flex-col gap-4">
-          <div>
+          <div className="flex items-center gap-2">
           <input
             type="text"
             value={taskText}
@@ -93,6 +94,9 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             placeholder="What's your next move?"
             className="w-full px-4 py-3 border border-text-secondary dark:border-text-darksecondary rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-focusring"
           />
+          <div>
+            <VoiceCaptureButton setState={setTaskText} />
+          </div>
           </div>
           {showPolishItInfo && (
             <motion.div
