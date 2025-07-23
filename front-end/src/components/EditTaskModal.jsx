@@ -19,10 +19,11 @@ export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTask
   const [timeEstimate, setTimeEstimate] = useState(task?.timeEstimate ?? "");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
 
-  function fromDateInputStringToLocalLateNight(value) {
+  function fromDateInputStringToUTCNoon(value) {
   const [year, month, day] = value.split("-").map(Number);
-  return new Date(year, month - 1, day, 23, 59); // 11:59 PM local time
+  return new Date(Date.UTC(year, month - 1, day, 12, 0, 0));
 }
+
 function toLocalDateInputString(date) {
   const d = new Date(date);
   const year = d.getFullYear();
@@ -52,7 +53,7 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const dewDateObj = dewDate ? fromDateInputStringToLocalLateNight(dewDate) : null;
+    const dewDateObj = dewDate ? fromDateInputStringToUTCNoon(dewDate) : null;
     if (!title.trim()) return;
     vibration("button-press");
     setSubmitting(true);
