@@ -376,7 +376,7 @@ const handleDragEnd = (_, info) => {
       {isFirst100User && isFirstTimeUser && user.isPro && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
           🎉 Whoa, look at you! You're one of the first 100 people to try DewList. 
-          To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered breakdowns.
+          To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered features.
           Go wild (but like… one task at a time 😉)
           <button
             onClick={() => closeFirstHundredBanner()}

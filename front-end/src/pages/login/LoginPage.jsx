@@ -170,7 +170,7 @@ useEffect(() => {
         <div className="mt-6 text-[#4F5962] dark:text-white text-sm transition cursor-pointer hover:underline" onClick={() => {
           document.getElementById("productDemo")?.scrollIntoView({ behavior: "smooth" });
         }}>
-          View Product Demo
+          Watch a Demo
         </div>
       </div>
 
@@ -337,6 +337,7 @@ useEffect(() => {
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> List reset scheduling</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Priority feature requests</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task polishing</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task list creation</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task breakdowns</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> $100 forever option if you’re bold</li>
         </ul>

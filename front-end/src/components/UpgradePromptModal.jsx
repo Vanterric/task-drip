@@ -19,6 +19,7 @@ export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
           <li>Scheduled task list reset</li>
           <li>AI-powered task polishing</li>
           <li>AI-powered task breakdown</li>
+          <li>AI-powered task list creation</li>
         </ul>
         <p className="font-semibold text-yellow-500 dark:text-yellow-300 cursor-default">Just $5/month or $30/year</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
