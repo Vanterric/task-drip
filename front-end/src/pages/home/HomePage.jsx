@@ -592,14 +592,17 @@ const handleDragEnd = (_, info) => {
       /* List View */
       (
         <div className="max-[500px]:mt-20 mt-25 ">
-          {tasks.length > 0 && tasks.every((task) => task.isComplete) && (
-            <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2">
+          {tasks.length > 0 && tasks.every((task) => task.isComplete) ? (
+            <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
               <TaskDripBadge />
               <div className="text-center text-accent-success text-xl font-semibold tracking-wide cursor-default">
                 All tasks complete! Chill Time.
               </div>
+              <ProgressBar completedCount={completedCount} tasks={tasks} />
             </div>
-          )}
+          ) : tasks.length > 0 && <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
+          <ProgressBar completedCount={completedCount} tasks={tasks} />
+          </div>}
         <DragDropContext onDragEnd={handleTaskReorder} >
          { !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-160px)] h-[calc(100vh-200px)] mx-2 items-center justify-center">
@@ -615,7 +618,7 @@ const handleDragEnd = (_, info) => {
       <div
         {...provided.droppableProps}
         ref={provided.innerRef}
-        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-270px)] max-h-[calc(100vh-290px)]' : 'max-[500px]:max-h-[calc(100vh-85px)] max-h-[calc(100vh-100px)]' } relative`}
+        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-345px)] max-h-[calc(100vh-365px)]' : 'max-[500px]:max-h-[calc(100vh-173px)] max-h-[calc(100vh-195px)]' } relative`}
       >
         
         {tasks.map((task, index) => (
@@ -778,13 +781,32 @@ const handleDragEnd = (_, info) => {
         description: text.description || "",
         timeEstimate: text.timeEstimate || null,
         dewDate: new Date(`${text.dewDate}T12:00:00`) || null,
-        order: tasks.length + 1, // append to end
+        order: 0, // append to beginning
       }),
     });
-  
+
     const newTask = await taskRes.json();
-    setFinalTask(newTask)
-    setTasks((prev) => [...prev, newTask]);
+    // step 3: Update the rest of the tasks in the list to shift their order by 1
+    const allTasksRes = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${activeList._id}`,
+      { headers }
+    );
+
+    const allTasks = await allTasksRes.json();
+    await Promise.all(
+      allTasks.map((task, index) => {
+        if (task._id === newTask._id) return; // skip the newly created task
+        return fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({ ...task, order: index + 1 }),
+        });
+      })
+    );
+
+    
+    setFirstTask(newTask)
+    setTasks((prev) => [newTask,...prev]);
   }}
   
 />
