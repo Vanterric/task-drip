@@ -21,7 +21,7 @@ export const testimonials = [
   },
   {
     name: "Brandon",
-    role: "Marketing at DewList",
+    role: "Sales Representative",
     quote: "I've been hesitant to adopt all this new AI stuff, but DewList's AI feature is almost invisible and makes adding tasks a breeze! The app looks beautiful too."
   },
   {
