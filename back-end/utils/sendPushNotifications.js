@@ -142,7 +142,9 @@ if (resetUserIds.length > 0) {
     for (const task of tasksDueTomorrow) {
       const userId = userMap[task.tasklistId.toString()];
       if (!userId) continue;
+      
       if (!userTasksMap[userId]) userTasksMap[userId] = [];
+      console.log(`📬 Preparing DewDate push for "${task.content}" due tomorrow for user ${userId}`);
       userTasksMap[userId].push(task);
     }
 
@@ -154,11 +156,11 @@ if (resetUserIds.length > 0) {
       if (!tasks?.length) continue;
 
       const dewSubs = user.pushSubscriptions.filter(sub => sub.type === 'dewDate');
-
+      console.log(`📬 Sending ${tasks.length} DewDate pushes for user ${user.email}`);
       for (const task of tasks) {
         const sub = dewSubs.find(sub => sub.taskId?.toString() === task._id.toString());
         if (!sub) continue;
-
+        console.log(`📬 Sending DewDate push for "${task.content}" to ${user.email}`);
         const payload = JSON.stringify({
           title: `Task Due Tomorrow`,
           body: `Your task "${task.content}" is due tomorrow 📅`,
