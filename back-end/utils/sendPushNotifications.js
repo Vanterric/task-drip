@@ -143,7 +143,7 @@ if (resetUserIds.length > 0) {
       const userId = userMap[task.tasklistId.toString()];
       if (!userId) continue;
       if (!userTasksMap[userId]) userTasksMap[userId] = [];
-      userTasksMap[userId].push([task]);
+      userTasksMap[userId].push(task);
     }
 
     const userIds = Object.keys(userTasksMap);
