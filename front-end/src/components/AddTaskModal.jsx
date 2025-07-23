@@ -134,7 +134,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             <button
               type="submit"
               disabled={submitting}
-              className="bg-accent-primary text-text-darkprimary px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer"
+              className="bg-accent-primary text-text-darkprimary px-4 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer w-29"
               onClick={(e) => {
                 handleSubmit(e);   
               }}

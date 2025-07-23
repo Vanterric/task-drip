@@ -168,7 +168,6 @@ useEffect(() => {
     }
 
       refetchTaskListsOrUpdateUI();
-      setIsResetScheduleModalOpen(false);
     } catch (error) {
       console.error("Error setting reset schedule:", error);
     }

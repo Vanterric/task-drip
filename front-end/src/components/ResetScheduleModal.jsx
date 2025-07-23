@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { vibration } from "../utilities/vibration";
+import { DotLoader } from "./DotLoader";
 
 export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList, handleClearResetSchedule }) {
   const [number, setNumber] = useState(taskList.resetSchedule?.number || 1);
   const [cadence, setCadence] = useState(taskList.resetSchedule?.cadence || "days");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
+  const [settingSchedule, setSettingSchedule] = useState(false);
   const [startDate, setStartDate] = useState(taskList.resetSchedule?.startDate ? new Date(taskList.resetSchedule.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
     const start = taskList.resetSchedule?.startDate
   ? new Date(taskList.resetSchedule.startDate)
@@ -27,11 +29,14 @@ const [resetTime, setResetTime] = useState(initialResetTime);
           Want a fresh start? Choose how often to reset tasks in <strong>{taskList.name}</strong>. They’ll be marked incomplete again, on your schedule
         </p>
 
-        <form onSubmit={(e)=>{e.preventDefault(); 
-        const [year, month, day] = startDate.split('-').map(Number);
-        const [hours, minutes] = resetTime.split(':').map(Number);
-        const localStart = new Date(year, month - 1, day, hours, minutes);
-        onSubmit(
+        <form onSubmit={async function (e) {
+          e.preventDefault();
+          vibration('button-press');
+          const [year, month, day] = startDate.split('-').map(Number);
+          const [hours, minutes] = resetTime.split(':').map(Number);
+          const localStart = new Date(year, month - 1, day, hours, minutes);
+          setSettingSchedule(true);
+          await onSubmit(
             taskList._id,
             isNotificationsEnabled,
             {
@@ -41,7 +46,11 @@ const [resetTime, setResetTime] = useState(initialResetTime);
             lastReset: new Date().toISOString()
             },
             taskList.name
-        )}} 
+        );
+          setSettingSchedule(false);
+          onClose();
+        
+      }} 
             className="flex flex-col gap-4">
           <div className="flex items-center gap-2 text-[#4F5962] dark:text-white text-sm">
             <span>Reset this list every</span>
@@ -138,9 +147,9 @@ const [resetTime, setResetTime] = useState(initialResetTime);
             </button>
             <button
               type="submit"
-              className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer"
+              className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer w-35"
             >
-              Set Schedule
+              {settingSchedule ? <span className="flex justify-center items-center gap-1">Setting <span className="mt-2"><DotLoader /></span></span> : "Set Schedule"}
             </button>
           </div>
         </form>

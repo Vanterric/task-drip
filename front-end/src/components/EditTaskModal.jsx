@@ -6,6 +6,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 import { subscribeToPush } from "../utilities/subscribeToPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
+import { DotLoader } from "./DotLoader";
 
 export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists }) {
   const [title, setTitle] = useState("");
@@ -251,9 +252,9 @@ useEffect(() => {
             <button
               type="submit"
               disabled={submitting}
-              className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer z-10"
+              className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] cursor-pointer transition w-37 z-10"
             >
-              {submitting ? "Saving..." : "Save Changes"}
+              {submitting ? <span className="flex justify-center items-center gap-1">Saving <span className="mt-2"><DotLoader/></span></span> : "Save Changes"}
             </button>
           </div>
           </div>

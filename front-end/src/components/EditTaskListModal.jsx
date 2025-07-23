@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { vibration } from "../utilities/vibration";
 import { GripVertical, ChevronDown, ChevronRight } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import {DotLoader} from "./DotLoader";
 
 export default function EditTaskListModal({
   isOpen,
@@ -16,6 +17,7 @@ export default function EditTaskListModal({
   const [deletedTaskIds, setDeletedTaskIds] = useState([]);
   const [showTodo, setShowTodo] = useState(true);
   const [showCompleted, setShowCompleted] = useState(true);
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     if (!isOpen || !list?._id) return;
@@ -45,6 +47,7 @@ export default function EditTaskListModal({
 
   const handleSave = async () => {
     vibration("button-press");
+    setSaving(true);
     await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists/${list._id}`, {
       method: "PUT",
       headers: {
@@ -78,6 +81,7 @@ export default function EditTaskListModal({
     );
     const updatedTasks = tasks.filter((task) => !deletedTaskIds.includes(task._id));
     onSave(updatedTasks);
+    setSaving(false);
     onClose();
   };
 
@@ -225,9 +229,9 @@ export default function EditTaskListModal({
           </button>
           <button
             onClick={handleSave}
-            className="bg-[#4C6CA8] text-white px-4 py-2 rounded-lg hover:bg-[#3A5D91] cursor-pointer transition"
+            className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] cursor-pointer transition w-37"
           >
-            Save Changes
+           {saving ? <span className="flex justify-center items-center gap-1">Saving <span className="mt-2"><DotLoader /></span></span> : "Save Changes"}
           </button>
         </div>
       </div>
