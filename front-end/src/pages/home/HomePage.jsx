@@ -21,6 +21,7 @@ import { motion, AnimatePresence, useAnimation } from "framer-motion";
 import EditTaskModal from "../../components/EditTaskModal";
 import { ColorContext } from "../../context/ColorContext";
 import { useContext } from "react";
+import { refetchTaskListsOrUpdateUI } from "../../utilities/refetchTaskListsOrUpdateUI";
 
 
 export default function HomePage() {
@@ -52,42 +53,62 @@ export default function HomePage() {
       setVisibleTask(tasks[0]);
     }, [tasks]);
 
+    const taskListInQuery = new URLSearchParams(window.location.search).get("tasklistId");
+    const taskInQuery = new URLSearchParams(window.location.search).get("taskId");
 
-  
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-  
-      try {
-        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, { headers });
-        const lists = await res.json();
-  
-        if (lists.length === 0) return setLoading(false);
-  
-        setTaskLists(lists);
-        setActiveTaskList(lists[0]); // pick the first list
-        const resTasks = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${lists[0]._id}`,
-          { headers }
-        );
-        const taskData = await resTasks.json();
-       const incompleteTasks = taskData.filter(t => !t.isComplete);
-        setFinalTask(incompleteTasks[incompleteTasks.length -1])
-        setFirstTask(incompleteTasks[0])
-        setTasks(taskData);
-      } catch (err) {
-        console.error("Fetch error:", err);
-      } finally {
-        setLoading(false);
-      }
+    useEffect(() => {
+  const fetchData = async () => {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
     };
-  
-    if (token) fetchData();
-  }, [token]);
+
+    try {
+      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, { headers });
+      const lists = await res.json();
+
+      if (lists.length === 0) {
+        setLoading(false);
+        return;
+      }
+
+      setTaskLists(lists);
+
+      // Try to find task list from query
+      let selectedTaskList = lists[0]; // default fallback
+      if (taskListInQuery) {
+        const match = lists.find(tl => tl._id === taskListInQuery);
+        if (match) {
+          console.log(`Found task list in query: ${match.name}`);
+          selectedTaskList = match;
+        }
+      }
+
+      setActiveTaskList(selectedTaskList);
+
+      const resTasks = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${selectedTaskList._id}`,
+        { headers }
+      );
+      const taskData = await resTasks.json();
+      const incompleteTasks = taskData.filter(t => !t.isComplete);
+      setFinalTask(incompleteTasks[incompleteTasks.length - 1]);
+      setFirstTask(incompleteTasks[0]);
+      setTasks(taskData);
+      if(taskInQuery){
+        handleGoToTask(taskInQuery, taskData);
+      }
+
+    } catch (err) {
+      console.error("Fetch error:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (token) fetchData();
+}, [token]);
+
 
   useEffect(() => {
   const dismissed = localStorage.getItem('firstHundredBannerDismissed');
@@ -238,7 +259,22 @@ const handleGoBack = (taskId) => {
   });
 };
 
+//handle go to specific task by finding it in tasks and splitting and inverting the array so that everything before it is pushed to the end, but as if each were skipped one at a time
+const handleGoToTask = (taskId, taskData) => {
+  const taskIndex = taskData.findIndex((t) => t._id === taskId);
+  if (taskIndex === -1) {console.log(`Task with ID ${taskId} not found`); return;}
 
+  const before = taskData.slice(0, taskIndex);
+  console.log(before);
+  const after = taskData.slice(taskIndex);
+  console.log(after);
+  const reordered = [...after, ...before];
+  console.log(reordered);
+  setTasks(reordered);
+  setLastActiveAt(user);
+  setFirstTask(taskData.find(t => !t.isComplete && t._id !== taskId));
+  setFinalTask(taskData.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
+};
 
   const nextTask = tasks.find((t) => !t.isComplete);
   const completedCount = tasks.filter((t) => t.isComplete).length;

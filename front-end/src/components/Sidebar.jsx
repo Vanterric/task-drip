@@ -19,6 +19,7 @@ import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { motion, useAnimation } from "framer-motion";
 import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
+import { refetchTaskListsOrUpdateUI } from "../utilities/refetchTaskListsOrUpdateUI";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -167,7 +168,7 @@ useEffect(() => {
       }
     }
 
-      refetchTaskListsOrUpdateUI();
+      refetchTaskListsOrUpdateUI({ token, activeTaskList, setTaskLists, setActiveTaskList, setTasks });
     } catch (error) {
       console.error("Error setting reset schedule:", error);
     }
@@ -205,7 +206,7 @@ useEffect(() => {
     }
 
     await unsubscribeFromPush('reset', taskListId);
-    refetchTaskListsOrUpdateUI();
+    refetchTaskListsOrUpdateUI({ token, activeTaskList, setTaskLists, setActiveTaskList, setTasks });
     setIsResetScheduleModalOpen(false);
   } catch (error) {
     console.error("Error clearing reset schedule:", error);
@@ -214,51 +215,7 @@ useEffect(() => {
 
 
 
-  const refetchTaskListsOrUpdateUI = async () => {
-    try {
-      const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
   
-      // Fetch all lists
-      const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, { headers });
-      const updatedLists = await res.json();
-      setTaskLists(updatedLists);
-  
-      // If the current active list still exists, keep it active
-      const stillExists = updatedLists.find((l) => l._id === activeTaskList?._id);
-  
-      if (stillExists) {
-        setActiveTaskList(stillExists);
-  
-        // Refresh tasks for the current active list
-        const taskRes = await fetch(
-          `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${stillExists._id}`,
-          { headers }
-        );
-        const updatedTasks = await taskRes.json();
-        
-        setTasks(updatedTasks);
-      } else {
-        // Fallback: set first available list as active
-        setActiveTaskList(updatedLists[0] || null);
-  
-        if (updatedLists[0]) {
-          const fallbackTaskRes = await fetch(
-            `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${updatedLists[0]._id}`,
-            { headers }
-          );
-          const fallbackTasks = await fallbackTaskRes.json();
-          setTasks(fallbackTasks);
-        } else {
-          setTasks([]);
-        }
-      }
-    } catch (err) {
-      console.error("Error refetching task lists or tasks:", err);
-    }
-  };
 
   const handleListReorder = ({ source, destination }) => {
     setDraggedId(null)
@@ -574,7 +531,7 @@ if (activeTaskList?._id === listToDelete._id) {
   onClose={() => {setShowEditModal(false)}}
   list={listToEdit}
   token={token}
-  onSave={(taskData)=>{refetchTaskListsOrUpdateUI(); 
+  onSave={(taskData)=>{refetchTaskListsOrUpdateUI({ token, activeTaskList, setTaskLists, setActiveTaskList, setTasks }); 
         const incompleteTasks = taskData.filter(t => !t.isComplete);
         setActiveTaskList(listToEdit)
         setFinalTask(incompleteTasks[incompleteTasks.length -1])

@@ -143,7 +143,7 @@ if (resetUserIds.length > 0) {
       const userId = userMap[task.tasklistId.toString()];
       if (!userId) continue;
       if (!userTasksMap[userId]) userTasksMap[userId] = [];
-      userTasksMap[userId].push(task);
+      userTasksMap[userId].push([task]);
     }
 
     const userIds = Object.keys(userTasksMap);
@@ -162,7 +162,7 @@ if (resetUserIds.length > 0) {
         const payload = JSON.stringify({
           title: `Task Due Tomorrow`,
           body: `Your task "${task.content}" is due tomorrow 📅`,
-          url: `/?taskId=${task._id}`,
+          url: `/?tasklistId=${task.tasklistId}&taskId=${task._id}`,
           icon: '/icons/icon-192.png',
           badge: '/icons/icon-192.png',
           userId: user._id
