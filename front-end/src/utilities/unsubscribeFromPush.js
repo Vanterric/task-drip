@@ -1,4 +1,4 @@
-export const unsubscribeFromPush = async (type = 'reset', listId = null) => {
+export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId = null) => {
     console.log('Unsubscribing from push notifications:', type, listId);
   try {
     const registration = await navigator.serviceWorker.getRegistration();
@@ -8,6 +8,7 @@ export const unsubscribeFromPush = async (type = 'reset', listId = null) => {
       type,
       endpoint: subscription?.endpoint,
       listId, // Send listId to bulk-remove matching subs
+      taskId, // Send taskId to bulk-remove matching subs
     };
 
     console.log('Unsubscribe payload:', payload);

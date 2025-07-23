@@ -102,9 +102,92 @@ if (resetUserIds.length > 0) {
       }
     }
   }
+    // 3. DewDate notifications
+
+  const now = new Date();
+
+  const tomorrowNoonUTC = new Date(Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate() + 1,
+    12, 0, 0, 0
+  ));
+
+  const oneDayBefore = new Date(tomorrowNoonUTC);
+  oneDayBefore.setUTCDate(oneDayBefore.getUTCDate() - 1); // 24h before dewDate
+
+  const tasksDueTomorrow = await Task.find({
+    notifyOnDewDate: true,
+    isComplete: false,
+    dewDate: tomorrowNoonUTC,
+    $or: [
+      { dewDatePushSent: null },
+      { dewDatePushSent: { $lt: oneDayBefore } } // Push was sent too early
+    ]
+  });
+
+  if (tasksDueTomorrow.length === 0) {
+    console.log('📭 No DewDate notifications needed this run');
+  } else {
+    const taskListIds = [...new Set(tasksDueTomorrow.map(t => t.tasklistId.toString()))];
+    const taskLists = await TaskList.find({ _id: { $in: taskListIds } });
+    const userMap = {};
+    taskLists.forEach(list => {
+      userMap[list._id.toString()] = list.userId.toString();
+    });
+
+    const userTasksMap = {};
+    for (const task of tasksDueTomorrow) {
+      const userId = userMap[task.tasklistId.toString()];
+      if (!userId) continue;
+      if (!userTasksMap[userId]) userTasksMap[userId] = [];
+      userTasksMap[userId].push(task);
+    }
+
+    const userIds = Object.keys(userTasksMap);
+    const users = await User.find({ _id: { $in: userIds }, isPro: true });
+
+    for (const user of users) {
+      const tasks = userTasksMap[user._id.toString()];
+      if (!tasks?.length) continue;
+
+      const dewSubs = user.pushSubscriptions.filter(sub => sub.type === 'dewDate');
+
+      for (const task of tasks) {
+        const sub = dewSubs.find(sub => sub.taskId?.toString() === task._id.toString());
+        if (!sub) continue;
+
+        const payload = JSON.stringify({
+          title: `Task Due Tomorrow`,
+          body: `Your task "${task.content}" is due tomorrow 📅`,
+          url: `/?taskId=${task._id}`,
+          icon: '/icons/icon-192.png',
+          badge: '/icons/icon-192.png',
+          userId: user._id
+        });
+
+        try {
+          await webpush.sendNotification(sub, payload);
+
+          // ✅ Log that this task was pushed
+          task.dewDatePushSent = now;
+          await task.save();
+
+          console.log(`📬 Sent DewDate push for "${task.content}" to ${user.email}`);
+        } catch (err) {
+          console.error('❌ DewDate push failed:', sub.endpoint, err.message);
+        }
+      }
+    }
+
+    console.log(`✅ Sent DewDate pushes for ${tasksDueTomorrow.length} task${tasksDueTomorrow.length > 1 ? 's' : ''}`);
+  }
+
+  
 
   console.log(`✅ Sent ${inactiveUsers.length} inactivity push${inactiveUsers.length !== 1 ? 'es' : ''}`);
   console.log(`✅ Sent ${resetUserIds.length} reset push${resetUserIds.length !== 1 ? 'es' : ''}`);
+  console.log(`✅ Sent ${tasksDueTomorrow.length} DewDate push${tasksDueTomorrow.length !== 1 ? 'es' : ''}`);
 
 };
 

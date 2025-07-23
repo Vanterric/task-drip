@@ -18,6 +18,7 @@ import SettingsModal from "./SettingsModal";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import { motion, useAnimation } from "framer-motion";
 import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
+import { getDeviceLabel } from "../utilities/getDeviceLabel";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
@@ -131,18 +132,7 @@ useEffect(() => {
     setShowInput(false);
   };
 
-  const getDeviceLabel = () => {
-    const platform = navigator.platform || '';
-    const userAgent = navigator.userAgent || '';
-
-    if (/Android/i.test(userAgent)) return 'android';
-    if (/iPhone|iPad|iPod/i.test(userAgent)) return 'ios';
-    if (/Win/i.test(platform)) return 'windows';
-    if (/Mac/i.test(platform)) return 'mac';
-    if (/Linux/i.test(platform)) return 'linux';
-
-    return 'unknown';
-  };
+  
 
   const handleSetResetSchedule = async (taskListId, isNotificationsEnabled, resetSchedule, taskListLabel = '') => {
     try {

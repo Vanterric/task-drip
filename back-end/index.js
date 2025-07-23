@@ -560,14 +560,14 @@ app.post('/subscribe', verifyToken, async (req, res) => {
     console.log('Subscribing with label:', req.body.label);
     console.log('Subscribing with listId:', req.body.listId);
 
-    const { device, type = 'inactivity', label, listId, ...subscription } = req.body;
+    const { device, type = 'inactivity', label, listId, taskId, ...subscription } = req.body;
 
     const alreadyExists = user.pushSubscriptions.some(
       (sub) => sub.endpoint === subscription.endpoint && sub.type === type
     );
 
     if (!alreadyExists) {
-      user.pushSubscriptions.push({ ...subscription, device, type, label, listId });
+      user.pushSubscriptions.push({ ...subscription, device, type, label, listId, taskId });
       await user.save();
     }
 
@@ -586,14 +586,17 @@ app.post('/unsubscribe', verifyToken, async (req, res) => {
     console.log('Unsubscribing from endpoint:', req.body.endpoint);
     console.log('Unsubscribing from type:', req.body.type);
     console.log('Unsubscribing from listId:', req.body.listId);
+    console.log('Unsubscribing from taskId:', req.body.taskId);
 
-    const { endpoint, type = 'reset', listId } = req.body;
+    const { endpoint, type = 'reset', listId, taskId } = req.body;
 
     const before = user.pushSubscriptions.length;
     console.log('Number of subscriptions before:', before);
 
     user.pushSubscriptions = user.pushSubscriptions.filter((sub) => {
       if (listId) return sub.listId !== listId || sub.type !== type;
+      if (taskId) return sub.taskId !== taskId || sub.type !== type;
+      // If no listId or taskId, just filter by endpoint and type
       return sub.endpoint !== endpoint || sub.type !== type;
     });
 

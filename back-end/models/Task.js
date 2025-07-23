@@ -9,6 +9,8 @@ const TaskSchema = new mongoose.Schema({
   description: { type: String, default: '' },
   dewDate: { type: Date, default: null },
   timeEstimate: { type: Number, default: null }, // in minutes
+  notifyOnDewDate: { type: Boolean, default: false },
+  dewDatePushSent: {type:Date, default: null}, // Date when push notification was sent for dew date
 });
 
 module.exports = mongoose.model('Task', TaskSchema);

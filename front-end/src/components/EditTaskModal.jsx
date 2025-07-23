@@ -3,6 +3,9 @@ import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
 import { ChevronDown } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
+import { subscribeToPush } from "../utilities/subscribeToPush";
+import { getDeviceLabel } from "../utilities/getDeviceLabel";
 
 export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists }) {
   const [title, setTitle] = useState("");
@@ -14,6 +17,7 @@ export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTask
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedTaskList, setSelectedTaskList] = useState(taskList?._id || "");
   const [timeEstimate, setTimeEstimate] = useState(task?.timeEstimate ?? "");
+  const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
 
   function fromDateInputStringToLocalLateNight(value) {
   const [year, month, day] = value.split("-").map(Number);
@@ -41,6 +45,7 @@ useEffect(() => {
       setTitle(task.content || "");
       setDescription(task.description || "");
       setDewDate(task.dewDate ? toLocalDateInputString(task.dewDate) : "");
+      setIsNotificationsEnabled(task.notifyOnDewDate || false);
     }
   }, [task]);
 
@@ -51,6 +56,23 @@ useEffect(() => {
     if (!title.trim()) return;
     vibration("button-press");
     setSubmitting(true);
+    if (isNotificationsEnabled) {
+          const permission = await Notification.requestPermission();
+    
+          if (permission === 'granted') {
+            const device = getDeviceLabel();
+            const success = await subscribeToPush(device, 'dewDate',task.content ,null, task._id);
+            if (!success) console.warn("Failed to subscribe for Dew Date notifications");
+          } else {
+            console.warn("Notification permission was denied or dismissed.");
+            setIsNotificationsEnabled(false);
+          }
+        }
+        else{
+          await unsubscribeFromPush('dewDate', null, task._id).catch(err => {
+            console.error("Failed to unsubscribe from Dew Date notifications:", err);
+          });
+        }
     await onSubmit({
       ...task,
       content: title,
@@ -58,6 +80,7 @@ useEffect(() => {
       dewDate: dewDateObj ? dewDateObj.toISOString() : null,
       tasklistId: selectedTaskList,
       timeEstimate: timeEstimate ? parseInt(timeEstimate) : null,
+      notifyOnDewDate: isNotificationsEnabled,
     });
     setSubmitting(false);
     if (selectedTaskList !== taskList?._id) {
@@ -165,7 +188,31 @@ useEffect(() => {
             className="w-full disabled:opacity-50 mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
-        
+
+        <div className="flex flex-col gap-1 ml-1">
+            <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-default">
+              Get a notification?
+            </label>
+            <p className="text-xs text-[#91989E] dark:text-[#B0B0B0]">
+              You’ll receive a notification on this device the day before this task's Dew Date.
+            </p>
+            <div className="flex items-center gap-2 mt-2">
+              <input
+                type="checkbox"
+                id="get-notifications"
+                checked={isNotificationsEnabled}
+                onChange={(e) => {
+                  vibration('button-press');
+                  setIsNotificationsEnabled(e.target.checked);
+                }}
+                className="cursor-pointer appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+              />
+              <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-pointer">
+                Yes, notify me on this device.
+              </label>
+              </div>
+          </div>
+
           <label className="text-[#91989E] dark:text-white block">
           Task List
           <select
