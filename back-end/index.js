@@ -553,21 +553,18 @@ app.post('/subscribe', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
-    console.log('Subscribing user:', user.email);
-    console.log('Subscribing with payload:', req.body);
-    console.log('Subscribing with device:', req.body.device);
-    console.log('Subscribing with type:', req.body.type);
-    console.log('Subscribing with label:', req.body.label);
-    console.log('Subscribing with listId:', req.body.listId);
+    
 
     const { device, type = 'inactivity', label, listId, taskId, ...subscription } = req.body;
 
     const alreadyExists = user.pushSubscriptions.some(
-      (sub) => sub.endpoint === subscription.endpoint && sub.type === type
+      (sub) => sub.endpoint === subscription.endpoint && sub.type === type && sub.listId === listId && sub.taskId === taskId
     );
 
     if (!alreadyExists) {
+      console.log('Adding new push subscription for user:', user.email);
       user.pushSubscriptions.push({ ...subscription, device, type, label, listId, taskId });
+      console.log('New push subscription added:', subscription);
       await user.save();
     }
 

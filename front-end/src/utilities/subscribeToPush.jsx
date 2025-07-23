@@ -28,6 +28,8 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
       taskId, // ID of the task this subscription is for
     };
 
+    console.log('Push subscription payload:', payload);
+
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/subscribe`, {
       method: 'POST',
       headers: {
@@ -38,6 +40,7 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
     });
 
     if (!res.ok) throw new Error('Failed to save subscription');
+    console.log('Push subscription saved successfully:', payload);
     return true;
   } catch (err) {
     console.error('Push subscription error:', err);
