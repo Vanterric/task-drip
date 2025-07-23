@@ -7,6 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
 import { safeParsePolished } from "../utilities/safeParsePolished";
 import VoiceCaptureButton from "./VoiceCaptureButton";
+import { DotLoader } from "./DotLoader";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, tasks }) {
   const [taskText, setTaskText] = useState("");
@@ -138,7 +139,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
                 handleSubmit(e);   
               }}
             >
-              {submitting ? "Adding..." : "Add Task"}
+              {submitting ? <span className="flex justify-center items-center gap-1">Adding <span className="mt-2"><DotLoader/></span></span> : "Add Task"}
             </button>
           </div>
         </form>

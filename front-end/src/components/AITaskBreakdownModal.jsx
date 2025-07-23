@@ -6,6 +6,7 @@ import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 import { safeParsePolished } from '../utilities/safeParsePolished';
 import VoiceCaptureButton from './VoiceCaptureButton';
 import { useAuth } from '../context/AuthContext';
+import { DotLoader } from './DotLoader';
 
 export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
   if (!isOpen) return null;
@@ -127,7 +128,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
           <X className="w-5 h-5 cursor-pointer" />
         </button>
 
-        <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1 cursor-default flex gap-2 justify-start items-center">AI Task Breakdown <span className="text-yellow-500 dark:text-yellow-300 border text-xs py-[2px] px-2 rounded-full">Pro</span></h2>
+        <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1 cursor-default flex gap-2 justify-start items-center">AI Task List Creation <span className="text-yellow-500 dark:text-yellow-300 border text-xs py-[2px] px-2 rounded-full">Pro</span></h2>
         <p className="text-sm text-[#4F5962] dark:text-white mb-4 cursor-default">
           {dailyPromptMap[dayOfWeek]}
         </p>
@@ -152,7 +153,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
             : 'bg-[#4C6CA8] hover:bg-[#3A5D91] cursor-pointer'
         }`}
         >
-        {loading ? 'Generating...' : 'Generate Tasks with AI'}
+        {loading ? <span className="flex items-center justify-center gap-1">Generating <span className="mt-2"><DotLoader/></span></span> : 'Generate New Task List'}
         </button>
       </div>
     </div>

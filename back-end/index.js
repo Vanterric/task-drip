@@ -918,6 +918,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
       { role: 'user', content: prompt },
     ],
     temperature: 0.5,
+    response_format: { type: "json_object" }
   });
       const raw = response.choices?.[0]?.message?.content;
       const taskList = JSON.parse(raw); // try-catch optional
@@ -954,6 +955,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
           { role: 'user', content: prompt },
         ],
         temperature: 0.5,
+        response_format: { type: "json_object" }
       });
       const polished = response.choices?.[0]?.message?.content?.trim();
       console.log('AI polish result:', polished);
