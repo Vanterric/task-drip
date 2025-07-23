@@ -1,5 +1,7 @@
 const webpush = require('web-push');
 const User = require('../models/User');
+const Task = require('../models/Task');
+const TaskList = require('../models/TaskList');
 
 
 const getRandomMessage = () => {
