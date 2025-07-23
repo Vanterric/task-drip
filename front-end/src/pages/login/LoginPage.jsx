@@ -335,6 +335,7 @@ useEffect(() => {
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Unlimited tasks</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Unlimited lists</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> List reset scheduling</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> DewDate™ scheduling</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Priority feature requests</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task polishing</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task list creation</li>

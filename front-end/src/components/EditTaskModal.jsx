@@ -63,7 +63,7 @@ useEffect(() => {
           if (permission === 'granted') {
             const device = getDeviceLabel();
             const success = await subscribeToPush(device, 'dewDate',task.content ,null, task._id);
-            if (!success) console.warn("Failed to subscribe for Dew Date notifications");
+            if (!success) console.warn("Failed to subscribe for DewDate™ notifications");
           } else {
             console.warn("Notification permission was denied or dismissed.");
             setIsNotificationsEnabled(false);
@@ -71,7 +71,7 @@ useEffect(() => {
         }
         else{
           await unsubscribeFromPush('dewDate', null, task._id).catch(err => {
-            console.error("Failed to unsubscribe from Dew Date notifications:", err);
+            console.error("Failed to unsubscribe from DewDate™ notifications:", err);
           });
         }
     await onSubmit({
@@ -195,7 +195,7 @@ useEffect(() => {
           />
         </label>
           <label className="text-[#91989E] dark:text-white block">
-          Dew Date
+          DewDate™
           <input
             type="date"
             value={dewDate}
@@ -210,7 +210,7 @@ useEffect(() => {
               Get a notification?
             </label>
             <p className="text-xs text-[#91989E] dark:text-[#B0B0B0]">
-              You’ll receive a notification on this device the day before this task's Dew Date.
+              You’ll receive a notification on this device the day before this task's DewDate™.
             </p>
             <div className="flex items-center gap-2 mt-2">
               <input
@@ -222,7 +222,7 @@ useEffect(() => {
                   vibration('button-press');
                   setIsNotificationsEnabled(e.target.checked);
                 }}
-                title={`${dewDate ? "Get a notification one day before your Dew Date" : "Set a Dew Date first to enable notifications"}`}
+                title={`${dewDate ? "Get a notification one day before your DewDate™" : "Set a DewDate™ first to enable notifications"}`}
                 className="disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
               />
               <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-pointer">
