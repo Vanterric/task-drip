@@ -115,7 +115,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
           <input
             type='checkbox'
             className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
-            checked={polishItSelected}
+            checked={polishItSelected && user.isPro}
             onChange={() => setPolishItSelected(!polishItSelected)}
             disabled={!user.isPro}
             title={!user.isPro ? "Polish it is a Pro feature. Upgrade to unlock!" : "Polish it"}

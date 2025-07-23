@@ -124,7 +124,7 @@ if (resetUserIds.length > 0) {
     dewDate: tomorrowNoonUTC,
     $or: [
       { dewDatePushSent: null },
-      { dewDatePushSent: { $lt: oneDayBefore } } // Push was sent too early
+      { dewDatePushSent: { $lt: oneDayBefore } } // Push was sent early for some reason (like if the dewDate used to be earlier)
     ]
   });
 

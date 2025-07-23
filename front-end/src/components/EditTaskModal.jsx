@@ -168,6 +168,21 @@ useEffect(() => {
   
         exit={{ opacity: 0, y: -10, position: "absolute" }}
         transition={{ duration: 0.2 }}>
+
+        <label className="text-[#91989E] dark:text-white block">
+          Task List
+          <select
+            value={selectedTaskList}
+            onChange={(e) => setSelectedTaskList(e.target.value)}
+            disabled={!user.isPro}
+            className="mt-1 w-full disabled:opacity-50 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
+          >
+            {taskLists && taskLists.map((list) => (
+              <option key={list._id} value={list._id}>{list.name}</option>
+            ))}
+          </select>
+        </label>
+
           <label className="text-[#91989E] dark:text-white block">
           Time Estimate (in minutes)
           <input
@@ -201,12 +216,14 @@ useEffect(() => {
               <input
                 type="checkbox"
                 id="get-notifications"
-                checked={isNotificationsEnabled}
+                checked={isNotificationsEnabled && dewDate && user.isPro}
+                disabled={!user.isPro || !dewDate}
                 onChange={(e) => {
                   vibration('button-press');
                   setIsNotificationsEnabled(e.target.checked);
                 }}
-                className="cursor-pointer appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
+                title={`${dewDate ? "Get a notification one day before your Dew Date" : "Set a Dew Date first to enable notifications"}`}
+                className="disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer appearance-none w-5 h-5 rounded-sm border border-[#4F5962] bg-white checked:bg-[#4C6CA8] checked:border-[#4C6CA8] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] transition-all duration-150 relative"
               />
               <label htmlFor="get-notifications" className="text-sm text-[#4F5962] dark:text-white cursor-pointer">
                 Yes, notify me on this device.
@@ -214,19 +231,7 @@ useEffect(() => {
               </div>
           </div>
 
-          <label className="text-[#91989E] dark:text-white block">
-          Task List
-          <select
-            value={selectedTaskList}
-            onChange={(e) => setSelectedTaskList(e.target.value)}
-            disabled={!user.isPro}
-            className="mt-1 w-full disabled:opacity-50 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
-          >
-            {taskLists && taskLists.map((list) => (
-              <option key={list._id} value={list._id}>{list.name}</option>
-            ))}
-          </select>
-        </label>
+          
         </motion.div>
         </AnimatePresence>
         </motion.div>

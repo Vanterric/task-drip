@@ -704,10 +704,28 @@ app.post('/snoozePush', async (req, res) => {
   });
 
   app.delete('/tasklists/:id', verifyToken, async (req, res) => {
-    await TaskList.deleteOne({ _id: req.params.id, userId: req.user.id });
-    await Task.deleteMany({ tasklistId: req.params.id });
-    res.json({ success: true });
-  });
+  const listId = req.params.id;
+
+  // Step 1: Find all tasks in the list
+  const tasksInList = await Task.find({ tasklistId: listId }, { _id: 1 });
+  const taskIds = tasksInList.map(task => task._id.toString());
+
+  // Step 2: Delete the task list and its tasks
+  await TaskList.deleteOne({ _id: listId, userId: req.user.id });
+  await Task.deleteMany({ tasklistId: listId });
+
+  // Step 3: Remove matching dewDate subscriptions
+  if (taskIds.length > 0) {
+    await User.updateMany(
+      { 'pushSubscriptions': { $elemMatch: { taskId: { $in: taskIds }, type: 'dewDate' } } },
+      { $pull: { pushSubscriptions: { taskId: { $in: taskIds }, type: 'dewDate' } } }
+    );
+    console.log(`🧹 Cleaned up dewDate subs for ${taskIds.length} tasks deleted with list ${listId}`);
+  }
+
+  res.json({ success: true });
+});
+
   
   app.put('/tasklists/:id', verifyToken, async (req, res) => {
     const { name, icon, resetSchedule, order } = req.body;
@@ -779,7 +797,12 @@ app.post('/snoozePush', async (req, res) => {
 
   
   app.delete('/tasks/:id', verifyToken, async (req, res) => {
-    await Task.deleteOne({ _id: req.params.id });
+    const taskId = req.params.id;
+    await User.updateMany(
+  { 'pushSubscriptions.taskId': taskId },
+  { $pull: { pushSubscriptions: { taskId, type: 'dewDate' } } }
+);
+    await Task.deleteOne({ _id: taskId });
     res.json({ success: true });
   });
 
