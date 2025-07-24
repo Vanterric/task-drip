@@ -1,5 +1,4 @@
 export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId = null) => {
-    console.log('Unsubscribing from push notifications:', type, listId);
   try {
     const registration = await navigator.serviceWorker.getRegistration();
     const subscription = await registration?.pushManager.getSubscription();
@@ -11,7 +10,6 @@ export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId 
       taskId, // Send taskId to bulk-remove matching subs
     };
 
-    console.log('Unsubscribe payload:', payload);
 
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/unsubscribe`, {
       method: 'POST',

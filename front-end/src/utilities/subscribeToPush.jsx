@@ -4,7 +4,6 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
   if (!('serviceWorker' in navigator)) return false;
   if (!('PushManager' in window)) return false;
   if (!('Notification' in window)) return false;
-  console.log('Subscribing to push notifications:', deviceLabel, type, label, listId, taskId);
   try {
     const permission = await Notification.requestPermission();
     if (permission !== 'granted') {
@@ -27,9 +26,6 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
       listId, // ID of the task list this subscription is for
       taskId, // ID of the task this subscription is for
     };
-
-    console.log('Push subscription payload:', payload);
-
     const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/subscribe`, {
       method: 'POST',
       headers: {
@@ -40,7 +36,6 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
     });
 
     if (!res.ok) throw new Error('Failed to save subscription');
-    console.log('Push subscription saved successfully:', payload);
     return true;
   } catch (err) {
     console.error('Push subscription error:', err);

@@ -79,7 +79,6 @@ export default function HomePage() {
       if (taskListInQuery) {
         const match = lists.find(tl => tl._id === taskListInQuery);
         if (match) {
-          console.log(`Found task list in query: ${match.name}`);
           selectedTaskList = match;
         }
       }
@@ -262,14 +261,9 @@ const handleGoBack = (taskId) => {
 //handle go to specific task by finding it in tasks and splitting and inverting the array so that everything before it is pushed to the end, but as if each were skipped one at a time
 const handleGoToTask = (taskId, taskData) => {
   const taskIndex = taskData.findIndex((t) => t._id === taskId);
-  if (taskIndex === -1) {console.log(`Task with ID ${taskId} not found`); return;}
-
   const before = taskData.slice(0, taskIndex);
-  console.log(before);
   const after = taskData.slice(taskIndex);
-  console.log(after);
   const reordered = [...after, ...before];
-  console.log(reordered);
   setTasks(reordered);
   setLastActiveAt(user);
   setFirstTask(taskData.find(t => !t.isComplete && t._id !== taskId));
