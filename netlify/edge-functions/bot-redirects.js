@@ -15,7 +15,7 @@ export default async (request, context) => {
   const isBot = botSignatures.some(bot => userAgent.includes(bot));
 
   if (isBot) {
-    return Response.redirect(new URL("/login-bot.html", request.url), 200);
+    return Response.redirect(new URL("/login-bot.html", request.url), 301);
   }
 
   // Let humans proceed normally
