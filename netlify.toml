@@ -3,9 +3,6 @@
   publish = "dist"
   command = "npm run build"
 
-[edge_functions]
-  directory = "netlify/edge-functions"
-
 [[edge_functions]]
   path = "/*"
   function = "bot-redirect"
