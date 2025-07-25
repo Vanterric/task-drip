@@ -1,8 +1,11 @@
 [build]
-command = "npm run build"
-publish = "task-drip/front-end/dist"
-base = "task-drip/front-end"
+  base = "front-end"
+  publish = "dist"
+  command = "npm run build"
+
+[edge_functions]
+  directory = "netlify/edge-functions"
 
 [[edge_functions]]
-path = "/*"
-function = "bot-redirect"
+  path = "/*"
+  function = "bot-redirect"
