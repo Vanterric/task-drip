@@ -695,8 +695,7 @@ const handleDragEnd = (_, info) => {
                 <motion.div key='controls' layout className="flex gap-4 justify-center" >
                 <button
                 
-                className="cursor-pointer group flex items-center max-[339px]:text-sm gap-2 max-[339px]:px-5 max-[339px]:py-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring"
-              >
+                className={`cursor-pointer group flex items-center max-[400px]:text-sm gap-2 ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring`}>
                 <CheckCircle className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
                 {showBreakDown ? "Replace":"Done"}
               </button>
@@ -709,7 +708,7 @@ const handleDragEnd = (_, info) => {
 
                   <button
                     onClick={() => {showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
-                    className={`cursor-pointer group flex items-center max-[339px]:px-5 max-[339px]:py-2 max-[339px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
+                    className={`cursor-pointer group flex items-center ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} max-[400px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
                   >
                     {showBreakDown ?
                     <XCircle className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200 group-hover:rotate-180" /> 
