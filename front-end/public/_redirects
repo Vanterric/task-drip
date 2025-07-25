@@ -8,4 +8,5 @@
 /* /login-bot.html 200 User-Agent=GPTBot
 
 # Default catch-all for humans
+/sitemap.xml /sitemap.xml  200
 /* /index.html 200

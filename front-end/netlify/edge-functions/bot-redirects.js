@@ -1,5 +1,12 @@
 export default async (request, context) => {
   const userAgent = request.headers.get("user-agent")?.toLowerCase() || "";
+  const url = new URL(request.url);
+  const pathname = url.pathname;
+
+  // Don't intercept sitemap or other SEO-critical files
+  if (pathname === "/sitemap.xml" || pathname === "/robots.txt") {
+    return context.next();
+  }
 
   const botSignatures = [
     "googlebot",
