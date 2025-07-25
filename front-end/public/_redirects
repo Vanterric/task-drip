@@ -1,1 +1,11 @@
-/*    /index.html   200
+/*    /login-bot.html   200   User-Agent=googlebot
+/*    /login-bot.html   200   User-Agent=bingbot
+/*    /login-bot.html   200   User-Agent=duckduckbot
+/*    /login-bot.html   200   User-Agent=slurp
+/*    /login-bot.html   200   User-Agent=yandex
+/*    /login-bot.html   200   User-Agent=baiduspider
+/*    /login-bot.html   200   User-Agent=ChatGPT-User
+/*    /login-bot.html   200   User-Agent=GPTBot
+
+# Default catch-all for humans (React SPA)
+ /*    /index.html   200
