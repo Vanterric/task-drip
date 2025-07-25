@@ -1,11 +1,11 @@
-/*    /login-bot.html   200   User-Agent=Googlebot
-/*    /login-bot.html   200   User-Agent=Bingbot
-/*    /login-bot.html   200   User-Agent=DuckDuckbot
-/*    /login-bot.html   200   User-Agent=Slurp
-/*    /login-bot.html   200   User-Agent=YandexBot
-/*    /login-bot.html   200   User-Agent=BaiduSpider
-/*    /login-bot.html   200   User-Agent=ChatGPT-User
-/*    /login-bot.html   200   User-Agent=GPTBot
+/* /login-bot.html 200 User-Agent=Googlebot
+/* /login-bot.html 200 User-Agent=Bingbot
+/* /login-bot.html 200 User-Agent=DuckDuckBot
+/* /login-bot.html 200 User-Agent=Slurp
+/* /login-bot.html 200 User-Agent=YandexBot
+/* /login-bot.html 200 User-Agent=Baiduspider
+/* /login-bot.html 200 User-Agent=ChatGPT-User
+/* /login-bot.html 200 User-Agent=GPTBot
 
-# Default catch-all for humans (React SPA)
- /*    /index.html   200
+# Default catch-all for humans
+/* /index.html 200
