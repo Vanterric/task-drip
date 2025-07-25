@@ -306,6 +306,27 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
 
 app.use(express.json());
+const prerender = require('prerender-node');
+
+// Your API key (get from https://prerender.io)
+prerender.set('prerenderToken', process.env.PRERENDER_API_KEY);
+
+// 1. Only allow `/login` (ignore all other paths)
+prerender.set('whitelisted', ['/login']);
+
+// 2. Ignore any query params so `/login?ref=abc` is treated same as `/login`
+prerender.set('blacklistedQueryParams', [
+  'ref',
+  'utm_source',
+  'utm_medium',
+  'utm_campaign',
+  'utm_term',
+  'utm_content',
+]);
+
+// 3. Use the middleware (place before your static serve)
+app.use(prerender);
+
 
 
 
