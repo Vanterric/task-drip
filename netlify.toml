@@ -1,0 +1,8 @@
+[build]
+command = "npm run build"
+publish = "task-drip/front-end/dist"
+base = "task-drip/front-end"
+
+[[edge_functions]]
+path = "/*"
+function = "bot-redirect"
