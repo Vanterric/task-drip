@@ -22,7 +22,7 @@ import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { refetchTaskListsOrUpdateUI } from "../utilities/refetchTaskListsOrUpdateUI";
 
 
-export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask }) {
+export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask, handleCancelBreakdown }) {
   const { logout } = useAuth();
   const [showInput, setShowInput] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -498,7 +498,7 @@ useEffect(() => {
         "Content-Type": "application/json",
       },
     });
-
+    handleCancelBreakdown();
     setTaskLists((prev) => prev.filter((l) => l._id !== listToDelete._id));
     const updatedLists = taskLists.filter((l) => l._id !== listToDelete._id);
 setTaskLists(updatedLists);

@@ -4,7 +4,7 @@ import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
 import DewListGold from "../../assets/DewListGold.png";
-import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, Menu, Plus, RefreshCw, Sparkles } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, Menu, Plus, RefreshCw, RotateCcw, Sparkles, Split, XCircle } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -22,6 +22,43 @@ import EditTaskModal from "../../components/EditTaskModal";
 import { ColorContext } from "../../context/ColorContext";
 import { useContext } from "react";
 import { refetchTaskListsOrUpdateUI } from "../../utilities/refetchTaskListsOrUpdateUI";
+import BreakdownReveal from "../../components/BreakdownReveal";
+import { DotLoader } from "../../components/DotLoader";
+
+
+const sliderVariants = {
+  enter: (dir) => ({
+    x:
+      dir === "left" ? window.innerWidth :
+      dir === "right" ? -window.innerWidth :
+      dir === "up" ? window.innerWidth:
+      0,
+    y:
+      dir === "up" ? 0 :
+      dir === "down" ? 0 :
+      0,
+    opacity: dir !== "down" ? 0 : 1,
+  }),
+  center: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+  },
+  exit: (dir) => ({
+    x:
+      dir === "left" ? -window.innerWidth :
+      dir === "right" ? window.innerWidth :
+      0,
+    y:
+      dir === "up" ? -150 :
+      dir === "down" ? 0 :
+      0,
+    opacity: dir !== "down" ? 0 : 1,
+  }),
+};
+
+
+
 
 
 export default function HomePage() {
@@ -44,10 +81,15 @@ export default function HomePage() {
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
   const [selectedTask, setSelectedTask] = useState(null);
   const directionRef = useRef(1)
+  const [swipeDirection, setSwipeDirection] = useState(null);
   const [firstTask, setFirstTask] = useState(null);
   const controls = useAnimation();
   const [visibleTask, setVisibleTask] = useState(tasks[0]);
+  const [isBreakingDownTask, setIsBreakingDownTask] = useState(false);
+  const [showBreakDown, setShowBreakDown] = useState(false);
    const {colors} = useContext(ColorContext)
+   const taskCardRef = useRef();
+   const [generatedTasks, setGeneratedTasks] = useState([{content:""},{content:''},{content:''}]);
 
     useEffect(() => {
       setVisibleTask(tasks[0]);
@@ -134,14 +176,26 @@ useEffect(() => {
 
 const swipeDistance = typeof window !== "undefined" ? window.innerWidth : 300;
 
+useEffect(() => {
+  controls.start({
+    y: showBreakDown ? 50 : 0,
+    transition: {
+      type: 'spring',
+      stiffness: 120,
+      damping: 14,
+    }
+  });
+}, [showBreakDown]);
+
+
 async function animateAndSwap(direction, swapFn) {
   const swipeDistance = typeof window !== "undefined" ? window.innerWidth : 300;
 
   // 1) animate current card out
   await controls.start({
     x: direction === "left" ? -swipeDistance : direction === "right" ? swipeDistance : 0,
-    y: direction === "up" ? -200 : 0,
-    opacity: 0,
+    y: direction === "up" ? -200 : direction === "down" ? 200 : 0,
+    opacity: direction === "down" ? 1 : 0,
     transition: { duration: 0.3, ease: "easeInOut" },
   });
 
@@ -175,8 +229,13 @@ async function animateAndSwap(direction, swapFn) {
 
 
   const handleComplete = async (taskId) => {
+    if (isBreakingDownTask) return;
+      if (showBreakDown) return
+
+    setSwipeDirection("up");
+    
   animateAndSwap("up", async () => {
-    directionRef.current = 0;
+    
     setLastActiveAt(user);
     const task = tasks.find(t => t._id === taskId);
     const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
@@ -205,9 +264,14 @@ async function animateAndSwap(direction, swapFn) {
 
 
   const handleSkip = (taskId) => {
+    if (isBreakingDownTask) return;
+      if (showBreakDown) return
+    setSwipeDirection("left");
   animateAndSwap("left", () => {
+    
     setLastActiveAt(user);
     vibration("button-press");
+    
 
     if (finalTask && taskId === finalTask._id && !isSkippedThroughAlertShown) {
       setIsSkippedThroughAlertShown(true);
@@ -231,7 +295,13 @@ async function animateAndSwap(direction, swapFn) {
 
 
 const handleGoBack = (taskId) => {
-  animateAndSwap("right", () => {
+  if (isBreakingDownTask) return;
+  if (showBreakDown) return
+  setSwipeDirection("right");
+  requestAnimationFrame(
+    ()=>{
+      animateAndSwap("right", () => {
+    
     setLastActiveAt(user);
     vibration("button-press");
 
@@ -255,8 +325,129 @@ const handleGoBack = (taskId) => {
     const [taskToRestore] = reordered.splice(index, 1);
     reordered.unshift(taskToRestore);
     setTasks(reordered);
+  })});
+};
+
+const handleTaskBreakdown = async (task) => {
+  if(isBreakingDownTask) return;
+  console.log(`activeTaskList:`, tasks);
+  console.log(`task:`, {"content": task.content, "description": task.description, "dewDate": task.dewDate, "timeEstimate": task.timeEstimate});
+  setLastActiveAt(user);
+  setIsBreakingDownTask(true);
+  setShowDescription(false);
+  setSwipeDirection("down");
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/singleTaskBreakdown`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ task:{"content": task.content, "description": task.description, "dewDate": task.dewDate, "timeEstimate": task.timeEstimate}, list:tasks }),
+  });
+  const data = await res.json();
+  console.log(`generatedTasks:`, data.tasks.tasks);
+  setIsBreakingDownTask(false);
+  setShowBreakDown(true);
+  setGeneratedTasks(data.tasks.tasks);
+};
+
+const handleCancelBreakdown = async () => {
+  
+  setIsBreakingDownTask(false);
+  setShowBreakDown(false);
+  setGeneratedTasks([{content:""},{content:''},{content:''}]);
+  requestAnimationFrame(() => {
+    controls.start({
+      y: 0,
+      transition: {
+        type: 'spring',
+        stiffness: 100,
+        damping: 14,
+      },
+    });
   });
 };
+
+const handleReplaceWithSubtasks = async () => {
+  if (!nextTask || !nextTask._id || !Array.isArray(generatedTasks) || generatedTasks.length === 0) return;
+  setSwipeDirection("down");
+  const headers = {
+    Authorization: `Bearer ${token}`,
+    "Content-Type": "application/json",
+  };
+
+  // 1. Capture the order where nextTask is
+  const baseOrder = nextTask.order;
+
+  // 2. Delete nextTask
+  await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${nextTask._id}`, {
+    method: "DELETE",
+    headers,
+  });
+
+  // 3. Insert subtasks at that order (first = baseOrder, next = baseOrder + 1, etc.)
+  const newTasks = [];
+  for (let i = 0; i < generatedTasks.length; i++) {
+    const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        tasklistId: nextTask.tasklistId,
+        content: generatedTasks[i].content,
+        order: baseOrder + i,
+        description: generatedTasks[i].description || '',
+        timeEstimate: generatedTasks[i].timeEstimate || null,
+        dewDate: generatedTasks[i].dewDate || null,
+      }),
+    });
+    const newTask = await res.json();
+    newTasks.push(newTask);
+  }
+
+  // 4. Reorder the remaining tasks (those that were after nextTask)
+  const updatedTasks = [];
+  const offset = generatedTasks.length - 1;
+
+  const reordered = tasks
+    .filter(t => t._id !== nextTask._id) // skip the deleted one
+    .map((t) => {
+      if (t.order > baseOrder) {
+        return { ...t, order: t.order + offset };
+      }
+      return t;
+    });
+
+  // 5. PATCH all reordered tasks (concurrently)
+  await Promise.all(
+    reordered.map((task) =>
+      fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+        method: "PATCH",
+        headers,
+        body: JSON.stringify({ order: task.order }),
+      })
+    )
+  );
+
+  // 6. Update state
+  const finalTasks = [
+    ...tasks.filter(t => t.order < baseOrder),
+    ...newTasks,
+    ...reordered.filter(t => t.order > baseOrder),
+  ].sort((a, b) => a.order - b.order);
+  setShowBreakDown(false);
+  setIsBreakingDownTask(false);
+  setGeneratedTasks([{content:""},{content:''},{content:''}]);
+  setTasks(finalTasks);
+  (requestAnimationFrame(async () => {
+    setFirstTask(finalTasks.find(t => !t.isComplete && t.order === 0));
+    setFinalTask(finalTasks.filter(t => !t.isComplete).slice(-1)[0]);
+    await refetchTaskListsOrUpdateUI({token,  activeTaskList, setTaskLists, setActiveTaskList, setTasks });    
+  handleGoToTask(newTasks[0]._id, finalTasks); 
+  }))
+};
+
+
+
 
 //handle go to specific task by finding it in tasks and splitting and inverting the array so that everything before it is pushed to the end, but as if each were skipped one at a time
 const handleGoToTask = (taskId, taskData) => {
@@ -266,8 +457,8 @@ const handleGoToTask = (taskId, taskData) => {
   const reordered = [...after, ...before];
   setTasks(reordered);
   setLastActiveAt(user);
-  setFirstTask(taskData.find(t => !t.isComplete && t._id !== taskId));
-  setFinalTask(taskData.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
+  setFirstTask(taskData.find(t => !t.isComplete));
+  setFinalTask(taskData.filter(t => !t.isComplete).slice(-1)[0]);
 };
 
   const nextTask = tasks.find((t) => !t.isComplete);
@@ -338,6 +529,7 @@ const handleTaskReorder = ({ source, destination }) => {
 };
 
 const handleUpdateTask = async (task) => {
+  handleCancelBreakdown();
   setLastActiveAt(user);
   vibration('button-press');
   const headers = {
@@ -373,15 +565,29 @@ const handleDragEnd = (_, info) => {
   const { x, y } = info.offset;
 
   if (x < -100) {
-    directionRef.current = 1;
+    if(showBreakDown) return
+    setSwipeDirection("left");
     handleSkip(nextTask._id);
   } else if (x > 100) {
-    directionRef.current = -1;
+    if(showBreakDown) return
+    setSwipeDirection("right");
     handleGoBack(nextTask._id);
   } else if (y < -100) {
-    directionRef.current = 0;
+    if(showBreakDown) return
+    setSwipeDirection("up");
     if (isSkippedThroughAlertShown) return
     handleComplete(nextTask._id);
+  }
+  else if(y > 100) {
+    setSwipeDirection("down");
+    setShowBreakDown(false);
+    setGeneratedTasks([{content:""},{content:''},{content:''}]);
+                  
+    if (isSkippedThroughAlertShown) return
+    
+    requestAnimationFrame(() => {
+      handleTaskBreakdown(nextTask)
+    });
   }
 };
 
@@ -457,42 +663,64 @@ const handleDragEnd = (_, info) => {
         {loading ? (
           <p className="text-lg text-text-secondary">Loading tasks...</p>
         ) : isSkippedThroughAlertShown && nextTask ? (
-        <div className="w-full max-w-md text-center space-y-6">
-        <AnimatePresence mode="wait" initial={true}>
-            <motion.div
-              key={1}
+         <div className="w-full max-w-md text-center space-y-6" >
+            <AnimatePresence mode="wait" initial={true}>
+
+                {/* <BreakdownReveal key={nextTask._id} subtasks={generatedTasks} originRef={taskCardRef} visible={showBreakDown}/> */}
+              </AnimatePresence>
+            <AnimatePresence mode="wait" initial={true} custom={swipeDirection}>
+              
+           <motion.div
+      key={"end-"+ swipeDirection}
+      custom={swipeDirection}
+      variants={sliderVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+              layout
               drag
               dragDirectionLock
               dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
               onDragEnd={handleDragEnd}
-              animate={controls}
-              className="w-full max-w-md text-center space-y-6"
+              ref={taskCardRef}
+              className="w-full max-w-md text-center space-y-6 z-50"
             >
-        <div className="bg-background-insetcard dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
+              
+            <div className="bg-background-insetcard z-50 dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
           </div>
-           </motion.div>
-            </AnimatePresence>
-          <div className="flex gap-4 justify-center">
-            <button
-            className="cursor-pointer group flex items-center gap-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
-          >
-            <CheckCircle className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
-            Done
-          </button>
-
-              <button
-                onClick={() => handleSkip(nextTask._id)}
-                className="cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-primaryhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
+      </motion.div>
+      </AnimatePresence>
+                <motion.div key='controls' layout className="flex gap-4 justify-center" >
+                <button
+                
+                className="cursor-pointer group flex items-center max-[339px]:text-sm gap-2 max-[339px]:px-5 max-[339px]:py-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring"
               >
-                <RefreshCw className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-180" />
-                Skip
+                <CheckCircle className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+                {showBreakDown ? "Replace":"Done"}
+              </button>
+              <button className="cursor-pointer group flex items-center  justify-center bg-accent-gold max-[339px]:w-10 max-[339px]:h-10 w-12 h-12 rounded-full shadow-md hover:bg-accent-goldhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusgold">
+                
+                <Split className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200  group-hover:scale-120" />
+                <Split className="w-5 h-5 text-black absolute blur-sm max-[339px]:w-4 max-[339px]:h-4 group-hover:scale-120  transition-transform" />
+                
               </button>
 
-            </div>
+                  <button
+                    onClick={() => {showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
+                    className={`cursor-pointer group flex items-center max-[339px]:px-5 max-[339px]:py-2 max-[339px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
+                  >
+                    {showBreakDown ?
+                    <XCircle className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200 group-hover:rotate-180" /> 
+                    :
+                      <RefreshCw className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200 group-hover:rotate-180" />}
+                    {showBreakDown ? "Cancel" : "Skip"}
+                  </button>
 
-            <ProgressBar completedCount={completedCount} tasks={tasks} />
-          </div>)
+                </motion.div>
+                <motion.div key="progress-bar" layout ><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
+              </div>)
         : !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-text-secondary text-center cursor-default">
           {!activeTaskList
@@ -503,20 +731,36 @@ const handleDragEnd = (_, info) => {
         ) : nextTask ? (
           
           <div className="w-full max-w-md text-center space-y-6" >
+            <div className="z-10">
             <AnimatePresence mode="wait" initial={true}>
-            <motion.div
-              key={1}
+              
+                <BreakdownReveal subtasks={generatedTasks} originRef={taskCardRef} visible={showBreakDown}/>
+               
+              </AnimatePresence>
+              </div>
+              <div className="z-50 relative">
+            <AnimatePresence mode="wait" initial={true} custom={swipeDirection}>
+              
+           <motion.div
+      key={nextTask._id + "-" + swipeDirection + "-"}
+      custom={swipeDirection}
+      variants={sliderVariants}
+      initial="enter"
+      animate="center"
+      exit="exit"
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+              layout
               drag
               dragDirectionLock
               dragConstraints={{ top: 0, bottom: 0, left: 0, right: 0 }}
               onDragEnd={handleDragEnd}
-              animate={controls}
-
-              className="w-full max-w-md text-center space-y-6"
+              ref={taskCardRef}
+              className="w-full max-w-md text-center space-y-6 z-50"
             >
-
+              
             <div
-    className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl font-semibold transition cursor-default flex-col flex"
+            
+    className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl z-50 font-semibold transition cursor-default flex-col flex"
     onClick={() => setShowDescription(!showDescription)}
   >
     {nextTask.content}
@@ -585,25 +829,59 @@ const handleDragEnd = (_, info) => {
       </div>
       </motion.div>
       </AnimatePresence>
-                <motion.div layout className="flex gap-4 justify-center">
+      </div>
+                <motion.div layout key='controls' className="flex gap-4 justify-center" >
                 <button
-                onClick={() => handleComplete(nextTask._id)}
-                className="cursor-pointer group flex items-center gap-2 bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring"
+                onClick={() => {showBreakDown ? handleReplaceWithSubtasks() : handleComplete(nextTask._id)}}
+                className={`cursor-pointer group flex items-center max-[400px]:text-sm gap-2 ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring`}
               >
-                <CheckCircle className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
-                Done
+                <CheckCircle className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
+                {showBreakDown ? "Replace":"Done"}
+              </button>
+              <button onClick={() => {
+                if(!showBreakDown) {
+                handleTaskBreakdown(nextTask)
+                } else {
+                  setShowBreakDown(false);
+                  setGeneratedTasks([{content:""},{content:''},{content:''}]);
+                  requestAnimationFrame(() => {
+                    handleTaskBreakdown(nextTask)
+                  });
+                }
+              }} className="cursor-pointer group flex items-center  justify-center bg-accent-gold max-[339px]:w-10 max-[339px]:h-10 w-12 h-12 rounded-full shadow-md hover:bg-accent-goldhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusgold">
+                {
+                isBreakingDownTask ?
+                <>
+                <DotLoader />
+                </>
+                :
+                showBreakDown ?
+                <>
+                <RotateCcw className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200  group-hover:scale-120 group-hover:rotate-[-180deg]" />
+                <RotateCcw className="w-5 h-5 text-black absolute blur-sm max-[339px]:w-4 max-[339px]:h-4 group-hover:scale-120 group-hover:rotate-[-180deg] transition-transform" />
+                </>
+                :
+                
+                <>
+                <Split className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200  group-hover:scale-120" />
+                <Split className="w-5 h-5 text-black absolute blur-sm max-[339px]:w-4 max-[339px]:h-4 group-hover:scale-120  transition-transform" />
+                </>
+                }
               </button>
 
                   <button
-                    onClick={() => handleSkip(nextTask._id)}
-                    className="cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-primaryhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring"
+                    onClick={() => {showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
+                    className={`cursor-pointer group flex items-center ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} max-[400px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
                   >
-                    <RefreshCw className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-180" />
-                    Skip
+                    {showBreakDown ?
+                    <XCircle className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200 group-hover:rotate-180" /> 
+                    :
+                      <RefreshCw className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200 group-hover:rotate-180" />}
+                    {showBreakDown ? "Cancel" : "Skip"}
                   </button>
 
                 </motion.div>
-                <motion.div layout><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
+                <motion.div key="progress-bar" layout><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
               </div>
               
             ) : (<div>
@@ -615,7 +893,9 @@ const handleDragEnd = (_, info) => {
                   All tasks complete! Chill Time.
                 </div>
               </div>
-          <ProgressBar completedCount={completedCount} tasks={tasks} />
+          <div key={"progress-bar"}>
+            <ProgressBar completedCount={completedCount} tasks={tasks} />
+            </div>
           </div>
         )}
       </div>) : 
@@ -724,7 +1004,7 @@ const handleDragEnd = (_, info) => {
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button>
       <button
-  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
+  className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer max-[339px]:text-[16px] group flex items-center gap-2 bg-accent-primary text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onClick={() => {
     vibration('button-press');
     if (tasks.length >= 5 && !user.isPro) {
@@ -734,7 +1014,7 @@ const handleDragEnd = (_, info) => {
     setShowAddModal(true);
   }}
 >
-  <Plus className="w-5 h-5 text-text-darkprimary transition-transform duration-200 group-hover:rotate-90" />
+  <Plus className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:rotate-90" />
   Add Task
 </button>
 <button
@@ -785,6 +1065,7 @@ const handleDragEnd = (_, info) => {
   taskList={activeTaskList}
   tasks={tasks}
   onSubmit={async (text) => {
+    handleCancelBreakdown();
     let activeList = activeTaskList;
     const headers = {
         Authorization: `Bearer ${token}`,
@@ -849,7 +1130,7 @@ const handleDragEnd = (_, info) => {
     window.location.href = '/subscribe'; // or whatever your route is
   }}
 />
-<AITaskBreakdownModal taskLists={taskLists} token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask}/>
+<AITaskBreakdownModal handleCancelBreakdown={handleCancelBreakdown} taskLists={taskLists} token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask} setFirstTask = {setFirstTask}/>
   <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => setShowFirstTimeModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
@@ -862,10 +1143,11 @@ token={token}
   activeTaskList={activeTaskList}
   setTasks={setTasks}
   setFinalTask={setFinalTask}
+  handleCancelBreakdown={handleCancelBreakdown}
   onSelectList={async (list) => {
     vibration('button-press')
     setActiveTaskList(list);
-
+    handleCancelBreakdown();
     const res = await fetch(
       `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${list._id}`,
       { headers: {
@@ -897,6 +1179,7 @@ token={token}
     });
 
     const newList = await res.json();
+    
     setTaskLists((prev) => [...prev, newList]);
     setActiveTaskList(newList);
     const newIcon = await getRelevantIcon(name)
@@ -909,9 +1192,13 @@ token={token}
   onClose={() => setIsEditTaskModalOpen(false)}
   task={selectedTask}
   onSubmit={handleUpdateTask}
+  handleCancelBreakdown={handleCancelBreakdown}
   setTasks={setTasks}
   taskList = {activeTaskList}
   taskLists={taskLists}
+  tasks={tasks}
+  setFirstTask={setFirstTask}
+  setFinalTask={setFinalTask}
 />
 
 

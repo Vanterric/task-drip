@@ -26,9 +26,8 @@ app.use(cors({
 
 const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
 const { systemPromptTaskBreakdown } = require('./system-prompts/systemPromptTaskBreakdown');
-const saveCreationPrompt = require('./utils/saveCreationPrompt');
 const { systemPromptPolishTask } = require('./system-prompts/systemPromptPolishTask');
-
+const { systemPromptTaskBreakdownSingle } = require('./system-prompts/SystemPromptSingleTaskBreakdown');
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
@@ -919,7 +918,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY,
   });
-
+  // AI Task List Creation
   app.post('/ai/breakdown', verifyToken, async (req, res) => {
     const { goal } = req.body;
     const user = await User.findById(req.user.id);
@@ -954,7 +953,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
     }
   });
 
-  // polish task endpoint
+  // polish task 
   app.post('/ai/polish', verifyToken, async (req, res) => {
     const { task } = req.body;
     const user = await User.findById(req.user.id);
@@ -989,6 +988,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
     }
   });
 
+  // AI Transcription
   app.post('/ai/transcribe', verifyToken, upload.single('audio'), async (req, res) => {
   const user = await User.findById(req.user.id);
   if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
@@ -1022,6 +1022,47 @@ app.post('/create-customer-portal-session', async (req, res) => {
     unlink(newPath).catch(() => {});
   }
 });
+
+// AI Single Task Breakdown
+app.post('/ai/singleTaskBreakdown', verifyToken, async (req, res) => {
+    const { task, list} = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!task || task.length < 5 || !list) {
+      return res.status(400).json({ error: 'Missing Task or Task List from Fetch' });
+    }
+  
+    try {
+      const prompt = `Today's date is ${new Date().toLocaleDateString()}. The day is ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}.
+      
+      Here is the entire task list for context:
+      ${JSON.stringify(list)}
+
+      Here is the task that needs to be broken down into three new tasks:
+      Task: "${JSON.stringify(task)}"
+
+      As a reminder, your response MUST be in valid JSON format, containing a single object with a "tasks" key that is an array of task objects. 
+`;
+  const response = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages: [
+      { role: 'system', content: systemPromptTaskBreakdownSingle},
+      { role: 'user', content: prompt },
+    ],
+    temperature: 0.5,
+    response_format: { type: "json_object" }
+  });
+      const raw = response.choices?.[0]?.message?.content;
+      const tasks = JSON.parse(raw); // try-catch optional
+      console.log('AI single task breakdown result:', tasks);
+      
+      res.json({ tasks });
+    } catch (err) {
+      console.error('OpenAI error:', err);
+      res.status(500).json({ error: 'AI breakdown failed.' });
+    }
+  });
+
 
   // semantically choose an icon
   app.get('/icon', async (req, res) => {

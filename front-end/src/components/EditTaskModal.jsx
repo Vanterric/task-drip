@@ -8,7 +8,7 @@ import { subscribeToPush } from "../utilities/subscribeToPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { DotLoader } from "./DotLoader";
 
-export default function EditTaskModal({ isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists }) {
+export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists, setFirstTask, setFinalTask, tasks}) {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [dewDate, setDewDate] = useState("");
@@ -93,6 +93,7 @@ useEffect(() => {
 
   const handleDeleteTask = async () => {
   vibration("button-press");
+  handleCancelBreakdown();
   await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
     method: "DELETE",
     headers: {
@@ -100,7 +101,10 @@ useEffect(() => {
       "Content-Type": "application/json",
     },
   });
+  const newTasks = tasks.filter((t) => t._id !== task._id);
   setTasks((prev) => prev.filter((t) => t._id !== task._id));
+  setFirstTask(newTasks[0] || null);
+  setFinalTask(newTasks[newTasks.length - 1] || null);
   setShowConfirmDelete(false);
   onClose(); // or pass back some delete signal via onDelete?
 };

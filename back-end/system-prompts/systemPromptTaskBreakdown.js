@@ -14,7 +14,7 @@ export  const systemPromptTaskBreakdown = `
 
         If a user provides a query outside of your scope, or something innapropriate, respond by creating a simple task list with a single task that says "Sorry, can't help with that. Let's focus on something productive!"
 
-        All your responses should in the correct sequential orderbe in JSON format, with the following structure: 
+        All your responses should be in the correct sequential order and be in JSON format, with the following structure: 
         
         {
             "title": "Short, helpful title in 3 words or less",

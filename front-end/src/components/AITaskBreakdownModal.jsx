@@ -8,7 +8,7 @@ import VoiceCaptureButton from './VoiceCaptureButton';
 import { useAuth } from '../context/AuthContext';
 import { DotLoader } from './DotLoader';
 
-export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, token, taskLists }) {
+export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, setFirstTask, token, taskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
@@ -33,6 +33,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
     if (!goal.trim()) return;
     vibration('button-press')
     setLoading(true);
+    handleCancelBreakdown();
     try {
       // 1. Send goal to AI
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/breakdown`, {
@@ -99,6 +100,7 @@ export default function AITaskBreakdownModal({ isOpen, onClose, setActiveTaskLis
       const newIcon = await getRelevantIcon(goal)
       if (newIcon) handleUpdateIcon(newTaskList._id, newIcon, token, setTaskLists);
       setFinalTask(savedTasks[savedTasks.length - 1]);
+      setFirstTask(savedTasks[0]);
       setTasks(savedTasks);
       
       onClose();

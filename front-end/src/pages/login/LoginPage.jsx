@@ -26,7 +26,8 @@ export default function LoginPage() {
   const [showPasswordIncorrect, setShowPasswordIncorrect] = useState(false);
   const { setToken, setUser } = useAuth();
   const navigate = useNavigate();
-  
+  const [passwordConfirm, setPasswordConfirm] = useState(""); // not actually meant to confirm password. Used as bot bait
+
 
 
   const faqs = [
@@ -76,6 +77,9 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(passwordConfirm !== ""){
+      window.alert("This is a bot bait field and not actually used for confirming password. \n\n If you are a human, please leave this field blank. \n\n If you are a bot, please go away.");
+    }
     setStatus("loading");
     vibration("button-press");
     if(email.trim() !== "" && selectedMagicLinkAuth === true){
@@ -516,6 +520,16 @@ useEffect(() => {
         className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
       />
     )}
+    {
+      // This input is bot bait and not actually used for confirming password
+    }
+    <input
+      name="passwordConfirm"
+      type="password"
+      value={passwordConfirm}
+      onChange={(e) => setPasswordConfirm(e.target.value)}
+      className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none hidden focus:ring-2 focus:ring-[#90A9D6]"
+    />
 
     <button
       type="submit"
