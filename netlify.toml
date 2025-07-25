@@ -4,6 +4,5 @@
   command = "npm run build"
 
 [[edge_functions]]
-  function = "bot-redirect"
   path = "/*"
-  directory = "front-end/netlify/edge-functions"
+  function = "bot-redirects"
