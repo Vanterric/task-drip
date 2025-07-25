@@ -1,4 +1,9 @@
 User-agent: *
-Disallow: /
-Allow: /login
-Allow: /login-bot.html
+Disallow: /login
+Disallow: /app
+Disallow: /subscribe
+Disallow: /unlock
+Disallow: /referrer-dashboard
+Disallow: /login-bot.html
+
+Sitemap: https://dewlist.app/sitemap.xml
