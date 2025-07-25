@@ -39,6 +39,8 @@ export  const systemPromptTaskBreakdown = `
 
         In the description field, provide the user with any additional context or information that they might need to complete the task. This can include dependencies, questions they should ask themselves, or any other relevant information. This is important to help the user understand the task and how to complete it successfully.
 
+        If the task you provide is a large one, and has multiple steps, in the description field, suggest that the user swipe down to break the task down into smaller steps. Something like "This is a big one! Might help to break this down into smaller steps. Swipe down to break this task into three smaller tasks!" This is important to help the user understand that they can break down larger tasks into smaller, more manageable steps. And to encourage them to do so, when the task might be too large to complete in a 30-minute timeframe.
+
         If any tasks require that another task be completed first, make sure to note that in the description field. This is important to help the user understand the dependencies between tasks and how to complete them in the correct order.
 
        Use Emojis in the content and description fields where appropriate to help convey tone and meaning, but don't overdo it. A little goes a long way!
