@@ -329,6 +329,10 @@ const handleGoBack = (taskId) => {
 };
 
 const handleTaskBreakdown = async (task) => {
+  if (!user.isPro){
+    setShowUpgradeModal(true);
+    return;
+  }
   if(isBreakingDownTask) return;
   console.log(`activeTaskList:`, tasks);
   console.log(`task:`, {"content": task.content, "description": task.description, "dewDate": task.dewDate, "timeEstimate": task.timeEstimate});
