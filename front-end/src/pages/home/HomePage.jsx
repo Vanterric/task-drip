@@ -336,7 +336,7 @@ const handleCancelBreakdown = async () => {
   
   setIsBreakingDownTask(false);
   setShowBreakDown(false);
-  setGeneratedTasks([{content:""},{content:''},{content:''}]);
+  
   requestAnimationFrame(() => {
     controls.start({
       y: 0,
@@ -347,6 +347,7 @@ const handleCancelBreakdown = async () => {
       },
     });
   });
+  setTimeout(() => setGeneratedTasks([{content:""},{content:''},{content:''}]), 200);
 };
 
 const handleReplaceWithSubtasks = async () => {
