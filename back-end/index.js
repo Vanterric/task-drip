@@ -614,10 +614,10 @@ app.post('/unsubscribe', verifyToken, async (req, res) => {
     );
 
     if (result.modifiedCount === 0) {
-      return res.status(204).json({ error: 'No matching subscriptions found' });
+      return res.status(204).end(); // No content, nothing to unsubscribe
     }
 
-    return res.json({ success: true });
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.error('Error unsubscribing:', err);
     return res.status(500).json({ error: 'Failed to unsubscribe' });
