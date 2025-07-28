@@ -34,9 +34,9 @@ const UserSchema = new mongoose.Schema({
   emailForInactivity: { type: Boolean, default: false }, // Email for inactivity notifications
   emailForReset: { type: Boolean, default: false }, // Email for reset notifications
   emailForDewDate: { type: Boolean, default: false }, // Email for dew date notifications
-  pushForInactivity: { type: Boolean, default: false }, // Push for inactivity notifications
-  pushForReset: { type: Boolean, default: false }, // Push for reset notifications
-  pushForDewDate: { type: Boolean, default: false }, // Push for dew date notifications
+  pushForInactivity: { type: Boolean, default: true }, // Push for inactivity notifications
+  pushForReset: { type: Boolean, default: true }, // Push for reset notifications
+  pushForDewDate: { type: Boolean, default: true }, // Push for dew date notifications
   lastActiveAt: { type: Date, default: Date.now }, 
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
   referrer: { type: String, default: null }, // Referrer code
