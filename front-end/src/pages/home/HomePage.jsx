@@ -563,7 +563,9 @@ const handleDragEnd = (_, info) => {
   else if(y > 100) {
     setSwipeDirection("down");
     setShowBreakDown(false);
+    setTimeout(() => {
     setGeneratedTasks([{content:""},{content:''},{content:''}]);
+    }, 200);
                   
     if (isSkippedThroughAlertShown) return
     
@@ -824,7 +826,9 @@ const handleDragEnd = (_, info) => {
                 handleTaskBreakdown(nextTask)
                 } else {
                   setShowBreakDown(false);
+                  setTimeout(() => {
                   setGeneratedTasks([{content:""},{content:''},{content:''}]);
+                  }, 200);
                   requestAnimationFrame(() => {
                     handleTaskBreakdown(nextTask)
                   });
