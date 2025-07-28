@@ -1,8 +1,10 @@
 const webpush = require('web-push');
+const dotenv = require('dotenv');
 const User = require('../models/User');
 const Task = require('../models/Task');
 const TaskList = require('../models/TaskList');
-
+const {Resend} = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const getRandomMessage = () => {
   const messages = [
@@ -69,6 +71,38 @@ sendPushNotifications = async (resetUserIds = []) => {
         console.error('Push failed for', sub.endpoint, err.message);
       }
     }
+    if(user.emailForInactivity) {
+      try {
+        await resend.emails.send({
+          from: 'DewList <noreply@dewlist.app>',
+          to: user.email,
+          subject: 'Hey, it’s DewList 👋',
+          html: `<div>
+          <img src="https://dewlist.app/DewList_Icon.png"
+         alt="DewList logo"
+         width="48"
+         height="48"
+         style="display: block; margin: 0 auto 16px auto;" />
+         <p>${getRandomMessage()}</p>
+         <a href="https://dewlist.app"
+       style="
+         display: inline-block;
+         background-color: #4C6CA8;
+         color: white;
+         text-decoration: none;
+         padding: 12px 24px;
+         border-radius: 8px;
+         font-weight: 600;
+         font-size: 16px;
+       ">
+      Log in to DewList
+    </a>
+         </div>`
+        });
+      } catch (err) {
+        console.error('Email failed for', user.email, err.message);
+      }
+    }
 
     user.lastPushSentAt = new Date();
     await user.save();
@@ -100,6 +134,36 @@ if (resetUserIds.length > 0) {
           await webpush.sendNotification(sub, payload);
         } catch (err) {
           console.error('❌ Reset push failed:', sub.endpoint, err.message);
+        }
+        if(user.emailForReset) {
+          try {
+            await resend.emails.send({
+              from: 'DewList <noreply@dewlist.app>',
+              to: user.email,
+              subject: `${sub.label || 'Your list'} has been reset!`,
+              html: `<div>
+                <img src="https://dewlist.app/DewList_Icon.png"
+                 alt="DewList logo"
+                 width="48"
+                 height="48"
+                 style="display: block; margin: 0 auto 16px auto;" />
+                <p>It's a fresh start! Time to dive back into "${sub.label || 'your tasks'}" ✨</p>
+                <a href="https://dewlist.app"
+               style="
+                 display: inline-block;
+                 background-color: #4C6CA8;
+                 color: white;
+                 text-decoration: none;
+                 padding: 12px 24px;
+                 border-radius: 8px;
+               ">
+              Log in to DewList
+            </a>
+          </div>`
+            });
+          } catch (err) {
+            console.error('Email failed for', user.email, err.message);
+          }
         }
       }
     }
@@ -180,6 +244,35 @@ if (resetUserIds.length > 0) {
           console.log(`📬 Sent DewDate push for "${task.content}" to ${user.email}`);
         } catch (err) {
           console.error('❌ DewDate push failed:', sub.endpoint, err.message);
+        }
+        if(user.emailForDewDate) {
+          try {
+            await resend.emails.send({
+              from: 'DewList <noreply@dewlist.app>',
+              to: user.email,
+              subject: `Your task "${task.content}" is due tomorrow!`,
+              html: `
+                <div>
+                  <p>Hi there!</p>
+                  <p>This is a friendly reminder that your task "${task.content}" is due tomorrow.</p>
+                  <a href="https://dewlist.app"
+                     style="
+                       display: inline-block;
+                       background-color: #4C6CA8;
+                       color: white;
+                       text-decoration: none;
+                       padding: 12px 24px;
+                       border-radius: 8px;
+                       font-weight: 600;
+                       font-size: 16px;
+                     ">
+                    Log in to DewList
+                  </a>
+                </div>`
+            });
+          } catch (err) {
+            console.error('Email failed for', user.email, err.message);
+          }
         }
       }
     }

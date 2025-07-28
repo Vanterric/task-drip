@@ -18,7 +18,15 @@ export default function SettingsModal({ isOpen, onClose }) {
   const [error, setError] = useState("");
     const [defaultView, setDefaultView] = useState(localStorage.getItem("defaultView") || "one-task"); // 'list' or 'one-task'
     const [defaultTaskState, setDefaultTaskState] = useState(localStorage.getItem("defaultTaskState") || "collapsed"); // 'collapsed' or 'expanded'
-  
+  const [notificationSettings, setNotificationSettings] = useState({
+  pushLogin: user.pushForInactivity,
+  emailLogin: user.emailForInactivity,
+  pushReset: user.pushForReset,
+  emailReset: user.emailForReset,
+  pushDewDate: user.pushForDewDate,
+  emailDewDate: user.emailForDewDate,
+});
+
 
 
   const handleSave = async () => {
@@ -53,6 +61,36 @@ export default function SettingsModal({ isOpen, onClose }) {
       setStatus("idle");
       setError("");
     }
+
+const defaultNotificationSettings = {
+  pushLogin: user.pushForInactivity,
+  emailLogin: user.emailForInactivity,
+  pushReset: user.pushForReset,
+  emailReset: user.emailForReset,
+  pushDewDate: user.pushForDewDate,
+  emailDewDate: user.emailForDewDate,
+};
+
+if (JSON.stringify(notificationSettings) !== JSON.stringify(defaultNotificationSettings)) {
+  const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/user/setNotificationPreferences`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+    body: JSON.stringify({ 
+      emailForInactivity: notificationSettings.emailLogin,
+      emailForReset: notificationSettings.emailReset,
+      emailForDewDate: notificationSettings.emailDewDate,
+      pushForInactivity: notificationSettings.pushLogin,
+      pushForReset: notificationSettings.pushReset,
+      pushForDewDate: notificationSettings.pushDewDate
+    }),
+  });
+
+  if (!res.ok) {
+    const error = await res.json();
+    alert(`Error saving notification settings: ${error.error}`);
+    return;
+  }
+}
     setSaving(false);
     onClose();
   };
@@ -98,6 +136,58 @@ export default function SettingsModal({ isOpen, onClose }) {
   const { url } = await res.json();
   window.location.href = url;
 };
+
+
+const NotificationSettings = ({ settings, setSettings }) => {
+  const toggle = (key) => {
+    setSettings((prev) => ({
+      ...prev,
+      [key]: !prev[key],
+    }));
+  };
+
+  return (
+    <div >
+      <table className="table-auto w-full border-collapse">
+        <thead>
+          <tr>
+            <th className="w-1/3"></th>
+            <th className="text-xs font-semibold text-text-info dark:text-text-darkinfo text-left px-5 pb-1 pt-3">Push</th>
+            <th className="text-xs font-semibold text-text-info dark:text-text-darkinfo text-left px-5 pb-1 pt-3">Email</th>
+          </tr>
+        </thead>
+        <tbody className="divide-y text-text-info dark:text-text-darkinfo">
+          {[
+            { label: "Log In Reminder", pushKey: "pushLogin", emailKey: "emailLogin" },
+            { label: "List Reset", pushKey: "pushReset", emailKey: "emailReset" },
+            { label: "Task DewDate", pushKey: "pushDewDate", emailKey: "emailDewDate" },
+          ].map(({ label, pushKey, emailKey }) => (
+            <tr key={label}>
+              <td className="text-xs font-medium text-text-info dark:text-text-darkinfo px-4 py-3">{label}</td>
+              {[pushKey, emailKey].map((key) => (
+                <td key={key} className="px-4 py-3">
+                  <button
+                    onClick={() => toggle(key)}
+                    className={`relative w-11 h-6 cursor-pointer flex items-center rounded-full p-1 transition-colors duration-300 ${
+                      settings[key] ? "bg-accent-primary dark:bg-accent-focusring" : "bg-text-info dark:bg-text-darkinfo"
+                    }`}
+                  >
+                    <div
+                      className={`bg-white dark:bg-text-primary w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                        settings[key] ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+                </td>
+              ))}
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+};
+
 
 
   if (!isOpen) return null;
@@ -148,6 +238,11 @@ export default function SettingsModal({ isOpen, onClose }) {
                 Upgrade
               </button>}
             </div>
+          </div>
+          {/*Notification Preferences*/}
+          <div>
+            <h3 className="font-medium">Notification Preferences</h3>
+            <NotificationSettings settings={notificationSettings} setSettings={setNotificationSettings} />
           </div>
 
           {/*Default View (List or One-Task)*/}

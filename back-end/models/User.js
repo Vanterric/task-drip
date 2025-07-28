@@ -28,9 +28,15 @@ const UserSchema = new mongoose.Schema({
     },
     label: String, // optional label for the subscription
     listId: {type: String , default: null}, // ID of the task list this subscription is for
-    taskId: {type: String, default: null} // ID of the task this subscription is for
+    taskId: {type: String, default: null}, // ID of the task this subscription is for
   }
 ],
+  emailForInactivity: { type: Boolean, default: false }, // Email for inactivity notifications
+  emailForReset: { type: Boolean, default: false }, // Email for reset notifications
+  emailForDewDate: { type: Boolean, default: false }, // Email for dew date notifications
+  pushForInactivity: { type: Boolean, default: false }, // Push for inactivity notifications
+  pushForReset: { type: Boolean, default: false }, // Push for reset notifications
+  pushForDewDate: { type: Boolean, default: false }, // Push for dew date notifications
   lastActiveAt: { type: Date, default: Date.now }, 
   lastPushSentAt: { type: Date, default: null }, // Last time a push notification was sent
   referrer: { type: String, default: null }, // Referrer code

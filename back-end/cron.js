@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 const webpush = require( 'web-push');
 const sendPushNotifications = require('./utils/sendPushNotifications');
 const resetScheduledTaskLists = require('./utils/resetScheduledTaskLists');
+const {Resend} = require('resend');
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 webpush.setVapidDetails(
   'mailto:hello@dewlist.app',

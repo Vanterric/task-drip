@@ -566,6 +566,19 @@ app.post('/subscribe', verifyToken, async (req, res) => {
       console.log('New push subscription added:', subscription);
       await user.save();
     }
+    if (type === 'inactivity') {
+      user.pushForInactivity = true;
+      await user.save();
+    }
+    if (type === 'reset') {
+      user.pushForReset = true;
+      await user.save();
+    }
+    if (type === 'dewDate') {
+      user.pushForDewDate = true;
+      await user.save();
+    }
+
 
     res.json({ success: true });
   } catch (err) {
@@ -634,7 +647,7 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType });
+    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType, pushForInactivity: user.pushForInactivity, pushForReset: user.pushForReset, pushForDewDate: user.pushForDewDate, emailForInactivity: user.emailForInactivity, emailForReset: user.emailForReset, emailForDewDate: user.emailForDewDate });
   });
 
   
@@ -672,6 +685,19 @@ app.post('/snoozePush', async (req, res) => {
     await user.save();
   
     res.json({ success: true, email: user.email });
+  });
+  app.post('/user/setNotificationPreferences', verifyToken, async (req, res) => {
+    const { emailForInactivity, emailForReset, emailForDewDate, pushForInactivity, pushForReset, pushForDewDate } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user) return res.status(404).json({ error: 'User not found' });
+    user.emailForInactivity = emailForInactivity;
+    user.emailForReset = emailForReset;
+    user.emailForDewDate = emailForDewDate;
+    user.pushForInactivity = pushForInactivity;
+    user.pushForReset = pushForReset;
+    user.pushForDewDate = pushForDewDate;
+    await user.save();
+    res.json({ success: true });
   });
 
   
