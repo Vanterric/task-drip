@@ -65,12 +65,14 @@ sendPushNotifications = async (resetUserIds = []) => {
     });
 
     for (const sub of user.pushSubscriptions.filter(s => s.type === 'inactivity')) {
+      if(user.pushForInactivity){
       try {
         await webpush.sendNotification(sub, payload);
       } catch (err) {
         console.error('Push failed for', sub.endpoint, err.message);
       }
     }
+  }
     if(user.emailForInactivity) {
       try {
         await resend.emails.send({
@@ -129,12 +131,14 @@ if (resetUserIds.length > 0) {
           badge: '/icons/icon-192.png',
           icon: '/icons/icon-192.png',
         });
-
-        try {
+        if(user.pushForReset){
+          try {
           await webpush.sendNotification(sub, payload);
         } catch (err) {
           console.error('❌ Reset push failed:', sub.endpoint, err.message);
         }
+        }
+        
         if(user.emailForReset) {
           try {
             await resend.emails.send({
@@ -233,7 +237,7 @@ if (resetUserIds.length > 0) {
           badge: '/icons/icon-192.png',
           userId: user._id
         });
-
+        if(user.pushForDewDate){
         try {
           await webpush.sendNotification(sub, payload);
 
@@ -245,6 +249,7 @@ if (resetUserIds.length > 0) {
         } catch (err) {
           console.error('❌ DewDate push failed:', sub.endpoint, err.message);
         }
+      }
         if(user.emailForDewDate) {
           try {
             await resend.emails.send({
