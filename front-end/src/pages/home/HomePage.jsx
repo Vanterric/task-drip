@@ -314,8 +314,6 @@ const handleTaskBreakdown = async (task) => {
     return;
   }
   if(isBreakingDownTask) return;
-  console.log(`activeTaskList:`, tasks);
-  console.log(`task:`, {"content": task.content, "description": task.description, "dewDate": task.dewDate, "timeEstimate": task.timeEstimate});
   setLastActiveAt(user);
   setIsBreakingDownTask(true);
   setShowDescription(false);
@@ -329,7 +327,6 @@ const handleTaskBreakdown = async (task) => {
     body: JSON.stringify({ task:{"content": task.content, "description": task.description, "dewDate": task.dewDate, "timeEstimate": task.timeEstimate}, list:tasks }),
   });
   const data = await res.json();
-  console.log(`generatedTasks:`, data.tasks.tasks);
   setIsBreakingDownTask(false);
   setShowBreakDown(true);
   setGeneratedTasks(data.tasks.tasks);

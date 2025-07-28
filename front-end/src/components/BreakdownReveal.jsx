@@ -180,7 +180,7 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
           <motion.div
             key={`subtask-${i}`}
             ref={(el) => (subtaskRefs.current[i] = el)}
-            className={`relative z-0 bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg  font-semibold max-w-[calc(100vw-4rem)]  max-[1000px]:w-[calc(100vw/3-20px)] max-[700px]:w-[25rem] transition cursor-default flex-col flex ${visible ? 'h-auto pt-6 px-6 pb-2 text-xl ' : 'h-0 text-transparent'} ${hasMeasured ? " w-xs " : "h-0 text-transparent"}`}
+            className={`relative text-[1rem] z-0 bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg  font-semibold max-w-[calc(100vw-4rem)]  max-[1000px]:w-[calc(100vw/3-20px)] max-[700px]:w-[20rem] transition cursor-default flex-col flex ${visible ? 'h-auto pt-4 px-6 pb-2 text-xl ' : 'h-0 text-transparent'} ${hasMeasured ? " w-xs " : "h-0 text-transparent"}`}
             onClick={() => setActiveDescription(activeDescription === i ? null : i)}
             initial="exit"
             animate={visible ? 'visible' : 'exit'}
@@ -194,7 +194,7 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
 
           >
             {subtask.content || `Subtask ${i + 1}`}
-            <span className="text-xs dark:text-text-darkinfo text-text-info mt-1">
+            <span className="text-xs dark:text-text-darkinfo text-text-info">
               {subtask.timeEstimate ? `${subtask.timeEstimate} min` : ''}
             </span>
             <ChevronDown
@@ -202,7 +202,7 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
                 e.stopPropagation();
                 setActiveDescription(activeDescription === i ? null : i);
               }}
-              className={`transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-text-info`}
+              className={`transition-transform duration-300 origin-center flex justify-center items-center mx-auto  cursor-pointer w-5 h-5 dark:text-white/60 text-text-info`}
               style={{
                 transform: activeDescription === i ? "rotateX(180deg)" : "rotateX(0deg)",
                 transformStyle: "preserve-3d",
