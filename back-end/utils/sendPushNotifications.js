@@ -258,7 +258,11 @@ if (resetUserIds.length > 0) {
               subject: `Your task "${task.content}" is due tomorrow!`,
               html: `
                 <div style="font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #4F5962; padding: 20px; text-align: center;">
-                  <p>Hi there!</p>
+                 <img src="https://dewlist.app/DewList_Icon.png"
+                 alt="DewList logo"
+                 width="48"
+                 height="48"
+                 style="display: block; margin: 0 auto 16px auto;" />  
                   <p>This is a friendly reminder that your task "${task.content}" is due tomorrow.</p>
                   <a href="https://dewlist.app"
                      style="
