@@ -1,13 +1,14 @@
-export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId = null) => {
+import { getDeviceLabel } from "./getDeviceLabel";
+
+export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId = null, user) => {
   try {
     const registration = await navigator.serviceWorker.getRegistration();
     const subscription = await registration?.pushManager.getSubscription();
-
     const payload = {
       type,
-      endpoint: subscription?.endpoint,
       listId, // Send listId to bulk-remove matching subs
       taskId, // Send taskId to bulk-remove matching subs
+      device: getDeviceLabel(), // Use the same device label logic as in subscribeToPush
     };
 
 
@@ -20,11 +21,11 @@ export const unsubscribeFromPush = async (type = 'reset', listId = null, taskId 
       body: JSON.stringify(payload),
     });
 
-    if (!res.ok) throw new Error('Failed to unsubscribe');
+    if (res.status!==200) return false;
     if (subscription) await subscription.unsubscribe();
     return true;
   } catch (err) {
-    console.error('Unsubscribe error:', err);
+    /* console.error('Unsubscribe error:', err); */
     return false;
   }
 };

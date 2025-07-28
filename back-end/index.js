@@ -591,35 +591,39 @@ app.post('/unsubscribe', verifyToken, async (req, res) => {
   try {
     const user = await User.findById(req.user.id);
     if (!user) return res.status(404).json({ error: 'User not found' });
+
+    const { device, type = 'reset', listId, taskId } = req.body;
+
     console.log('Unsubscribing user:', user.email);
-    console.log('Unsubscribing from endpoint:', req.body.endpoint);
-    console.log('Unsubscribing from type:', req.body.type);
-    console.log('Unsubscribing from listId:', req.body.listId);
-    console.log('Unsubscribing from taskId:', req.body.taskId);
+    console.log('From device:', device);
+    console.log('Type:', type);
+    console.log('List ID:', listId);
+    console.log('Task ID:', taskId);
 
-    const { endpoint, type = 'reset', listId, taskId } = req.body;
+    if (!device) return res.status(400).json({ error: 'Device label is required' });
 
-    const before = user.pushSubscriptions.length;
-    console.log('Number of subscriptions before:', before);
+    // Build dynamic match object
+    const match = { device, type };
+    if (listId) match.listId = listId;
+    if (taskId) match.taskId = taskId;
 
-    user.pushSubscriptions = user.pushSubscriptions.filter((sub) => {
-      if (listId) return sub.listId !== listId || sub.type !== type;
-      if (taskId) return sub.taskId !== taskId || sub.type !== type;
-      // If no listId or taskId, just filter by endpoint and type
-      return sub.endpoint !== endpoint || sub.type !== type;
-    });
+    // Remove the sub directly in DB (atomic update)
+    const result = await User.updateOne(
+      { _id: req.user.id },
+      { $pull: { pushSubscriptions: match } }
+    );
 
-    if (user.pushSubscriptions.length < before) {
-      await user.save();
-      return res.json({ success: true });
+    if (result.modifiedCount === 0) {
+      return res.status(204).json({ error: 'No matching subscriptions found' });
     }
 
-    res.status(404).json({ error: 'No matching subscriptions found' });
+    return res.json({ success: true });
   } catch (err) {
     console.error('Error unsubscribing:', err);
-    res.status(500).json({ error: 'Failed to unsubscribe' });
+    return res.status(500).json({ error: 'Failed to unsubscribe' });
   }
 });
+
 
 
 

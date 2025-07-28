@@ -24,6 +24,7 @@ import { useContext } from "react";
 import { refetchTaskListsOrUpdateUI } from "../../utilities/refetchTaskListsOrUpdateUI";
 import BreakdownReveal from "../../components/BreakdownReveal";
 import { DotLoader } from "../../components/DotLoader";
+import { syncDevicePushSubs } from "../../utilities/syncDevicePushSubs";
 
 
 const sliderVariants = {
@@ -91,6 +92,11 @@ export default function HomePage() {
    const taskCardRef = useRef();
    const [generatedTasks, setGeneratedTasks] = useState([{content:""},{content:''},{content:''}]);
    const [showCard, setShowCard] = useState(true);
+
+   useEffect(() => {
+    if (!user) return;
+   syncDevicePushSubs(user);
+    }, [user]);
 
     useEffect(() => {
       setVisibleTask(tasks[0]);

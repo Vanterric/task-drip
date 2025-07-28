@@ -71,7 +71,7 @@ useEffect(() => {
           }
         }
         else{
-          await unsubscribeFromPush('dewDate', null, task._id).catch(err => {
+          await unsubscribeFromPush('dewDate', null, task._id, user).catch(err => {
             console.error("Failed to unsubscribe from DewDate™ notifications:", err);
           });
         }

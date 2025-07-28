@@ -77,7 +77,7 @@ sendPushNotifications = async (resetUserIds = []) => {
           from: 'DewList <noreply@dewlist.app>',
           to: user.email,
           subject: 'Hey, it’s DewList 👋',
-          html: `<div>
+          html: `<div style="font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #4F5962; padding: 20px; text-align: center;">
           <img src="https://dewlist.app/DewList_Icon.png"
          alt="DewList logo"
          width="48"
@@ -141,7 +141,7 @@ if (resetUserIds.length > 0) {
               from: 'DewList <noreply@dewlist.app>',
               to: user.email,
               subject: `${sub.label || 'Your list'} has been reset!`,
-              html: `<div>
+              html: `<div style="font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #4F5962; padding: 20px; text-align: center;">
                 <img src="https://dewlist.app/DewList_Icon.png"
                  alt="DewList logo"
                  width="48"
@@ -252,7 +252,7 @@ if (resetUserIds.length > 0) {
               to: user.email,
               subject: `Your task "${task.content}" is due tomorrow!`,
               html: `
-                <div>
+                <div style="font-family: 'Lexend', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6; color: #4F5962; padding: 20px; text-align: center;">
                   <p>Hi there!</p>
                   <p>This is a friendly reminder that your task "${task.content}" is due tomorrow.</p>
                   <a href="https://dewlist.app"

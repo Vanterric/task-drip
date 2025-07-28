@@ -205,7 +205,7 @@ useEffect(() => {
       setActiveTaskList(updatedList);
     }
 
-    await unsubscribeFromPush('reset', taskListId);
+    await unsubscribeFromPush('reset', taskListId, null, user);
     refetchTaskListsOrUpdateUI({ token, activeTaskList, setTaskLists, setActiveTaskList, setTasks });
     setIsResetScheduleModalOpen(false);
   } catch (error) {
