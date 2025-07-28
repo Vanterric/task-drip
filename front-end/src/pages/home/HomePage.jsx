@@ -90,6 +90,7 @@ export default function HomePage() {
    const {colors} = useContext(ColorContext)
    const taskCardRef = useRef();
    const [generatedTasks, setGeneratedTasks] = useState([{content:""},{content:''},{content:''}]);
+   const [showCard, setShowCard] = useState(true);
 
     useEffect(() => {
       setVisibleTask(tasks[0]);
@@ -188,40 +189,19 @@ useEffect(() => {
 }, [showBreakDown]);
 
 
-async function animateAndSwap(direction, swapFn) {
-  const swipeDistance = typeof window !== "undefined" ? window.innerWidth : 300;
+function animateAndSwap(direction, swapFn) {
+  return new Promise((resolve) => {
+    setShowCard(false); // triggers exit
 
-  // 1) animate current card out
-  await controls.start({
-    x: direction === "left" ? -swipeDistance : direction === "right" ? swipeDistance : 0,
-    y: direction === "up" ? -200 : direction === "down" ? 200 : 0,
-    opacity: direction === "down" ? 1 : 0,
-    transition: { duration: 0.3, ease: "easeInOut" },
-  });
-
- 
-  
-
-  // 2) swap the data (this remounts the new card)
-  await swapFn()
-
-  // 3) position new card off-screen based on direction
-  controls.set({
-    x: direction === "left" ? swipeDistance : direction === "right" ? -swipeDistance : 0,
-    y: direction === "up" ? 20 : 0,
-    opacity: 0,
-  });
-
-  
-
-  // 5) animate new card into view
-  controls.start({
-    x: 0,
-    y: 0,
-    opacity: 1,
-    transition: { duration: 0.3, ease: "easeInOut" },
+    // wait for exit to finish
+    setTimeout(async () => {
+      await swapFn();         // update the data (like setting the next task)
+      setShowCard(true);      // trigger enter animation
+      resolve();              // if you need to chain
+    }, 300); // must match your exit animation duration
   });
 }
+
 
 
 
@@ -235,7 +215,7 @@ async function animateAndSwap(direction, swapFn) {
     setSwipeDirection("up");
     
   animateAndSwap("up", async () => {
-    
+   
     setLastActiveAt(user);
     const task = tasks.find(t => t._id === taskId);
     const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
@@ -674,7 +654,7 @@ const handleDragEnd = (_, info) => {
               </AnimatePresence>
             <AnimatePresence mode="wait" initial={true} custom={swipeDirection}>
               
-           <motion.div
+           {showCard && <motion.div
       key={"end-"+ swipeDirection}
       custom={swipeDirection}
       variants={sliderVariants}
@@ -694,7 +674,7 @@ const handleDragEnd = (_, info) => {
             <div className="bg-background-insetcard z-50 dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
           </div>
-      </motion.div>
+      </motion.div>}
       </AnimatePresence>
                 <motion.div key='controls' layout className="flex gap-4 justify-center" >
                 <button
@@ -743,8 +723,8 @@ const handleDragEnd = (_, info) => {
               </div>
               <div className="z-50 relative">
             <AnimatePresence mode="wait" initial={true} custom={swipeDirection}>
-              
-           <motion.div
+
+           {showCard && <motion.div
       key={nextTask._id + "-" + swipeDirection + "-"}
       custom={swipeDirection}
       variants={sliderVariants}
@@ -830,7 +810,7 @@ const handleDragEnd = (_, info) => {
       )}
     </AnimatePresence>
       </div>
-      </motion.div>
+      </motion.div>}
       </AnimatePresence>
       </div>
                 <motion.div layout key='controls' className="flex gap-4 justify-center" >
