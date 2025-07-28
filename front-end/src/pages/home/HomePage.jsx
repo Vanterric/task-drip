@@ -641,11 +641,11 @@ const handleDragEnd = (_, info) => {
       
       {viewType === "one-task" ? 
       /* One-Task View */
-      (<div className="flex-grow flex flex-col items-center justify-center px-4">
+      (<div className="flex-grow flex flex-col items-center justify-center px-4 mb-3">
         {loading ? (
           <p className="text-lg text-text-secondary">Loading tasks...</p>
         ) : isSkippedThroughAlertShown && nextTask ? (
-         <div className="w-full max-w-md text-center space-y-6" >
+         <div className="w-full max-w-md text-center space-y-6 mt-3" >
             <AnimatePresence mode="wait" initial={true}>
 
                 {/* <BreakdownReveal key={nextTask._id} subtasks={generatedTasks} originRef={taskCardRef} visible={showBreakDown}/> */}
