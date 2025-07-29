@@ -4,7 +4,7 @@ import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
 import DewListIcon from "../../assets/DewList_Icon.png";
 import DewListGold from "../../assets/DewListGold.png";
-import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, Menu, Plus, RefreshCw, RotateCcw, Sparkles, Split, XCircle } from "lucide-react"; // optional icon lib, or use emoji
+import { AlarmClock, CheckCircle, ChevronDown, Clock, GripHorizontal, LayoutPanelTop, List, ListEnd, Menu, Plus, RefreshCw, RotateCcw, Sparkles, Split, XCircle } from "lucide-react"; // optional icon lib, or use emoji
 import UpgradePromptModal from "../../components/UpgradePromptModal";
 import ProgressBar from "../../components/ProgressBar";
 import TaskDripBadge from "../../components/TaskDripBadge";
@@ -25,6 +25,7 @@ import { refetchTaskListsOrUpdateUI } from "../../utilities/refetchTaskListsOrUp
 import BreakdownReveal from "../../components/BreakdownReveal";
 import { DotLoader } from "../../components/DotLoader";
 import { syncDevicePushSubs } from "../../utilities/syncDevicePushSubs";
+import Dropdown from "../../components/Dropdown";
 
 
 const sliderVariants = {
@@ -92,6 +93,7 @@ export default function HomePage() {
    const taskCardRef = useRef();
    const [generatedTasks, setGeneratedTasks] = useState([{content:""},{content:''},{content:''}]);
    const [showCard, setShowCard] = useState(true);
+   const [filter, setFilter] = useState('Custom');
 
    useEffect(() => {
     if (!user) return;
@@ -492,6 +494,94 @@ const handleGoToTask = (taskId, taskData) => {
 
   return '';
 }
+
+useEffect(() => {
+  if (filter === 'Custom') return;
+
+  const getSortedTasks = () => {
+    const copy = [...tasks];
+
+    switch (filter) {
+      case '↑ DewDate':
+        return copy.sort((a, b) => {
+          const dateA = a.dewDate ? new Date(a.dewDate) : null;
+          const dateB = b.dewDate ? new Date(b.dewDate) : null;
+          if (dateA && dateB) return dateA - dateB;
+          if (dateA) return -1;
+          if (dateB) return 1;
+          return 0;
+        });
+      case '↓ DewDate':
+        return copy.sort((a, b) => {
+          const dateA = a.dewDate ? new Date(a.dewDate) : null;
+          const dateB = b.dewDate ? new Date(b.dewDate) : null;
+          if (dateA && dateB) return dateB - dateA;
+          if (dateA) return -1;
+          if (dateB) return 1;
+          return 0;
+        });
+      case '↑ Time Estimate':
+        return copy.sort((a, b) => {
+          const aVal = a.timeEstimate ?? null;
+          const bVal = b.timeEstimate ?? null;
+          if (aVal != null && bVal != null) return aVal - bVal;
+          if (aVal != null) return -1;
+          if (bVal != null) return 1;
+          return 0;
+        });
+
+      case '↓ Time Estimate':
+        return copy.sort((a, b) => {
+          const aVal = a.timeEstimate ?? null;
+          const bVal = b.timeEstimate ?? null;
+          if (aVal != null && bVal != null) return bVal - aVal;
+          if (aVal != null) return -1;
+          if (bVal != null) return 1;
+          return 0;
+        });
+      case '↑ Alphabetical':
+        return copy.sort((a, b) => {
+          const aVal = (a.content || '').replace(/^[`'"]+/, '').toLowerCase();
+          const bVal = (b.content || '').replace(/^[`'"]+/, '').toLowerCase();
+          return aVal.localeCompare(bVal);
+        });
+
+      case '↓ Alphabetical':
+        return copy.sort((a, b) => {
+          const aVal = (a.content || '').replace(/^[`'"]+/, '').toLowerCase();
+          const bVal = (b.content || '').replace(/^[`'"]+/, '').toLowerCase();
+          return bVal.localeCompare(aVal);
+        });
+      case 'Complete':
+        return copy.sort((a, b) => (b.isComplete ? 1 : 0) - (a.isComplete ? 1 : 0));
+      case 'Incomplete':
+        return copy.sort((a, b) => (a.isComplete ? 1 : 0) - (b.isComplete ? 1 : 0));
+      default:
+        return tasks
+    }
+  };
+
+  const sortedTasks = getSortedTasks();
+
+  // Assign new order and set state
+  sortedTasks.forEach((task, index) => task.order = index);
+  setTasks(sortedTasks);
+
+  // Save all task orders
+  sortedTasks.forEach((task, index) => {
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...task, order: index }),
+    }).catch(err => {
+      console.error("Failed to save task order for", task._id, err);
+    });
+  });
+}, [filter]);
+
 
 const handleTaskReorder = ({ source, destination }) => {
   setDraggedId(null);
@@ -932,7 +1022,17 @@ const getTaskName = (taskId, taskListId) => {
           ) : tasks.length > 0 && <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
           <ProgressBar completedCount={completedCount} tasks={tasks} />
           </div>}
-        <DragDropContext onDragEnd={handleTaskReorder} >
+          <div className="flex justify-end max-w-4xl px-4 mx-auto text-sm mb-4">
+            <div className="w-55 flex justify-end items-center gap-2">
+              <span className="text-text-info dark:text-text-darkinfo text-nowrap">Sort by:</span>
+            <Dropdown 
+              state={filter}
+              setState={setFilter}
+              options={filter === 'Custom' ? ['↑ DewDate','↓ DewDate', '↑ Time Estimate', '↓ Time Estimate', '↑ Alphabetical', '↓ Alphabetical', 'Complete', 'Incomplete', "Custom"] : ['↑ DewDate','↓ DewDate', '↑ Time Estimate', '↓ Time Estimate', '↑ Alphabetical', '↓ Alphabetical', 'Complete', 'Incomplete']}
+            />
+            </div>
+            </div>
+        <DragDropContext onDragEnd={(source, destination) => { setFilter("Custom"); handleTaskReorder(source, destination); }} >
          { !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-160px)] h-[calc(100vh-200px)] mx-2 items-center justify-center">
           {!activeTaskList
@@ -947,7 +1047,7 @@ const getTaskName = (taskId, taskListId) => {
       <div
         {...provided.droppableProps}
         ref={provided.innerRef}
-        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-345px)] max-h-[calc(100vh-365px)]' : 'max-[500px]:max-h-[calc(100vh-173px)] max-h-[calc(100vh-195px)]' } relative`}
+        className={`flex-grow flex flex-col items-start px-3 w-full max-w-4xl mx-auto overflow-y-auto pb-20 ${tasks.length > 0 && tasks.every((task) => task.isComplete) ? 'max-[500px]:max-h-[calc(100vh-407px)] max-h-[calc(100vh-427px)]' : 'max-[500px]:max-h-[calc(100vh-235px)] max-h-[calc(100vh-255px)]' } relative`}
       >
         
         {tasks.map((task, index) => (
@@ -956,7 +1056,7 @@ const getTaskName = (taskId, taskListId) => {
               <div
                 ref={provided.innerRef}
                 {...provided.draggableProps}
-                className={` mt-5 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-background-card dark:bg-background-darkcard w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
+                className={` mt-2 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-background-card dark:bg-background-darkcard w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
               >
                 <div
                 {...provided.dragHandleProps}
