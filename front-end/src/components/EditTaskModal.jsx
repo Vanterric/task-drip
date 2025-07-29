@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, Fragment } from "react";
 import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
 import { ChevronDown } from "lucide-react";
@@ -7,6 +7,8 @@ import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 import { subscribeToPush } from "../utilities/subscribeToPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { DotLoader } from "./DotLoader";
+import {Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions} from "@headlessui/react";
+import Dropdown from "./Dropdown";
 
 export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists, setFirstTask, setFinalTask, tasks}) {
   const [title, setTitle] = useState("");
@@ -19,6 +21,15 @@ export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, o
   const [selectedTaskList, setSelectedTaskList] = useState(taskList?._id || "");
   const [timeEstimate, setTimeEstimate] = useState(task?.timeEstimate ?? "");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
+  const [dependencies, setDependencies] = useState([]);
+
+  useEffect(() => {
+    if (task?.dependencies && Array.isArray(task?.dependencies)) {
+      setDependencies(task.dependencies.map(dep => JSON.stringify({ task: dep.task, list: dep.list, taskContent: dep.taskContent })));
+    } else {
+      setDependencies([]);
+    }
+  }, [task]);
 
   function fromDateInputStringToUTCNoon(value) {
   const [year, month, day] = value.split("-").map(Number);
@@ -83,6 +94,7 @@ useEffect(() => {
       tasklistId: selectedTaskList,
       timeEstimate: timeEstimate ? parseInt(timeEstimate) : null,
       notifyOnDewDate: isNotificationsEnabled,
+      dependencies: dependencies.map(dep => JSON.parse(dep))
     });
     setSubmitting(false);
     if (selectedTaskList !== taskList?._id) {
@@ -110,7 +122,6 @@ useEffect(() => {
 };
 
 
-  
 
 
   if (!isOpen || !task) return null;
@@ -176,16 +187,31 @@ useEffect(() => {
 
         <label className="text-[#91989E] dark:text-white block">
           Task List
-          <select
-            value={selectedTaskList}
-            onChange={(e) => setSelectedTaskList(e.target.value)}
+          <Dropdown
+            state={selectedTaskList}
+            setState={setSelectedTaskList}
+            options={taskLists.map((list) => ({ option: list._id, label: list.name }))}
             disabled={!user.isPro}
-            className="mt-1 w-full disabled:opacity-50 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
-          >
-            {taskLists && taskLists.map((list) => (
-              <option key={list._id} value={list._id}>{list.name}</option>
-            ))}
-          </select>
+          />
+        </label>
+        <label className="text-[#91989E] dark:text-white block">
+          Task Dependencies
+          <div className="w-full max-w-md">
+            <Dropdown
+              state={dependencies}
+              setState={setDependencies}
+              options={tasks
+                .filter((item) => !item.isComplete && item._id !== task._id)
+                .map((task) => ({
+                  option: JSON.stringify({ task: task._id, list: taskList._id, taskContent: task.content }),
+                  label: task.content
+                }))
+              }
+              multiple
+              disabled={!user.isPro}
+            />
+          </div>
+
         </label>
 
           <label className="text-[#91989E] dark:text-white block">

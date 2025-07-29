@@ -3,6 +3,7 @@ import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { capitalizeFirst } from "../utilities/capitalizeFirst";
+import Dropdown from "./Dropdown";
 
 export default function SettingsModal({ isOpen, onClose }) {
   
@@ -209,7 +210,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+              className="mt-1 w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
             />
           </div>
           {/*Reset Password*/}
@@ -221,7 +222,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
               type="password"
               value={resetPassword}
               onChange={(e) => setResetPassword(e.target.value)}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
+              className="mt-1 w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
             />
             {status === "error" && <p className="text-sm text-[#D66565] mt-1">{error}</p>}
             {status === "success" && <p className="text-sm text-green-500 mt-1">Password reset successfully!</p>}
@@ -248,33 +249,19 @@ const NotificationSettings = ({ settings, setSettings }) => {
           {/*Default View (List or One-Task)*/}
           <div>
             <label className="font-medium">Default View</label>
-            <select
-              value={defaultView}
-              onChange={(e) => {
-                vibration("button-press");
-                setDefaultView(e.target.value);
-              }}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
-            >
-              <option value="list">List</option>
-              <option value="one-task">One Task</option>
-            </select>
+            <Dropdown state={defaultView} setState={setDefaultView} options={[
+              { option: "list", label: "List" },
+              { option: "one-task", label: "One Task" }
+            ]}/>
           </div>
 
           {/*Default Task State (Collapsed or Expanded)*/}
           <div>
             <label className="font-medium">Default Task State</label>
-            <select
-              value={defaultTaskState}
-              onChange={(e) => {
-                vibration("button-press");
-                setDefaultTaskState(e.target.value);
-              }}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
-            >
-              <option value="collapsed">Collapsed</option>
-              <option value="expanded">Expanded</option>
-            </select>
+            <Dropdown state={defaultTaskState} setState={setDefaultTaskState} options={[
+              { option: "collapsed", label: "Collapsed" },
+              { option: "expanded", label: "Expanded" }
+            ]}/>
           </div>
 
           {/* Theme dropdown */}
@@ -282,19 +269,15 @@ const NotificationSettings = ({ settings, setSettings }) => {
             <label htmlFor="theme" className="font-medium">
               Theme
             </label>
-            <select
-              id="theme"
-              value={theme}
-              onChange={(e) => {
-                vibration("button-press");
-                setTheme(e.target.value);
-              }}
-              className="mt-1 w-full px-4 py-2 border border-[#4F596254] dark:border-white rounded-xl bg-white dark:bg-[#4F5962] focus:outline-none focus:ring-2 focus:ring-[#90A9D6] text-[#4F5962] dark:text-white"
-            >
-              <option value="light">Light</option>
-              <option value="dark">Dark</option>
-              <option value="system">System</option>
-            </select>
+            <Dropdown
+              state={theme}
+              setState={setTheme}
+              options={[
+                { option: "light", label: "Light" },
+                { option: "dark", label: "Dark" },
+                { option: "system", label: "System" }
+              ]}
+              />
           </div>
           <hr className="mt-5"/>
           <h2 className="text-lg font-bold mb-0 text-[#4F5962] dark:text-white cursor-default">Danger Zone</h2>

@@ -581,9 +581,21 @@ const handleDragEnd = (_, info) => {
   }
 };
 
+const checkIfCompleted = (taskId, taskListId) => {
+  if(taskListId === activeTaskList?._id) {
+    const task = tasks.find(t => t._id === taskId);
+    return task ? task.isComplete : false;
+  }
+  return false;
+}
 
-
-
+const getTaskName = (taskId, taskListId) => {
+  if(taskListId === activeTaskList?._id) {
+    const task = tasks.find(t => t._id === taskId);
+    return task ? task.content : '';
+  }
+  return '';
+}
 
 
   return (
@@ -790,6 +802,22 @@ const handleDragEnd = (_, info) => {
               <span className="dark:text-white/60 text-[#4F5962]/60 italic">
                 Click "Edit Task" to add a description.
               </span>
+            )}
+            {nextTask.dependencies && nextTask.dependencies.length > 0 && (
+              <div className="mt-4">
+                <span className="font-semibold">Dependencies:</span>
+                <ul className="list-disc pl-5">
+                  {nextTask.dependencies.map((dep) => {
+                    const isCompleted = checkIfCompleted(dep.task, dep.list)
+                    const taskName = getTaskName(dep.task, dep.list);
+                    return (
+                    <li key={dep._id} className={`text-sm ${isCompleted ? 'line-through opacity-50' : ''}`}>
+                      <a className="text-accent-primary underline dark:text-accent-focusring" href={`https://dewlist.app/app?tasklistId=${dep.list}&taskId=${dep.task}`}>{taskName}</a>
+                    </li>
+                  )
+                  })}
+                </ul>
+              </div>
             )}
           </motion.div>
 

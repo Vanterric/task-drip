@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { vibration } from "../utilities/vibration";
 import { DotLoader } from "./DotLoader";
+import Dropdown from "./Dropdown";
 
 export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList, handleClearResetSchedule }) {
   const [number, setNumber] = useState(taskList.resetSchedule?.number || 1);
@@ -54,30 +55,27 @@ const [resetTime, setResetTime] = useState(initialResetTime);
             className="flex flex-col gap-4">
           <div className="flex items-center gap-2 text-[#4F5962] dark:text-white text-sm">
             <span>Reset this list every</span>
-
-            <select
-              value={number}
-              onChange={(e) => setNumber(Number(e.target.value))}
-              className="px-2 py-1 border border-[#4F596254] dark:border-white rounded-lg bg-transparent focus:outline-none"
-            >
-              {[...Array(10)].map((_, i) => (
-                <option key={i + 1} value={i + 1} className="text-[#4F5962]">
-                  {i + 1}
-                </option>
-              ))}
-            </select>
-
-            <select
-              value={cadence}
-              onChange={(e) => setCadence(e.target.value)}
-              className="px-2 py-1 border border-[#4F596254] dark:border-white rounded-lg bg-transparent focus:outline-none"
-            >
-              {["days", "weeks", "months", "years"].map((unit) => (
-                <option key={unit} value={unit} className="text-[#4F5962]">
-                  {unit}
-                </option>
-              ))}
-            </select>
+            <div className="max-w-[75px]">
+              <Dropdown 
+                state={number}
+                setState={setNumber}
+                options={[...Array(31)].map((_, i) => ({ option: i + 1, label: `${i + 1}` }))}
+                disabled={false}
+              />
+            </div>
+            <div className="max-w-[125px]">
+            <Dropdown
+              state={cadence}
+              setState={setCadence}
+              options={[
+                { option: 'days', label: 'Days' },
+                { option: 'weeks', label: 'Weeks' },
+                { option: 'months', label: 'Months' },
+                { option: 'years', label: 'Years' }
+              ]}
+              disabled={false}
+            />
+            </div>
           </div>
           {cadence === "days" && (
   <div className="flex flex-col gap-1">
