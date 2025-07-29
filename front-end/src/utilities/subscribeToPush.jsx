@@ -12,10 +12,13 @@ export const subscribeToPush = async (deviceLabel = 'unknown', type = 'inactivit
     }
     const registration = await navigator.serviceWorker.register('/sw.js');
 
-    const subscription = await registration.pushManager.subscribe({
-      userVisibleOnly: true,
-      applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
-    });
+    let subscription = await registration.pushManager.getSubscription();
+    if (!subscription) {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: urlBase64ToUint8Array(import.meta.env.VITE_VAPID_PUBLIC_KEY),
+      });
+    }
 
     // Add device label into the subscription object
     const payload = {
