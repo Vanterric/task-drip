@@ -1,4 +1,4 @@
-import { X } from 'lucide-react';
+import { Info, X } from 'lucide-react';
 import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
 import getRelevantIcon from '../utilities/getRelevantIcon';
@@ -7,12 +7,19 @@ import { safeParsePolished } from '../utilities/safeParsePolished';
 import VoiceCaptureButton from './VoiceCaptureButton';
 import { useAuth } from '../context/AuthContext';
 import { DotLoader } from './DotLoader';
+import { AnimatePresence, motion } from 'framer-motion';
+import FollowUpsModal from './FollowUpsModal';
 
 export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, setFirstTask, token, taskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
   const { user } = useAuth();
+  const [followUpsSelected, setFollowUpsSelected] = useState(false);
+  const [showFollowUpsInfo, setShowFollowUpsInfo] = useState(false);
+  const [followUpQuestions, setFollowUpQuestions] = useState([]);
+  const [followUpAnswers, setFollowUpAnswers] = useState([]);
+  const [showFollowUpModal, setShowFollowUpModal] = useState(false);
   const dailyPromptMap = {
   "Monday": "Happy Monday! What's one thing you could do today to start the week feeling grounded and clear?",
   "Tuesday": "Hey, it’s Tuesday. What's cluttering your head because it's missing a start cue?",
@@ -29,6 +36,31 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
     const today = new Date();
     const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
 
+    const handleFollowUpsSelected = async () => {
+      if (!user.isPro) return;
+      if (!goal.trim()) return;
+      setLoading(true);
+      console.log('Fetching follow-up questions for goal:', goal);
+      try {
+        const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/followups`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          },
+          body: JSON.stringify({ goal }),
+        });
+        const data = await res.json();
+        setFollowUpQuestions(data.questions);
+        setShowFollowUpModal(true);
+        setLoading(false);
+      }
+      catch (err) {
+        setLoading(false);
+        return
+      }
+    }
+
   const handleSubmit = async () => {
     if (!goal.trim()) return;
     vibration('button-press')
@@ -42,7 +74,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
           'Content-Type': 'application/json',
           Authorization: `Bearer ${localStorage.getItem('authToken')}`,
         },
-        body: JSON.stringify({ goal }),
+        body: JSON.stringify({ goal, followUpQuestions, followUpAnswers }),
       });
   
       const { taskList } = await res.json();
@@ -102,7 +134,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       setFinalTask(savedTasks[savedTasks.length - 1]);
       setFirstTask(savedTasks[0]);
       setTasks(savedTasks);
-      
+      setShowFollowUpModal(false);
       onClose();
     } catch (err) {
       console.error('Error handling AI task breakdown:', err);
@@ -118,8 +150,15 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
       onClick={onClose}
     >
+      {!showFollowUpModal && <AnimatePresence>
+        <motion.div
+        layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}>
       <div
-        className="bg-white dark:bg-[#4F5962] w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4"
+        className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-xl p-6 max-w-md mx-4 relative"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -146,9 +185,32 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         {user.isPro && <VoiceCaptureButton setState={setGoal} />}
         </div>
         </div>
+        {showFollowUpsInfo && (
+            <motion.div
+            initial={{ opacity: 0, height: 0 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 0 }}
+            transition={{ duration: 0.2 }}
+            >
+            <p className="text-xs text-text-info dark:text-text-darkinfo italic mt-3 mb-3">
+              Asks a few follow-up questions to clarify your goal, understand your needs, and craft a smarter task list.
+            </p>
+            </motion.div>
+            )}
+        <div className="flex items-center mt-2 text-sm gap-2 text-text-primary dark:text-text-darkprimary select-none">
+        <input
+            type='checkbox'
+            className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
+            checked={followUpsSelected && user.isPro}
+            onChange={() => setFollowUpsSelected(!followUpsSelected)}
+            disabled={!user.isPro}
+            title={!user.isPro ? "Follow-ups is a Pro feature. Upgrade to unlock!" : "Follow-ups"}
+            />
+          Ask me follow-ups <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => setShowFollowUpsInfo(!showFollowUpsInfo)} />
+        </div>
         <button
         disabled={loading}
-        onClick={handleSubmit}
+        onClick={followUpsSelected ? handleFollowUpsSelected : handleSubmit}
         className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
             ? 'bg-[#4C6CA8]/60 cursor-not-allowed'
@@ -158,6 +220,9 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         {loading ? <span className="flex items-center justify-center gap-1">Generating <span className="mt-2"><DotLoader/></span></span> : 'Generate New Task List'}
         </button>
       </div>
+      </motion.div>
+      </AnimatePresence>}
+      {showFollowUpModal && <FollowUpsModal onClose={()=>setShowFollowUpModal(false)} followUpQuestions={followUpQuestions} followUpAnswers={followUpAnswers} setFollowUpAnswers={setFollowUpAnswers} handleSubmit={handleSubmit} loading={loading} />}
     </div>
   );
 }

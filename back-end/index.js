@@ -28,6 +28,7 @@ const { sendMagicLinkEmail } = require('./utils/sendMagicLink');
 const { systemPromptTaskBreakdown } = require('./system-prompts/systemPromptTaskBreakdown');
 const { systemPromptPolishTask } = require('./system-prompts/systemPromptPolishTask');
 const { systemPromptTaskBreakdownSingle } = require('./system-prompts/SystemPromptSingleTaskBreakdown');
+const { systemPromptFollowUpQuestions } = require('./system-prompts/systemPromptFollowUpQuestions');
 
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log("MongoDB Connected"))
@@ -950,7 +951,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   });
   // AI Task List Creation
   app.post('/ai/breakdown', verifyToken, async (req, res) => {
-    const { goal } = req.body;
+    const { goal, followUpQuestions, followUpAnswers } = req.body;
     const user = await User.findById(req.user.id);
     if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
     if (!goal || goal.length < 5) {
@@ -959,9 +960,10 @@ app.post('/create-customer-portal-session', async (req, res) => {
   
     try {
       const prompt = `Today's date is ${new Date().toLocaleDateString()}. The day is ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}.
-      
+      Remember, you must respond in valid JSON format.
       Here is the user's goal:
       Goal: "${goal}"
+      ${followUpQuestions && 'Here is some additional context about the goal: '}${followUpQuestions && followUpQuestions.map((q,i) => {if (followUpAnswers[i]) return `\n\nQ: ${q}\nA: ${followUpAnswers[i]}`; else return ''}).join('')}
 `;
   const response = await openai.chat.completions.create({
     model: 'gpt-3.5-turbo',
@@ -980,6 +982,41 @@ app.post('/create-customer-portal-session', async (req, res) => {
     } catch (err) {
       console.error('OpenAI error:', err);
       res.status(500).json({ error: 'AI breakdown failed.' });
+    }
+  });
+
+  app.post('/ai/followups', verifyToken, async (req, res) => {
+    const { goal } = req.body;
+    const user = await User.findById(req.user.id);
+    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!goal || goal.length < 5) {
+      return res.status(400).json({ error: 'Invalid goal' });
+    }
+  
+    try {
+      const prompt = `Today's date is ${new Date().toLocaleDateString()}. The day is ${new Date().toLocaleDateString('en-US', { weekday: 'long' })}.
+      Again, your purpose is to provide a list of 3 follow-up questions aimed at getting the context needed to fully understand the user's goal before breaking it down into tasks. Your response must be in JSON format, containing a single object with a "summary" key and a "questions" key that is an array of strings.
+      Here is the user's goal:
+      Goal: "${goal}"
+`;
+  const response = await openai.chat.completions.create({
+    model: 'gpt-3.5-turbo',
+    messages: [
+      { role: 'system', content: systemPromptFollowUpQuestions},
+      { role: 'user', content: prompt },
+    ],
+    temperature: 0.5,
+    response_format: { type: "json_object" }
+  });
+      const raw = response.choices?.[0]?.message?.content;
+      const data = JSON.parse(raw); // try-catch optional
+      const questions = data.questions || [];
+      console.log('AI follow-up questions result:', questions);
+
+      return res.status(200).json({ questions });
+    } catch (err) {
+      console.error('OpenAI error:', err);
+      return res.status(500).json({ error: 'AI breakdown failed.' });
     }
   });
 
