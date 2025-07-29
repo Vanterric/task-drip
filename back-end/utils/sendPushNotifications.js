@@ -140,6 +140,7 @@ if (resetUserIds.length > 0) {
         }
         
         if(user.emailForReset) {
+          if (!user.isPro) continue
           try {
             await resend.emails.send({
               from: 'DewList <noreply@dewlist.app>',
@@ -176,25 +177,27 @@ if (resetUserIds.length > 0) {
 
   const now = new Date();
 
-  const tomorrowNoonUTC = new Date(Date.UTC(
-    now.getUTCFullYear(),
-    now.getUTCMonth(),
-    now.getUTCDate() + 1,
-    12, 0, 0, 0
-  ));
+  const dewDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() + 1, 12));
 
-  const oneDayBefore = new Date(tomorrowNoonUTC);
-  oneDayBefore.setUTCDate(oneDayBefore.getUTCDate() - 1); // 24h before dewDate
+  const pushWindowStart = new Date(dewDate.getTime() - 24 * 60 * 60 * 1000); // 12 PM today
+  const pushWindowEnd = new Date(pushWindowStart.getTime() + 60 * 60 * 1000); // 1-hour window
 
   const tasksDueTomorrow = await Task.find({
-    notifyOnDewDate: true,
-    isComplete: false,
-    dewDate: tomorrowNoonUTC,
-    $or: [
-      { dewDatePushSent: null },
-      { dewDatePushSent: { $lt: oneDayBefore } } // Push was sent early for some reason (like if the dewDate used to be earlier)
+  notifyOnDewDate: true,
+  isComplete: false,
+  dewDate: dewDate,
+  $or: [
+    { dewDatePushSent: null },
+    { dewDatePushSent: { $lt: pushWindowStart } }
+  ],
+  // Only send if now is within the push window
+  $expr: {
+    $and: [
+      { $gte: [now, pushWindowStart] },
+      { $lt: [now, pushWindowEnd] }
     ]
-  });
+  }
+});
 
   if (tasksDueTomorrow.length === 0) {
     console.log('📭 No DewDate notifications needed this run');
