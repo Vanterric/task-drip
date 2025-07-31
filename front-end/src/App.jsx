@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import InAppBrowserBanner from "./components/InAppBrowserBanner";
 import ReferrerDashboard from "./pages/referrer-dashboard/ReferrerDashboard";
 import { consoleMessageToCuriousUsers } from "./utilities/consoleMessageToCuriousUsers";
+import {preloadAudio} from "./utilities/audio";
 
 function App() {
 
@@ -25,6 +26,11 @@ function App() {
     })
   }
 }, [])
+
+useEffect(() => {
+  preloadAudio();
+}, []);
+
 
 
 setTimeout(() => {

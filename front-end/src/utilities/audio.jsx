@@ -1,4 +1,5 @@
 import { Howl } from 'howler';
+import { useEffect } from 'react';
 
 export let isMuted = localStorage.getItem("isMuted") === "true";
 export const setIsMuted = (value) => {
@@ -6,30 +7,52 @@ export const setIsMuted = (value) => {
   localStorage.setItem("isMuted", value);
 };
 
+
+
+
+
+
 const audioFiles = {
-  'open-modal': '/audio/OpenModal.wav',
-  'close-modal': '/audio/CloseModal.wav',
-  'button-press-1': '/audio/ButtonPress1.wav',
-  'button-press-2': '/audio/ButtonPress2.wav',
-  'slide-1': '/audio/Slide1.wav',
-  'bubble-up': '/audio/BubbleUp.wav',
-  'growth': '/audio/Growth.wav',
-  'shrinkage': '/audio/Shrinkage.wav',
-  'single-drop': '/audio/SingleDrop.wav',
-  'progress-full': '/audio/ProgressFull.wav',
-  'progress9-10': '/audio/Progress9-10.wav',
-  'progress8-10': '/audio/Progress8-10.wav',
-  'progress7-10': '/audio/Progress7-10.wav',
-  'progress6-10': '/audio/Progress6-10.wav',
-  'progress5-10': '/audio/Progress5-10.wav',
-  'progress4-10': '/audio/Progress4-10.wav',
-  'progress3-10': '/audio/Progress3-10.wav',
-  'progress2-10': '/audio/Progress2-10.wav',
-  'success-bubbles': '/audio/SuccessBubbles.wav',
+  'open-modal': '/audio/mp3/OpenModal.mp3',
+  'close-modal': '/audio/mp3/CloseModal.mp3',
+  'button-press-1': '/audio/mp3/ButtonPress1.mp3',
+  'button-press-2': '/audio/mp3/ButtonPress2.mp3',
+  'slide-1': '/audio/mp3/Slide1.mp3',
+  'bubble-up': '/audio/mp3/BubbleUp.mp3',
+  'growth': '/audio/mp3/Growth.mp3',
+  'shrinkage': '/audio/mp3/Shrinkage.mp3',
+  'single-drop': '/audio/mp3/SingleDrop.mp3',
+  'progress-full': '/audio/mp3/ProgressFull.mp3',
+  'progress9-10': '/audio/mp3/Progress9-10.mp3',
+  'progress8-10': '/audio/mp3/Progress8-10.mp3',
+  'progress7-10': '/audio/mp3/Progress7-10.mp3',
+  'progress6-10': '/audio/mp3/Progress6-10.mp3',
+  'progress5-10': '/audio/mp3/Progress5-10.mp3',
+  'progress4-10': '/audio/mp3/Progress4-10.mp3',
+  'progress3-10': '/audio/mp3/Progress3-10.mp3',
+  'progress2-10': '/audio/mp3/Progress2-10.mp3',
+  'success-bubbles': '/audio/mp3/SuccessBubbles.mp3',
 };
+
+export const preloadAudio = () => {
+  Object.entries(audioFiles).forEach(([key, src]) => {
+    if (!cache[key]) {
+      cache[key] = new Howl({
+        src: [src],
+        volume:
+          key === 'single-drop' ? 0.05 :
+          progressBarKeys.includes(key) ? 0.15 :
+          key === 'success-bubbles' ? 0.25 : 0.4,
+        preload: true, // just to be explicit
+      });
+    }
+  });
+};
+
 
 const getRandomInt = (min, max) =>
   Math.floor(Math.random() * (max - min + 1)) + min;
+
 
 const cache = {};
 const progressBarKeys = [
@@ -46,8 +69,11 @@ const progressBarKeys = [
 
 const lastPlayTimestamps = {};
 
+
 export const audio = (type) => {
   if (isMuted) return;
+
+  
   
 
   let key = type;
