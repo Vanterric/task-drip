@@ -3,10 +3,15 @@ import { useState } from 'react';
 import { vibration } from '../utilities/vibration';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
 import getRelevantIcon from '../utilities/getRelevantIcon';
+import { audio } from '../utilities/audio';
+import { DotLoader } from './DotLoader';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useAuth } from '../context/AuthContext';
 
 export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setActiveTaskList, setTasks, setTaskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
+  const {isMuted} = useAuth();
   const [goal, setGoal] = useState('');
   const dailyPromptMap = {
   "Monday": "Happy Monday! What’s one thing that would help you start the week on solid ground?",
@@ -106,15 +111,22 @@ export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setAc
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
-      onClick={onClose}
+      onClick={() => { vibration('button-press'); audio('close-modal', isMuted); onClose(); }}
     >
-      <div
+      <AnimatePresence>
+      <motion.div
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
         className="bg-white dark:bg-[#4F5962] w-full max-w-lg rounded-xl shadow-xl p-6 relative mx-4"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
         <button
           onClick={() => {
+            audio('close-modal', isMuted);
             vibration('button-press');
             onClose();
           }}
@@ -143,15 +155,17 @@ export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setAc
         <button
           disabled={loading}
           onClick={handleSubmit}
+          onPointerDown = {() => { audio('button-press', isMuted); }}
           className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
               ? 'bg-[#4C6CA8]/60 cursor-not-allowed'
               : 'bg-[#4C6CA8] hover:bg-[#3A5D91] cursor-pointer'
           }`}
         >
-          {loading ? 'Generating...' : 'Let’s do it'}
+          {loading ? <span className="flex items-center justify-center gap-1">Generating <span className="mt-2"><DotLoader/></span></span> : "Let's do it!"}
         </button>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

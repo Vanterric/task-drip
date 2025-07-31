@@ -3,6 +3,9 @@ import { vibration } from "../utilities/vibration";
 import { GripVertical, ChevronDown, ChevronRight } from "lucide-react";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import {DotLoader} from "./DotLoader";
+import { audio } from "../utilities/audio";
+import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 export default function EditTaskListModal({
   isOpen,
@@ -18,6 +21,7 @@ export default function EditTaskListModal({
   const [showTodo, setShowTodo] = useState(true);
   const [showCompleted, setShowCompleted] = useState(true);
   const [saving, setSaving] = useState(false);
+  const { isMuted } = useAuth();
 
   useEffect(() => {
     if (!isOpen || !list?._id) return;
@@ -137,6 +141,7 @@ export default function EditTaskListModal({
           <button
             className="text-[#D66565] hover:text-[#B94E4E] font-bold text-lg cursor-pointer transition"
             onClick={() => {
+              audio("button-press", isMuted);
               vibration("button-press");
               handleDeleteTask(task._id);
             }}
@@ -153,7 +158,14 @@ export default function EditTaskListModal({
 
   return (
     <div className="fixed inset-0 bg-black/40 z-50 flex items-center justify-center px-4 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#4F5962] rounded-2xl shadow-xl max-w-lg w-full p-6">
+      <AnimatePresence>
+      <motion.div 
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white dark:bg-[#4F5962] rounded-2xl shadow-xl max-w-lg w-full p-6">
         <h2 className="text-lg font-bold text-[#4F5962] dark:text-white mb-4 cursor-default">Edit Task List</h2>
 
         <label className="text-sm text-[#91989E] block mb-1">List Name</label>
@@ -168,7 +180,7 @@ export default function EditTaskListModal({
           <div className="max-h-64 overflow-y-auto space-y-4">
             {/* To-Dew Section */}
             <div>
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowTodo(!showTodo)}>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => {setShowTodo(!showTodo); audio("button-press", isMuted);}}>
                 {showTodo ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                 <h3 className="text-sm font-semibold text-[#4F5962] dark:text-white">To-Dew</h3>
               </div>
@@ -192,7 +204,7 @@ export default function EditTaskListModal({
 
             {/* Completed Section */}
             <div>
-              <div className="flex items-center gap-2 cursor-pointer" onClick={() => setShowCompleted(!showCompleted)}>
+              <div className="flex items-center gap-2 cursor-pointer" onClick={() => {setShowCompleted(!showCompleted); audio("button-press", isMuted);}}>
                 {showCompleted ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
                 <h3 className="text-sm font-semibold text-[#4F5962] dark:text-white">Completed</h3>
               </div>
@@ -219,6 +231,7 @@ export default function EditTaskListModal({
         <div className="flex justify-end gap-4 mt-6">
           <button
             onClick={() => {
+              audio("close-modal", isMuted);
               vibration("button-press");
               onClose();
               setDeletedTaskIds([]);
@@ -228,13 +241,15 @@ export default function EditTaskListModal({
             Cancel
           </button>
           <button
+            onPointerDown={() => { audio('button-press', isMuted); }}
             onClick={handleSave}
             className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] cursor-pointer transition w-37"
           >
            {saving ? <span className="flex justify-center items-center gap-1">Saving <span className="mt-2"><DotLoader /></span></span> : "Save Changes"}
           </button>
         </div>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

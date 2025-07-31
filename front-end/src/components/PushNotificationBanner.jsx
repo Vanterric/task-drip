@@ -2,10 +2,13 @@ import { useEffect, useState } from 'react';
 import { subscribeToPush } from '../utilities/subscribeToPush';
 import { isEdgeDesktop } from '../utilities/isEdgeDesktop';
 import { useAuth } from '../context/AuthContext';
+import { AnimatePresence, motion } from 'framer-motion';
+import { audio } from '../utilities/audio';
+import { vibration } from '../utilities/vibration';
 
 export default function PushNotificationBanner({ isSubscribedToPushNotifications, setIsSubscribedToPushNotifications }) {
   const [showBanner, setShowBanner] = useState(false);
-  const {isFirstTimeUser, user} = useAuth();
+  const {isFirstTimeUser, user, isMuted} = useAuth();
   const isInStandalone = () =>
   window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
   const isSubscribedToDailyReminders = user.pushSubscriptions?.some(
@@ -44,12 +47,15 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
   }, [isSubscribedToPushNotifications]);
 
   const handleDismiss = () => {
+    audio('button-press', isMuted);
+    vibration('button-press');
     localStorage.setItem('pushBannerDismissedAt', new Date().toISOString());
     setShowBanner(false);
   };
   const device = getDeviceLabel();
 
   const handleSubscribe = async () => {
+    vibration('button-press');
     const subscribed = await subscribeToPush(device);
     if (subscribed) {
       setIsSubscribedToPushNotifications(true);
@@ -57,18 +63,23 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
     }
   };
 
-  if (!showBanner || device === 'mac' || isFirstTimeUser) return null;
-  if(!isInStandalone()) return null; 
-  if(isSubscribedToDailyReminders) return null;
+
 
   return (
-    <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
+    <AnimatePresence>
+    {showBanner && device !== 'mac' && isInStandalone() && !isSubscribedToDailyReminders && (
+      <motion.div layout
+    initial={{ opacity: 0, y: 150, transition: { duration: 0.2 } }}
+    animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
+    exit={{ opacity: 0, y: 150, transition: { duration: 0.2 } }}
+    className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
       <div className="flex-1">
         <p className="font-semibold text-base cursor-default">Need a little nudge now and then?</p>
         <p className="text-sm opacity-90 cursor-default">
           We’ll ping you when it’s a good moment to Dew something 💬✨ <br/><br/>
         </p>
         <button
+          onPointerDown={()=> audio('button-press', isMuted)}
           onClick={handleSubscribe}
           className="mt-2 text-sm bg-white text-[#4C6CA8] hover:bg-[#E0ECFC] transition px-3 py-1 rounded cursor-pointer"
         >
@@ -82,6 +93,7 @@ export default function PushNotificationBanner({ isSubscribedToPushNotifications
       >
         &times;
       </button>
-    </div>
+    </motion.div>)}
+    </AnimatePresence>
   );
 }

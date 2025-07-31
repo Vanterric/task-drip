@@ -903,8 +903,9 @@ app.post('/snoozePush', async (req, res) => {
         yearly: 'price_1RgXtiDFl6DTTJEm7g5gS59Z',
       };
 
-
-  const session = await stripe.checkout.sessions.create({
+      let session;
+  try {
+  session = await stripe.checkout.sessions.create({
     mode: 'subscription',
     payment_method_types: ['card'],
     customer: user.stripeCustomerId,
@@ -915,10 +916,38 @@ app.post('/snoozePush', async (req, res) => {
       },
     ],
     allow_promotion_codes: true,
-    metadata:{ plan, referrer: user.referrer || null },
+    metadata: { plan, referrer: user.referrer || null },
     success_url: 'https://dewlist.app/subscribe?status=success',
     cancel_url: 'https://dewlist.app/subscribe',
   });
+} catch (err) {
+  console.warn('Failed with existing customer ID. Creating a new customer...', err);
+
+  const newCustomer = await stripe.customers.create({
+    email: user.email,
+  });
+
+  // Save to DB (replace this with your actual update logic)
+  user.stripeCustomerId = newCustomer.id;
+  await user.save();
+
+  // Retry with new ID
+  session = await stripe.checkout.sessions.create({
+    mode: 'subscription',
+    payment_method_types: ['card'],
+    customer: newCustomer.id,
+    line_items: [
+      {
+        price: priceMap[plan],
+        quantity: 1,
+      },
+    ],
+    allow_promotion_codes: true,
+    metadata: { plan, referrer: user.referrer || null },
+    success_url: 'https://dewlist.app/subscribe?status=success',
+    cancel_url: 'https://dewlist.app/subscribe',
+  });
+}
 
   res.json({ url: session.url });
 });

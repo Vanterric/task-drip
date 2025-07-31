@@ -5,6 +5,9 @@ import { CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { vibration } from '../../utilities/vibration';
 import dewlistLogo from '../../assets/DewListGold.png';
+import { audio } from '../../utilities/audio';
+import { AnimatePresence, motion } from 'framer-motion';
+import { DotLoader } from '../../components/DotLoader';
 
 const plans = {
   monthly: { label: 'Monthly', price: '$5/mo', stripePriceId: 'monthly' },
@@ -98,14 +101,25 @@ export default function SubscribePage() {
     });
 
     const { url } = await res.json();
-    window.location.href = url;
+    setLoading(false);
+    audio('open-modal', false);
+    setTimeout(() => {
+      window.location.href = url; // Redirect to Stripe Checkout
+    }, 200);
   }
 };
 
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4">
-      <div className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
+      <AnimatePresence>
+      <motion.div 
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.3 }}
+      className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6">
         {!subscribed ? (
           <>
           <img src={dewlistLogo} alt="DewList Logo" className="w-16 h-16 mx-auto mb-4" />
@@ -118,7 +132,7 @@ export default function SubscribePage() {
               {Object.entries(plans).map(([key, plan]) => (
                 <button
                   key={key}
-                  onClick={() => {vibration('button-press'); setSelectedPlan(key)}}
+                  onClick={() => {audio('button-press', false); vibration('button-press'); setSelectedPlan(key)}}
                   className={`text-xs sm:text-sm px-2 sm:px-4 py-2 rounded-full border flex flex-col w-md  transition cursor-pointer outline-none focus:ring-2
                     ${selectedPlan === key
                       ? 'bg-accent-primary text-yellow-300 font-semibold dark:border-yellow-300 border-yellow-500'
@@ -133,19 +147,27 @@ export default function SubscribePage() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               
-
+              <AnimatePresence>
             {selectedPlan === 'lifetime' && (
-              <CardElement className="p-3 border rounded-md bg-white" />
+              <motion.div layout className='overflow-hidden'
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.3 }}>
+                <CardElement className="p-3 border rounded-md bg-white" />
+              </motion.div>
             )}
+              </AnimatePresence>
             {error && <div className="text-sm text-red-500">{error}</div>}
 
             <button
               type="submit"
               disabled={!stripe || loading}
+              onPointerDown={() => {audio('button-press', false); vibration('button-press')}}
               className="w-full bg-[#4C6CA8] text-white px-4 py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer outline-none focus:ring-2 focus:ring-accent-focusring"
             >
               {loading
-                ? 'Processing...'
+                ? <span className="flex justify-center items-center gap-1">Processing<span className="mt-2"><DotLoader/></span></span>
                 : selectedPlan === 'lifetime'
                 ? `Pay ${plans[selectedPlan].price}`
                 : `Subscribe (${plans[selectedPlan].price})`}
@@ -167,14 +189,15 @@ export default function SubscribePage() {
               Your upgrade was successful. <br/> You can now enjoy all DewList Pro features.
             </p>
             <button
-              onClick={() => {vibration('button-press'); navigate('/app')}}
+              onClick={() => {audio('button-press', false); vibration('button-press'); navigate('/app')}}
               className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition cursor-pointer transition"
             >
               Go back to DewList
             </button>
           </div>
         )}
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

@@ -9,6 +9,7 @@ import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { DotLoader } from "./DotLoader";
 import {Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions} from "@headlessui/react";
 import Dropdown from "./Dropdown";
+import { audio } from "../utilities/audio";
 
 export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists, setFirstTask, setFinalTask, tasks}) {
   const [title, setTitle] = useState("");
@@ -22,6 +23,7 @@ export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, o
   const [timeEstimate, setTimeEstimate] = useState(task?.timeEstimate ?? "");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(false);
   const [dependencies, setDependencies] = useState([]);
+  const {isMuted} = useAuth();
 
   useEffect(() => {
     if (task?.dependencies && Array.isArray(task?.dependencies)) {
@@ -128,7 +130,7 @@ useEffect(() => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm ">
-      <AnimatePresence>
+      {!showConfirmDelete && <AnimatePresence>
       <motion.div
       layout
       key="modal"
@@ -142,6 +144,7 @@ useEffect(() => {
           Edit Task
         </h2>
         <div className="text-[#D66565] hover:text-[#B94E4E] text-sm cursor-pointer transition" onClick={() => {
+              audio("open-modal", isMuted);
               vibration("button-press");
               setShowConfirmDelete(true);
             }}>
@@ -171,7 +174,7 @@ useEffect(() => {
         </label>
         
         <div className="flex items-center gap-1 justify-start text-xs mt-2  select-none" >
-          <div className="cursor-pointer" onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}}>Advanced</div> <span className="text-yellow-500 dark:text-yellow-300 text-[10px] border px-[8px] rounded-full py-[2px]">Pro</span> <ChevronDown  onClick={() => {vibration("button-press"); setShowAdvanced(!showAdvanced);}} className={`cursor-pointer w-5 h-5 transition ${!showAdvanced ? "transform rotate-[-90deg]" : ""}`} />
+          <div className="cursor-pointer" onClick={() => {showAdvanced ? audio("button-press", isMuted) : audio("open-modal", isMuted); vibration("button-press"); setShowAdvanced(!showAdvanced);}}>Advanced</div> <span className="text-yellow-500 dark:text-yellow-300 text-[10px] border px-[8px] rounded-full py-[2px]">Pro</span> <ChevronDown  onClick={() => {showAdvanced ? audio("button-press", isMuted) : audio("open-modal", isMuted); vibration("button-press"); setShowAdvanced(!showAdvanced);}} className={`cursor-pointer w-5 h-5 transition ${!showAdvanced ? "transform rotate-[-90deg]" : ""}`} />
         </div>
         <motion.div layout className={`relative ${showAdvanced ? 'overflow-y-auto' : ''}`}>
         <AnimatePresence initial={false}>
@@ -251,6 +254,7 @@ useEffect(() => {
                 disabled={!user.isPro || !dewDate}
                 onChange={(e) => {
                   vibration('button-press');
+                  audio('button-press', isMuted);
                   setIsNotificationsEnabled(e.target.checked);
                 }}
                 title={`${dewDate ? "Get a notification one day before your DewDate™" : "Set a DewDate™ first to enable notifications"}`}
@@ -272,6 +276,7 @@ useEffect(() => {
             <button
               type="button"
               onClick={() => {
+                audio('close-modal', isMuted);
                 vibration("button-press");
                 onClose();
               }}
@@ -283,6 +288,7 @@ useEffect(() => {
               type="submit"
               disabled={submitting}
               className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] cursor-pointer transition w-37 z-10"
+              onPointerDown={() => { audio('button-press', isMuted); }}
             >
               {submitting ? <span className="flex justify-center items-center gap-1">Saving <span className="mt-2"><DotLoader/></span></span> : "Save Changes"}
             </button>
@@ -290,9 +296,16 @@ useEffect(() => {
           </div>
         </form>
       </motion.div>
-      </AnimatePresence>
+      </AnimatePresence>}
       {showConfirmDelete && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <AnimatePresence>
+  <motion.div className="fixed inset-0 z-50 flex items-center justify-center"
+  layout
+      key="modal"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}>
     <div className="bg-white dark:bg-[#4F5962] p-6 rounded-3xl shadow-xl max-w-sm w-full mx-4 text-center">
       <h3 className="text-lg font-semibold text-[#4F5962] dark:text-white">
         Delete this task?
@@ -303,12 +316,13 @@ useEffect(() => {
       </p>
       <div className="flex gap-4 justify-center mt-6">
         <button
-          onClick={() => setShowConfirmDelete(false)}
+          onClick={() => {setShowConfirmDelete(false); audio("close-modal", isMuted); vibration("button-press");}}
           className="text-sm text-[#91989E] hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer"
         >
           Cancel
         </button>
         <button
+          onPointerDown={() => { audio('button-press', isMuted); }}
           onClick={handleDeleteTask}
           className="bg-[#D66565] text-white px-5 py-2 rounded-xl hover:bg-red-600 transition cursor-pointer"
         >
@@ -316,7 +330,8 @@ useEffect(() => {
         </button>
       </div>
     </div>
-  </div>
+  </motion.div>
+  </AnimatePresence>
 )}
 
     </div>

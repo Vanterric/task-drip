@@ -2,6 +2,9 @@ import React, { useState, useMemo, lazy, Suspense, useRef, useEffect } from "rea
 import iconsWithTags from "../assets/lucide-icons-with-tags.json";
 import { FixedSizeGrid as Grid } from 'react-window';
 import * as LucideIcons from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import { audio } from "../utilities/audio";
+import { useAuth } from "../context/AuthContext";
 
 
 const IconPickerModal = ({ onSubmit, listId, listName, currentIcon = "clipboard-check", onClose }) => {
@@ -10,6 +13,7 @@ const IconPickerModal = ({ onSubmit, listId, listName, currentIcon = "clipboard-
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const modalRef = useRef(null);
     const [modalWidth, setModalWidth] = useState(360); // fallback default
+    const { isMuted } = useAuth();
     const lazyIconCache = {};
 
 
@@ -99,7 +103,7 @@ const getIcon = (iconName) => {
 
   return (
     <div
-      onClick={() => setSelectedIcon(iconName)}
+      onClick={() => {setSelectedIcon(iconName); audio('button-press', isMuted);}}
       className={`flex items-center justify-center w-12 h-12 rounded-xl cursor-pointer transition 
         ${isSelected
           ? "bg-gray-200 dark:bg-[#3A3F45]"
@@ -119,7 +123,14 @@ const getIcon = (iconName) => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div ref={modalRef} className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-xl max-h-[90vh] overflow-hidden mx-4">
+      <AnimatePresence>
+      <motion.div 
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+        ref={modalRef} className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-xl max-h-[90vh] overflow-hidden mx-4">
         <h2 className="text-xl font-bold mb-1 text-[#4F5962] dark:text-white cursor-default">
           Pick an Icon
         </h2>
@@ -162,20 +173,22 @@ const getIcon = (iconName) => {
         <div className="flex gap-4 justify-end mt-6">
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => { audio('close-modal', isMuted); onClose(); }}
             className="text-sm text-[#91989E] dark:hover:text-white hover:text-[#4F5962] transition cursor-pointer"
           >
             Cancel
           </button>
           <button
             type="submit"
+            onPointerDown={() => audio('button-press', isMuted)}
             onClick={handleSubmit}
             className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer"
           >
             Save Icon
           </button>
         </div>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 };

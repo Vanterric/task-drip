@@ -1,11 +1,16 @@
 import { useState } from "react";
 import { vibration } from "../utilities/vibration";
-import { ChevronDown } from "lucide-react";
+import Dropdown from "./Dropdown";
+import { audio } from "../utilities/audio";
+import {DotLoader} from "./DotLoader";
+import { AnimatePresence, motion } from "framer-motion";
+import { useAuth } from "../context/AuthContext";
 
 export default function FeedbackModal({ onClose }) {
   const [feedbackText, setFeedbackText] = useState("");
   const [feedbackType, setFeedbackType] = useState("Feature Request");
   const [submitting, setSubmitting] = useState(false);
+  const { isMuted } = useAuth();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,24 +40,20 @@ export default function FeedbackModal({ onClose }) {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
+      <AnimatePresence>
+      <motion.div 
+      layout
+      key="modal"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
         <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default">
           Got something to share?
         </h2>
         <form onSubmit={handleSubmit} className="flex flex-col gap-4 relative">
-          <ChevronDown className="absolute right-4 top-3 text-[#4F5962] dark:text-white pointer-events-none" />
-          <select
-            value={feedbackType}
-            onChange={(e) => setFeedbackType(e.target.value)}
-            className="appearance-none w-full px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] bg-white dark:bg-[#4F5962] text-[#4F5962] dark:text-white cursor-pointer"
-          >
-            <option>Feature Request</option>
-            <option>Bug Report</option>
-            <option>Kudos</option>
-            <option>Press</option>
-            <option>Other</option>
-          </select>
-          
+          <Dropdown state={feedbackType} setState={setFeedbackType} options={["Feature Request", "Bug Report", "Kudos", "Press", "Other"]} />
           <textarea
             value={feedbackText}
             onChange={(e) => setFeedbackText(e.target.value)}
@@ -64,6 +65,7 @@ export default function FeedbackModal({ onClose }) {
             <button
               type="button"
               onClick={() => {
+                audio('close-modal', isMuted);
                 vibration("button-press");
                 onClose();
               }}
@@ -74,13 +76,15 @@ export default function FeedbackModal({ onClose }) {
             <button
               type="submit"
               disabled={submitting}
-              className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer"
+              onPointerDown={() => { audio('button-press', isMuted); vibration("button-press"); }}
+              className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer w-30"
             >
-              {submitting ? "Sending..." : "Send"}
+              {submitting ? <span className="flex justify-center items-center gap-1">Sending <span className="mt-2"><DotLoader/></span></span> : "Send"}
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

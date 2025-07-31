@@ -3,6 +3,8 @@ import { Mic } from 'lucide-react';
 import WaveformVisualizer from './WaveFormVisualizer';
 import { useAuth } from '../context/AuthContext';
 import { DotLoader } from './DotLoader';
+import {audio} from '../utilities/audio';
+import {vibration} from '../utilities/vibration';
 
 const MAX_RECORDING_TIME = 180000; // 3 minutes in ms
 
@@ -11,9 +13,14 @@ export default function VoiceCaptureButton({ setState }) {
   const [mediaRecorder, setMediaRecorder] = useState(null);
   const [audioChunks, setAudioChunks] = useState([]);
   const timerRef = useRef(null);
-  const [liveStream, setLiveStream] = useState(null);
+  const liveStreamRef = useRef(null);
+
   const {token} = useAuth()
   const [isTranscribing, setIsTranscribing] = useState(false);
+  const containerRef = useRef();
+  const wasAbortedRef = useRef(false);
+
+
 
 
   useEffect(() => {
@@ -22,14 +29,17 @@ export default function VoiceCaptureButton({ setState }) {
     navigator.mediaDevices.getUserMedia({ audio: true })
       .then((stream) => {
         const recorder = new MediaRecorder(stream);
-        setLiveStream(stream);
+        liveStreamRef.current = stream; 
         setMediaRecorder(recorder);
         const chunks = [];
 
         recorder.ondataavailable = (e) => chunks.push(e.data);
         recorder.onstop = () => {
           stream.getTracks().forEach(track => track.stop());
-          handleTranscription(new Blob(chunks, { type: 'audio/webm' }));
+          if (wasAbortedRef.current === false) {
+            handleTranscription(new Blob(chunks, { type: 'audio/webm' }));
+          }
+          wasAbortedRef.current = false;
         };
 
         recorder.start();
@@ -74,6 +84,39 @@ export default function VoiceCaptureButton({ setState }) {
   }
 };
 
+useEffect(() => {
+  const observer = new IntersectionObserver(
+    ([entry]) => {
+      if (!entry.isIntersecting && isRecording) {
+        wasAbortedRef.current = true; 
+        stopRecording();
+      }
+    },
+    { threshold: 0.1 }
+  );
+
+  if (containerRef.current) {
+    observer.observe(containerRef.current);
+  }
+
+  return () => {
+    if (containerRef.current) observer.unobserve(containerRef.current);
+    if (isRecording) {
+      stopRecording();
+    }
+  };
+}, [isRecording]);
+
+
+useEffect(() => {
+  return () => {
+    wasAbortedRef.current = true;
+    stopRecording();
+    setState(''); 
+    
+  };
+}, []);
+
 
 
 
@@ -81,11 +124,19 @@ export default function VoiceCaptureButton({ setState }) {
     if (mediaRecorder && mediaRecorder.state === 'recording') {
       mediaRecorder.stop();
     }
+    if (liveStreamRef.current) {
+    liveStreamRef.current.getTracks().forEach(track => {
+      if (track.readyState === 'live') track.stop();
+    });
+  }
     setIsRecording(false);
     clearTimeout(timerRef.current);
   };
 
   const toggleRecording = () => {
+    wasAbortedRef.current = false;
+    audio('button-press', false)
+    vibration('button-press')
     if (isRecording) {
       stopRecording();
     } else {
@@ -94,6 +145,7 @@ export default function VoiceCaptureButton({ setState }) {
   };
 
   return (
+    <div ref={containerRef}>
     <button
         type="button"
       onClick={toggleRecording}
@@ -102,7 +154,7 @@ export default function VoiceCaptureButton({ setState }) {
       }`}
     >
       {isRecording ? (
-        <WaveformVisualizer stream={liveStream} />
+        <WaveformVisualizer stream={liveStreamRef.current} />
         ) : isTranscribing ? (
         <DotLoader />
         ) : (
@@ -110,6 +162,7 @@ export default function VoiceCaptureButton({ setState }) {
         )}
 
     </button>
+    </div>
   );
 }
 

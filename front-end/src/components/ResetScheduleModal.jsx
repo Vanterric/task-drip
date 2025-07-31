@@ -2,12 +2,16 @@ import { useState } from "react";
 import { vibration } from "../utilities/vibration";
 import { DotLoader } from "./DotLoader";
 import Dropdown from "./Dropdown";
+import { AnimatePresence, motion } from "framer-motion";
+import { audio } from "../utilities/audio";
+import { useAuth } from "../context/AuthContext";
 
 export default function ResetScheduleModal({ onClose, onSubmit = () => {}, taskList, handleClearResetSchedule }) {
   const [number, setNumber] = useState(taskList.resetSchedule?.number || 1);
   const [cadence, setCadence] = useState(taskList.resetSchedule?.cadence || "days");
   const [isNotificationsEnabled, setIsNotificationsEnabled] = useState(true);
   const [settingSchedule, setSettingSchedule] = useState(false);
+  const {isMuted} = useAuth();
   const [startDate, setStartDate] = useState(taskList.resetSchedule?.startDate ? new Date(taskList.resetSchedule.startDate).toISOString().split('T')[0] : new Date().toISOString().split('T')[0]);
     const start = taskList.resetSchedule?.startDate
   ? new Date(taskList.resetSchedule.startDate)
@@ -21,7 +25,14 @@ const [resetTime, setResetTime] = useState(initialResetTime);
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
+      <AnimatePresence>
+      <motion.div 
+      layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
         <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default flex items-center gap-2">
           Set Reset Schedule
           <span className="text-yellow-500 dark:text-yellow-300 border text-xs py-[2px] px-2 rounded-full">Pro</span>
@@ -118,6 +129,7 @@ const [resetTime, setResetTime] = useState(initialResetTime);
                 id="get-notifications"
                 checked={isNotificationsEnabled}
                 onChange={(e) => {
+                  audio('button-press', isMuted);
                   vibration('button-press');
                   setIsNotificationsEnabled(e.target.checked);
                 }}
@@ -127,7 +139,7 @@ const [resetTime, setResetTime] = useState(initialResetTime);
                 Yes, notify me on this device.
               </label>
               </div>
-              <span onClick={() => handleClearResetSchedule(taskList._id)} className="text-xs text-accent-destructive hover:text-accent-destructivehover w-fit mt-3 cursor-pointer transition">
+              <span onClick={() => {vibration('button-press'); audio('button-press', isMuted); handleClearResetSchedule(taskList._id)}} className="text-xs text-accent-destructive hover:text-accent-destructivehover w-fit mt-3 cursor-pointer transition">
                 Clear Reset Schedule
               </span>
           </div>
@@ -136,6 +148,7 @@ const [resetTime, setResetTime] = useState(initialResetTime);
             <button
               type="button"
               onClick={() => {
+                audio('close-modal', isMuted);
                 vibration('button-press');
                 onClose();
               }}
@@ -144,6 +157,7 @@ const [resetTime, setResetTime] = useState(initialResetTime);
               Cancel
             </button>
             <button
+            onPointerDown={()=>{audio('button-press', isMuted); vibration('button-press');}}
               type="submit"
               className="bg-[#4C6CA8] text-white px-4 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer w-35"
             >
@@ -151,7 +165,8 @@ const [resetTime, setResetTime] = useState(initialResetTime);
             </button>
           </div>
         </form>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

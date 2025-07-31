@@ -1,5 +1,6 @@
 import { useAuth } from "../context/AuthContext";
 import { useContext, useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
@@ -20,6 +21,8 @@ import { motion, useAnimation } from "framer-motion";
 import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { refetchTaskListsOrUpdateUI } from "../utilities/refetchTaskListsOrUpdateUI";
+import { audio } from "../utilities/audio";
+import { DotLoader } from "./DotLoader";
 
 
 export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask, handleCancelBreakdown }) {
@@ -34,12 +37,14 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const panelRef = useRef(null);
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
-  const { user } = useAuth();
+  const { user, isMuted } = useAuth();
   const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
   const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
   const [draggedId, setDraggedId] = useState(null);
   const controls = useAnimation();
+  const navigate = useNavigate();
+  const [addingTask, setAddingTask] = useState(false);
 useEffect(() => {
   if (isOpen) {
     controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 25 } });
@@ -93,6 +98,7 @@ useEffect(() => {
 
     if (hasMovedEnoughToTrigger && diff < -60) {
       onClose(); // intentional swipe
+      audio('slide', isMuted);
     } else {
       // snap back
       panel.style.transition = "transform 0.2s ease-out";
@@ -127,10 +133,14 @@ useEffect(() => {
 
   const handleAdd = async () => {
     if (!newListName.trim()) return;
+    audio('button-press', isMuted);
     vibration('button-press')
+    setAddingTask(true)
     await onAddTaskList(newListName);
     setNewListName("");
     setShowInput(false);
+    audio('close-modal', isMuted);
+    setAddingTask(false);
   };
 
   
@@ -257,6 +267,7 @@ useEffect(() => {
       pointerEvents: isOpen ? 'auto' : 'none',
     }}
     onClick={(e) => {
+      audio('slide', isMuted);
       onClose();
       setActiveKebab(null);
     }}
@@ -301,12 +312,12 @@ useEffect(() => {
     }
   }}
   animate={controls}
-  initial={false}
+  initial={{ x: -288 }}
 >
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
-          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {user.isPro? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
+          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {user.isPro? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{audio('open-modal', isMuted);vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
-          <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
+          <button onClick={() => {audio('button-press', isMuted);vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {isDarkMode ? (
               <Sun className="w-5 h-5 text-white" />
             ) : (
@@ -317,7 +328,7 @@ useEffect(() => {
         {user.isReferrer ? 
         <div className={`pt-6 pl-4 gap-3 dark:text-white text-[#4F5962] flex items-center justify-start transition`}>
           <ChartArea className="w-5 h-5"/>
-          <div className="text-sm hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] cursor-pointer transition" onClick={()=>window.location.href=`/referrer-dashboard`}>Referrer Dashboard</div>
+          <div className="text-sm hover:text-[#3A5D91] dark:hover:text-[#D4E3FF] cursor-pointer transition" onPointerDown={() => {audio('button-press', isMuted);vibration('button-press');}} onClick={()=>navigate(`/referrer-dashboard`)}>Referrer Dashboard</div>
         </div>
         :
         null}
@@ -333,12 +344,13 @@ useEffect(() => {
               <div className="flex gap-2">
                 <button
                   onClick={handleAdd}
-                  className="bg-[#4C6CA8] text-sm text-white px-4 py-1 rounded hover:bg-[#3A5D91] cursor-pointer"
+                  className="bg-[#4C6CA8] text-sm text-white px-4 py-1 w-25 rounded-lg hover:bg-[#3A5D91] cursor-pointer"
                 >
-                  Add
+                  {addingTask ? <span className="flex justify-center items-center gap-1">Adding<span className="mt-2"><DotLoader/></span></span> : "Add"}
                 </button>
                 <button
                   onClick={() => {
+                    audio('button-press', isMuted);
                     vibration('button-press');
                     setShowInput(false);
                     setNewListName("");
@@ -355,7 +367,7 @@ useEffect(() => {
               className="mt-5 flex pl-4 items-center gap-3 text-sm dark:text-white text-[#4F5962] rounded-full transition"
             >
               <Edit className="w-5 h-5 " />
-              <div className="cursor-pointer hover:text-[#3A5D91] dark:hover:text-[#D4E3FF]" onClick={() => {vibration('button-press'); setShowInput(true)}}>
+              <div className="cursor-pointer hover:text-[#3A5D91] dark:hover:text-[#D4E3FF]" onClick={() => {vibration('button-press'); audio('button-press', isMuted); setShowInput(true)}}>
                 Add New Task List
               </div>
             </button>
@@ -380,7 +392,7 @@ useEffect(() => {
             {...provided.dragHandleProps} 
             className={`flex justify-between items-center w-full bg-white dark:bg-[#4F5962] rounded-lg ${isSelected ? 'shadow-lg' : ''}`}
             >
-              <div className="cursor-pointer" onClick={() => {setListToEdit(list);setIsIconPickerModalOpen(true); vibration('button-press')}}>
+              <div className="cursor-pointer" onClick={() => {audio('open-modal', isMuted);setListToEdit(list);setIsIconPickerModalOpen(true); vibration('button-press')}}>
                 <LucideIcon icon = {list.icon} size={20} />
                 </div>
             <div
@@ -394,7 +406,7 @@ useEffect(() => {
             </div>
             <div className="relative">
             <button
-              onClick={(e) => {e.stopPropagation();vibration('button-press');setActiveKebab(list._id)}}
+              onClick={(e) => {e.stopPropagation();audio('button-press', isMuted);vibration('button-press');setActiveKebab(list._id)}}
               className="text-[#91989E] px-2 cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition"
             >
               ⋮
@@ -406,6 +418,7 @@ useEffect(() => {
                     className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
                       vibration('button-press');
+                      audio('open-modal', isMuted);
                       setShowEditModal(true);
                       setListToEdit(list);
                       setActiveKebab(null);
@@ -418,6 +431,7 @@ useEffect(() => {
                     className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 hover:bg-[rgba(76,108,168,0.15)] dark:text-[#90A9D6] text-[#4C6CA8] transition rounded"
                     onClick={() => {
                       vibration('button-press');
+                      audio('open-modal', isMuted);
                       if (user.isPro) {
                         setIsResetScheduleModalOpen(true);
                         setListToEdit(list);
@@ -435,6 +449,7 @@ useEffect(() => {
                 <button
                   className="cursor-pointer w-full flex items-center gap-2 text-left px-4 py-2 text-[#D66565] hover:bg-[rgba(214,101,101,0.15)] transition rounded"
                   onClick={() => {
+                    audio('open-modal', isMuted);
                     vibration('button-press');
                     setListToDelete(list);
                     setShowDeleteModal(true);
@@ -459,7 +474,7 @@ useEffect(() => {
         </Droppable>
         </DragDropContext>
         {/* sticky settings */}
-          <div onClick={()=>{vibration('button-press'); setIsSettingsModalOpen(true)}} className="p-4 flex items-center justify-start gap-2 text-[#91989E] text-xs cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition w-fit">
+          <div onClick={()=>{audio('open-modal', isMuted);vibration('button-press'); setIsSettingsModalOpen(true)}} className="p-4 flex items-center justify-start gap-2 text-[#91989E] text-xs cursor-pointer hover:text-[#4F5962] dark:hover:text-white transition w-fit">
            <Settings className="w-5 h-5" />
             Settings
           </div>
@@ -470,7 +485,7 @@ useEffect(() => {
             
           >
             <LogOut className="w-4 h-4" />
-            <div onClick={()=>{vibration('button-press'); logout()}}>
+            <div onClick={()=>{audio('button-press', isMuted);vibration('button-press'); setTimeout(()=>logout(), 200);}} className="cursor-pointer">
             Logout
             </div>
           </button>
@@ -478,7 +493,7 @@ useEffect(() => {
             <a target="blank" href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing" className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Privacy Policy</a>
             <a target="blank" href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing" className="ml-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer">Terms and Conditions</a>
           </div>
-          <div onClick={()=>setIsFeedbackModalOpen(true)} className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer mt-4 text-xs text-[#91989E] flex justify-center space-x-2 text-center">Got thoughts? We want to hear them! DewList only adds what real people ask for.</div>
+          <div onClick={()=>{setIsFeedbackModalOpen(true);audio('open-modal', isMuted); vibration('button-press');}} className="m1-4 hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer mt-4 text-xs text-[#91989E] flex justify-center space-x-2 text-center">Got thoughts? We want to hear them! DewList only adds what real people ask for.</div>
         </div>
       </motion.div>
 

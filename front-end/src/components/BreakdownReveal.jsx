@@ -2,6 +2,9 @@ import { motion, AnimatePresence, useMotionValue, useMotionTemplate, useTransfor
 import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, AlarmClock } from 'lucide-react';
 import ArrowLayer from './ArrowLayer';
+import { audio } from '../utilities/audio';
+import { vibration } from '../utilities/vibration';
+import { useAuth } from '../context/AuthContext';
 
 
 export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEditTaskModalOpen, setSelectedTask, visible}) {
@@ -9,6 +12,7 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
   const subtaskRefs = useRef([]);
   const [activeDescription, setActiveDescription] = useState(null);
   const [hasMeasured, setHasMeasured] = useState(false);
+  const {isMuted, setIsMuted} = useAuth();
 
   useEffect(() => {
   let frame;
@@ -181,7 +185,7 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
             key={`subtask-${i}`}
             ref={(el) => (subtaskRefs.current[i] = el)}
             className={`relative text-[1rem] z-0 bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg  font-semibold max-w-[calc(100vw-4rem)]  max-[1000px]:w-[calc(100vw/3-20px)] max-[700px]:w-[20rem] transition cursor-default flex-col flex ${visible ? 'h-auto pt-4 px-6 pb-2 text-xl ' : 'h-0 text-transparent'} ${hasMeasured ? " w-xs " : "h-0 text-transparent"}`}
-            onClick={() => setActiveDescription(activeDescription === i ? null : i)}
+            onClick={() => {setActiveDescription(activeDescription === i ? null : i); audio(activeDescription === i ? 'button-press' : 'open-modal', isMuted); vibration('button-press');}}
             initial="exit"
             animate={visible ? 'visible' : 'exit'}
             exit="exit"
@@ -200,6 +204,8 @@ export default function BreakdownReveal({ key, subtasks = [], originRef, setIsEd
             <ChevronDown
               onClick={(e) => {
                 e.stopPropagation();
+                activeDescription === i ? audio('button-press', isMuted) : audio('open-modal', isMuted);
+                vibration('button-press');
                 setActiveDescription(activeDescription === i ? null : i);
               }}
               className={`transition-transform duration-300 origin-center flex justify-center items-center mx-auto  cursor-pointer w-5 h-5 dark:text-white/60 text-text-info`}

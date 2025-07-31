@@ -8,6 +8,7 @@ export function AuthProvider({ children }) {
   const [isFirst100User, setIsFirst100User] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [isSubscribedToPushNotifications, setIsSubscribedToPushNotifications] = useState(false);
+  const [isMuted, setIsMuted] = useState(localStorage.getItem("isMuted") === "true");
   const [user, setUser] = useState(() => {
     const stored = localStorage.getItem("user");
     return stored ? JSON.parse(stored) : null;
@@ -111,7 +112,7 @@ export function AuthProvider({ children }) {
   };
   verifyToken();
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications, isMuted, setIsMuted }}>
       {children}
     </AuthContext.Provider>
   );

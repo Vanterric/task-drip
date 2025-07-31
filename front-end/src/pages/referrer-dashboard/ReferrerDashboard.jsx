@@ -4,6 +4,8 @@ import getReferredUsers from "./getReferredUsers";
 import referrerMapForDashboard from "./referrerMapForDashboard";
 import SignupLineChart from "./SignupLineChart";
 import { ChevronDown, ChevronUp, Info } from "lucide-react";
+import { audio } from "../../utilities/audio";
+import { useNavigate } from "react-router-dom";
 
 const ReferrerDashboard = () => {
   const {user} = useAuth();
@@ -18,6 +20,7 @@ const ReferrerDashboard = () => {
   const MONTHLY_PRICE = 5;
   const YEARLY_PRICE = 30;
   const LIFETIME_PRICE = 100;
+  const navigate = useNavigate();
 
   const referrerInfo = referrerMapForDashboard(user.email);
   
@@ -74,7 +77,7 @@ if (!user.isReferrer) {
   return (
     <div className="p-4 max-w-3xl mx-auto bg-[#212732]">
       <h1 className="text-2xl font-bold mb-2 flex justify-center mt-5">Referrer Dashboard</h1>
-      <p className="flex justify-center mb-10 text-[#90A9D6] cursor-pointer" onClick={()=>window.location.href='/app'}>Back to DewList</p>
+      <p className="flex justify-center mb-10 text-[#90A9D6] cursor-pointer" onClick={()=>{audio("button-press", false); window.location.href = '/app'}}>Back to DewList</p>
       <p>Welcome back, {referrerInfo.name}! 👋</p>
       <br/>
       <p className="mb-2">Share your unique referral link to earn {toPercentage(referrerInfo.percentShare)} on user subscriptions</p>

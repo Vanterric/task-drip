@@ -1,11 +1,14 @@
 import { useState, useRef, Fragment } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronDown } from 'lucide-react';
+import { audio } from '../utilities/audio';
+import { useAuth } from '../context/AuthContext';
 
 export default function Dropdown({ state, setState, options, multiple = false, disabled = false }) {
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState('');
   const [collapsedGroups, setCollapsedGroups] = useState({});
+  const {isMuted} = useAuth();
   const inputRef = useRef(null);
 
   const normalizedOptions = typeof options[0] === 'object'
@@ -24,6 +27,7 @@ export default function Dropdown({ state, setState, options, multiple = false, d
   }, {});
 
   const toggleValue = (val) => {
+    audio('button-press', isMuted);
     if (multiple) {
       setState((prev) =>
         prev.includes(val) ? prev.filter((v) => v !== val) : [...prev, val]
@@ -77,6 +81,7 @@ export default function Dropdown({ state, setState, options, multiple = false, d
           disabled={disabled}
         />
         <div
+          onPointerDown={() => { isOpen ? audio('button-press', isMuted) : audio('open-modal', isMuted); }}
           onClick={() => {!disabled && setIsOpen((prev) => !prev)}}
           className="absolute inset-y-0 right-0 flex items-center pr-3 pt-1 cursor-pointer"
         >

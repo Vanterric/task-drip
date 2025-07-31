@@ -21,6 +21,7 @@ import {
   differenceInCalendarDays,
   differenceInMonths,
 } from 'date-fns';
+import {audio} from '../../utilities/audio';
 
 const timeRanges = {
   week: 7,
@@ -116,12 +117,12 @@ for (let i = 0; i < totalMonths; i++) {
         {['week', 'month', 'year', 'all'].map(option => (
           <button
             key={option}
-            className={`px-3 py-1 rounded-full text-sm font-medium transition ${
+            className={`px-3 py-1 rounded-lg text-sm font-medium transition cursor-pointer ${
               range === option
-                ? 'bg-black text-white'
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                ? 'bg-accent-primary text-white'
+                : 'bg-background-darkcard text-text-darkprimary hover:bg-accent-primaryhover'
             }`}
-            onClick={() => setRange(option)}
+            onClick={() => {audio("button-press", false); setRange(option)}}
           >
             {option === 'all' ? 'All Time' : `Last ${option.charAt(0).toUpperCase() + option.slice(1)}`}
           </button>

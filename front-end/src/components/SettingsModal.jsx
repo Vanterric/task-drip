@@ -4,6 +4,9 @@ import { useAuth } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
 import { capitalizeFirst } from "../utilities/capitalizeFirst";
 import Dropdown from "./Dropdown";
+import { AnimatePresence, motion } from "framer-motion";
+import { audio, isMuted, setIsMuted } from "../utilities/audio";
+import { Switch } from "@headlessui/react";
 
 export default function SettingsModal({ isOpen, onClose }) {
   
@@ -17,6 +20,7 @@ export default function SettingsModal({ isOpen, onClose }) {
     const [resetPassword, setResetPassword] = useState("");
   const [status, setStatus] = useState("idle"); // 'idle', 'loading', 'success', 'error'
   const [error, setError] = useState("");
+  const [muteSelected, setMuteSelected] = useState(localStorage.getItem("isMuted") === "true");
     const [defaultView, setDefaultView] = useState(localStorage.getItem("defaultView") || "one-task"); // 'list' or 'one-task'
     const [defaultTaskState, setDefaultTaskState] = useState(localStorage.getItem("defaultTaskState") || "collapsed"); // 'collapsed' or 'expanded'
   const [notificationSettings, setNotificationSettings] = useState({
@@ -30,14 +34,21 @@ export default function SettingsModal({ isOpen, onClose }) {
 
 
 
+
   const handleSave = async () => {
-    vibration("button-press");
     setSaving(true);
     if (!email || !email.includes("@")) {
       setSaving(false);
       setStatus("error");
       setError("Please enter a valid email.");
       return;
+    }
+    if (muteSelected) {
+      localStorage.setItem("isMuted", "true");
+      setIsMuted(true);
+    } else {
+      localStorage.setItem("isMuted", "false");
+      setIsMuted(false);
     }
     theme === "system" ? setIsDarkMode(systemTheme === "dark") : setIsDarkMode(theme === "dark");
     defaultView && localStorage.setItem("defaultView", defaultView);
@@ -148,7 +159,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
   };
 
   return (
-    <div >
+    <div>
       <table className="table-auto w-full border-collapse">
         <thead>
           <tr>
@@ -168,7 +179,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
               {[pushKey, emailKey].map((key) => (
                 <td key={key} className="px-4 py-3">
                   <button
-                    onClick={() => toggle(key)}
+                    onClick={() => {vibration('button-press'); audio('button-press', isMuted); toggle(key)}}
                     className={`relative w-11 h-6 cursor-pointer flex items-center rounded-full p-1 transition-colors duration-300 ${
                       settings[key] ? "bg-accent-primary dark:bg-accent-focusring" : "bg-text-info dark:bg-text-darkinfo"
                     }`}
@@ -195,7 +206,13 @@ const NotificationSettings = ({ settings, setSettings }) => {
 
   return (
     <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 backdrop-blur-sm">
-      <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
+      <AnimatePresence>
+      <motion.div layout
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-xl p-6 w-full max-w-md mx-4">
         <h2 className="text-xl font-bold mb-4 text-[#4F5962] dark:text-white cursor-default">
           Settings
         </h2>
@@ -240,6 +257,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
               </button>}
             </div>
           </div>
+          
           {/*Notification Preferences*/}
           <div>
             <h3 className="font-medium">Notification Preferences</h3>
@@ -279,12 +297,28 @@ const NotificationSettings = ({ settings, setSettings }) => {
               ]}
               />
           </div>
+          {/*Mute Toggle*/}
+          <div className="flex items-center gap-2 mt-2">
+            <label className="font-medium">Mute Application Audio</label>
+            <button
+                    onClick={() => {vibration('button-press'); audio('button-press', isMuted);  setMuteSelected(!muteSelected)}}
+                    className={`relative w-11 h-6 cursor-pointer flex items-center rounded-full p-1 transition-colors duration-300 ${
+                      muteSelected ? "bg-accent-primary dark:bg-accent-focusring" : "bg-text-info dark:bg-text-darkinfo"
+                    }`}
+                  >
+                    <div
+                      className={`bg-white dark:bg-text-primary w-4 h-4 rounded-full shadow-md transform transition-transform duration-300 ${
+                        muteSelected ? "translate-x-5" : "translate-x-0"
+                      }`}
+                    />
+                  </button>
+          </div>
           <hr className="mt-5"/>
           <h2 className="text-lg font-bold mb-0 text-[#4F5962] dark:text-white cursor-default">Danger Zone</h2>
           
             {/*Delete Account*/}
             <div>
-            <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-2 transition cursor-pointer" onClick={()=>{window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
+            <p className="text-sm text-[#D66565] hover:text-[#B94E4E] w-fit font-medium mt-2 transition cursor-pointer" onClick={()=>{audio('button-press', isMuted); window.location.href = `mailto:support@dewlist.app?subject=Account%20Deletion%20Request&body=Please%20delete%20my%20account%20with%20the%20email%20${user.email}.`}}>
               Delete Account
             </p>
             </div>
@@ -293,6 +327,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
             <p className="text-xs mt-1">
               Have a question or need support? Email us at{" "}
               <a
+                onPointerDown={() => {vibration("button-press"); audio("button-press", isMuted)}}
                 href="mailto:support@dewlist.app"
                 className="underline hover:opacity-70"
               >
@@ -306,6 +341,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
         <div className="flex justify-end gap-5 items-center mt-6">
           <button
             onClick={() => {
+              audio('close-modal', isMuted);
               vibration("button-press");
               onClose();
             }}
@@ -314,6 +350,7 @@ const NotificationSettings = ({ settings, setSettings }) => {
             Cancel
           </button>
           <button
+          onPointerDown={() => {vibration("button-press"); audio("button-press", isMuted)}}
             onClick={handleSave}
             disabled={saving}
             className="bg-[#4C6CA8] text-white px-5 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer"
@@ -321,7 +358,8 @@ const NotificationSettings = ({ settings, setSettings }) => {
             {saving ? "Saving..." : "Save Changes"}
           </button>
         </div>
-      </div>
+      </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

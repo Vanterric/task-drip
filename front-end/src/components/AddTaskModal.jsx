@@ -8,6 +8,7 @@ import { useAuth } from "../context/AuthContext";
 import { safeParsePolished } from "../utilities/safeParsePolished";
 import VoiceCaptureButton from "./VoiceCaptureButton";
 import { DotLoader } from "./DotLoader";
+import {audio} from "../utilities/audio";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, tasks }) {
   const [taskText, setTaskText] = useState("");
@@ -25,7 +26,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
   "Saturday": "Hello, weekend. What’s one light, satisfying task that feels doable and good for *you* today?",
   "Sunday": "It’s Sunday. What’s one easy move you could make to help next week feel a little calmer and clearer?"
 }
-
+  const {isMuted, setIsMuted} = useAuth();
 
     const today = new Date();
     const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
@@ -116,17 +117,17 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             type='checkbox'
             className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
             checked={polishItSelected && user.isPro}
-            onChange={() => setPolishItSelected(!polishItSelected)}
+            onChange={() => {audio('button-press', isMuted); setPolishItSelected(!polishItSelected)}}
             disabled={!user.isPro}
             title={!user.isPro ? "Polish it is a Pro feature. Upgrade to unlock!" : "Polish it"}
             />
-          Polish it <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => setShowPolishItInfo(!showPolishItInfo)} />
+          Polish it <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => {audio('button-press', isMuted); setShowPolishItInfo(!showPolishItInfo)}} />
         </div>
           
           <div className="flex gap-4 justify-end">
             <button
               type="button"
-              onClick={()=>{vibration('button-press'); onClose()}}
+              onClick={()=>{audio('close-modal', isMuted);vibration('button-press'); onClose()}}
               className="text-sm text-text-secondary dark:text-text-darksecondary dark:hover:text-text-darkprimary hover:text-text-primary transition cursor-pointer"
             >
               Cancel
@@ -135,6 +136,9 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
               type="submit"
               disabled={submitting}
               className="bg-accent-primary text-text-darkprimary px-4 py-2 rounded-xl hover:bg-[#3A5D91] transition cursor-pointer w-29"
+              onPointerDown={() => {
+                audio('button-press', isMuted);
+              }}
               onClick={(e) => {
                 handleSubmit(e);   
               }}

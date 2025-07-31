@@ -1,6 +1,7 @@
 import { Check, CheckCircle, ChevronDown, Moon, RefreshCw, Sun } from "lucide-react";
 import { useContext, useEffect, useRef, useState } from "react";
 import { vibration } from "../../utilities/vibration";
+import { audio } from "../../utilities/audio";
 import DewList_Logo from "../../assets/DewList_Logo.png";
 import { ListTodo, Sparkles, Bot } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
@@ -10,6 +11,8 @@ import { FaFacebook, FaInstagram, FaLinkedin } from 'react-icons/fa';
 import SupademoEmbed from "../../components/SupaDemoEmbed";
 import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { DotLoader } from "../../components/DotLoader";
+import { AnimatePresence, motion } from "framer-motion";
 
 
 export default function LoginPage() {
@@ -70,7 +73,14 @@ useEffect(() => {
 
 
   const toggle = (i) => {
+    if(openIndex === i) {
+      audio("button-press", false);
+    }
+    else {
+      audio("open-modal", false);
+    }
     setOpenIndex(openIndex === i ? null : i);
+    
   };
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -78,7 +88,7 @@ useEffect(() => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if(passwordConfirm !== ""){
-      window.alert("This is a bot bait field and not actually used for confirming password. \n\n If you are a human, please leave this field blank. \n\n If you are a bot, please go away.");
+      return setError("Please do not fill in the password confirmation field. It is not used for anything and is just there to catch bots.");
     }
     setStatus("loading");
     vibration("button-press");
@@ -143,7 +153,7 @@ useEffect(() => {
     <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5]  dark:bg-[#212732] px-6 max-[540px]:px-4 py-20 transition overflow-x-hidden cursor-default">
       <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
 
-      <button onClick={() => {vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-5 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
+      <button onClick={() => {vibration('button-press'); audio('button-press', false); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-5 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
             {isDarkMode ? (
               <Sun className="w-10 h-10 text-white" />
             ) : (
@@ -164,6 +174,7 @@ useEffect(() => {
         </div>
         <button
           onClick={() => {
+            audio("open-modal", false);
             vibration("button-press");
             setShowModal(true);
           }}
@@ -171,7 +182,7 @@ useEffect(() => {
         >
           Try it free!
         </button>
-        <div className="mt-6 text-[#4F5962] dark:text-white text-sm transition cursor-pointer hover:underline" onClick={() => {
+        <div className="mt-6 text-[#4F5962] dark:text-white text-sm transition cursor-pointer hover:underline" onPointerDown={()=>{audio("button-press", false), vibration('button-press')}} onClick={() => {
           document.getElementById("productDemo")?.scrollIntoView({ behavior: "smooth" });
         }}>
           Watch a Demo
@@ -190,12 +201,14 @@ useEffect(() => {
 
     <div className="flex gap-4 justify-center">
       <button
+      onClick={()=>{vibration('button-press'); audio('button-press', false);}}
         className="group flex items-center gap-2 bg-[#4BAF8E] text-white px-5 py-3 rounded-xl shadow hover:bg-[#3B8F75] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
       >
         <CheckCircle className="w-5 h-5 text-white group-hover:scale-110 group-hover:rotate-[10deg] transition-transform" />
         Done
       </button>
       <button
+      onClick={()=>{vibration('button-press'); audio('button-press', false);}}
         className="group flex items-center gap-2 bg-[#4C6CA8] text-white px-5 py-3 rounded-xl shadow hover:bg-[#3A5D91] hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out"
       >
         <RefreshCw className="w-5 h-5 text-white group-hover:rotate-180 transition-transform" />
@@ -321,6 +334,7 @@ useEffect(() => {
 
       <button
         onClick={() => {
+          audio("open-modal", false);
           vibration("button-press");
           setShowModal(true);
         }}
@@ -350,6 +364,7 @@ useEffect(() => {
 
       <button
         onClick={() => {
+          audio("open-modal", false);
           vibration("button-press");
           setShowModal(true);
         }}
@@ -428,6 +443,7 @@ useEffect(() => {
   </p>
   <button
     onClick={() => {
+      audio("open-modal", false);
       vibration("button-press");
       setShowModal(true);
     }}
@@ -449,13 +465,14 @@ useEffect(() => {
   
   </p>
   <div className="flex gap-4 mt-0">
-    <FaInstagram className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://instagram.com/dewlist.app', '_blank')} />
-    <FaFacebook className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://www.facebook.com/dewlistapp', '_blank')}/>
-    <FaLinkedin className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>window.open('https://www.linkedin.com/company/dewlist', '_blank')}/>
+    <FaInstagram className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>{audio('open-modal', false); window.open('https://instagram.com/dewlist.app', '_blank')}} />
+    <FaFacebook className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>{audio('open-modal', false); window.open('https://www.facebook.com/dewlistapp', '_blank')}} />
+    <FaLinkedin className="w-6 h-6 text-[#4F5962] dark:text-white cursor-pointer hover:opacity-80 transition" onClick={()=>{audio('open-modal', false); window.open('https://www.linkedin.com/company/dewlist', '_blank')}} />
   </div>
   
   <p>
     <a
+      onPointerDown={()=>{audio('open-modal', false); vibration('button-press')}}
       href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing"
       target="_blank"
       rel="noopener noreferrer"
@@ -465,6 +482,7 @@ useEffect(() => {
     </a>{" "}
     •{" "}
     <a
+      onPointerDown={()=>{audio('open-modal', false); vibration('button-press')}}
       href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing"
       target="_blank"
       rel="noopener noreferrer"
@@ -478,8 +496,17 @@ useEffect(() => {
 
 
       {showModal && (
+        
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-2xl p-6 md:p-10 max-w-lg w-full">
+          <AnimatePresence mode="wait" >
+          <motion.div 
+          layout
+      key="modal"
+      initial={{ opacity: 0, scale: 0.95 }}
+      animate={{ opacity: 1, scale: 1 }}
+      exit={{ opacity: 0, scale: 0.95 }}
+      transition={{ duration: 0.2 }}
+      className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-2xl p-6 md:p-10 max-w-lg w-full">
             <h2 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white mb-4">
               Welcome to DewList!
             </h2>
@@ -493,8 +520,10 @@ useEffect(() => {
             )}
             {status === "success" ? (
   <div className="flex flex-col items-center justify-center gap-2 text-[#4BAF8E] font-medium text-center text-2xl">
+    <div className="flex items-center gap-2">
     <CheckCircle className="w-6 h-6" />
-    Magic link sent! <br />
+    Magic link sent!
+    </div> 
     <span className="text-[12.5px]">
       Check your inbox (and spam, just in case)
     </span>
@@ -509,8 +538,15 @@ useEffect(() => {
       required
       className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
     />
-
+    <AnimatePresence mode="wait" initial={false}>
     {!selectedMagicLinkAuth && (
+      <motion.div
+      layout
+      initial={{ opacity: 0, height: 0 }}
+      animate={{ opacity: 1, height: 'auto' }}
+      exit={{ opacity: 0, height: 0 }}
+      transition={{ duration: 0.2 }}
+      className="overflow-hidden">
       <input
         type="password"
         placeholder="Password"
@@ -519,7 +555,9 @@ useEffect(() => {
         required
         className="w-full rounded-2xl border border-[#4F596254] dark:border-white text-[#4F5962] dark:text-white px-5 py-4 text-lg focus:outline-none focus:ring-2 focus:ring-[#90A9D6]"
       />
+      </motion.div>
     )}
+    </AnimatePresence>
     {
       // This input is bot bait and not actually used for confirming password
     }
@@ -533,13 +571,17 @@ useEffect(() => {
 
     <button
       type="submit"
+      onPointerDown={() => {
+        audio("button-press", false);
+        vibration("button-press");
+      }}
       disabled={status === "loading"}
       className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 rounded-2xl text-lg font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
     >
       {status === "loading"
         ? selectedMagicLinkAuth
-          ? "Sending..."
-          : "Logging in..."
+          ? <span className="flex justify-center items-center gap-1">Sending <span className="mt-2"><DotLoader/></span></span>
+          : <span className="flex justify-center items-center gap-1">Logging In <span className="mt-2"><DotLoader/></span></span>
         : selectedMagicLinkAuth
         ? "Send Magic Link"
         : "Get Started"}
@@ -552,6 +594,7 @@ useEffect(() => {
     <button
       type="button"
       onClick={() => {
+        audio("button-press", false);
         vibration("button-press");
         setSelectedMagicLinkAuth(!selectedMagicLinkAuth);
       }}
@@ -567,11 +610,13 @@ useEffect(() => {
 
             <p className="mt-6 text-xs text-[#91989E] text-center">
               By continuing, you agree to our <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" 
+              onPointerDown={()=>{audio('open-modal', false); vibration('button-press')}}
               target="_blank"
               rel="noopener noreferrer"
               href="https://docs.google.com/document/d/1GQj9gn08KF13Wp9hGQL5dqdGIScAZgcbqiUuOO7_qaw/edit?usp=sharing">
                 Privacy Policy
               </a> and <a className="underline text-[#4C6CA8] hover:text-[#3A5D91] dark:text-[#90A9D6] dark:hover:text-[#D4E3FF] transition" 
+              onPointerDown={()=>{audio('open-modal', false); vibration('button-press')}}
               target="_blank"
               rel="noopener noreferrer"
               href="https://docs.google.com/document/d/1lHYt0nikDrIXuEd7WNDzlv4GINUaVICziyxYykSXAfM/edit?usp=sharing">
@@ -581,6 +626,7 @@ useEffect(() => {
 
             <button
               onClick={() => {
+                audio("close-modal", false);
                 vibration("button-press");
                 setShowModal(false);
               }}
@@ -588,8 +634,10 @@ useEffect(() => {
             >
               Cancel
             </button>
-          </div>
+          </motion.div>
+          </AnimatePresence>
         </div>
+        
       )}
     </div>
   );

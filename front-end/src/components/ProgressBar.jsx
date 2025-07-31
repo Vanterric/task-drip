@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react';
 import { vibration } from '../utilities/vibration';
+import { audio } from '../utilities/audio';
+import { useHasInteracted } from '../utilities/useHasInteracted';
+import { useAuth } from '../context/AuthContext';
 
 
-export default function ProgressBar({ completedCount, tasks }) {
+export default function ProgressBar({ previousCompletedCount, completedCount, tasks }) {
   const [animatedProgress, setAnimatedProgress] = useState(0);
   const [pulse, setPulse] = useState(false);
   const [celebrating, setCelebrating] = useState(false);
@@ -10,12 +13,20 @@ export default function ProgressBar({ completedCount, tasks }) {
   const [justHitFull, setJustHitFull] = useState(false);
   const [triggeredExplosion, setTriggeredExplosion] = useState(false);
     const [showScale, setShowScale] = useState(false);
-
-
+  const hasInteracted = useHasInteracted();
+  const {isMuted} = useAuth();
 
   const totalTasks = tasks.length;
   const progress = totalTasks === 0 ? 0 : (completedCount / totalTasks) * 100;
   const isComplete = totalTasks > 0 && completedCount === totalTasks;
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (isComplete && hasInteracted ) {
+        audio('progress-full', isMuted);
+      }
+    }, 100);
+  }, [isComplete]);
 
   useEffect(() => {
     setPulse(true);
@@ -23,13 +34,36 @@ export default function ProgressBar({ completedCount, tasks }) {
     const timeout = setTimeout(() => {
       setAnimatedProgress(progress);
       setPulse(false);
+      if (hasInteracted && progress > 0 && progress < 100) {
+        const percentPrevious = previousCompletedCount / totalTasks * 100;
+        const difference = progress - percentPrevious;
+        console.log('Progress difference:', previousCompletedCount, '->', completedCount, '=>', difference);
+        if (difference >= 90 && difference < 100) {
+          audio('progress9-10', isMuted);
+        } else if (difference >= 80 && difference < 90) {
+          audio('progress8-10', isMuted);
+        } else if (difference >= 70 && difference < 80) {
+          audio('progress7-10', isMuted);
+        } else if (difference >= 60 && difference < 70) {
+          audio('progress6-10', isMuted);
+        } else if (difference >= 50 && difference < 60) {
+          audio('progress5-10', isMuted);
+        } else if (difference >= 40 && difference < 50) {
+          audio('progress4-10', isMuted);
+        } else if (difference >= 20 && difference < 40) {
+          audio('progress3-10', isMuted);
+        } else if (difference > 0 && difference < 20) {
+          audio('progress2-10', isMuted);
+        }
+      }
   
       // Trigger explosion exactly when bar *visually* fills
       if (progress === 100) {
         vibration('task-list-completion')
         setTimeout(() => {
           setShowScale(true);             
-          setTriggeredExplosion(true);    
+          setTriggeredExplosion(true); 
+          audio('success-bubbles', isMuted);   
           generateSparkles();
       
           // Let scale ease back down after 1s

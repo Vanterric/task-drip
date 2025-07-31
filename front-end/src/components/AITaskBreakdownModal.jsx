@@ -9,12 +9,13 @@ import { useAuth } from '../context/AuthContext';
 import { DotLoader } from './DotLoader';
 import { AnimatePresence, motion } from 'framer-motion';
 import FollowUpsModal from './FollowUpsModal';
+import { audio } from '../utilities/audio';
 
 export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, setFirstTask, token, taskLists }) {
   if (!isOpen) return null;
   const [loading, setLoading] = useState(false);
   const [goal, setGoal] = useState('');
-  const { user } = useAuth();
+  const { user, isMuted } = useAuth();
   const [followUpsSelected, setFollowUpsSelected] = useState(false);
   const [showFollowUpsInfo, setShowFollowUpsInfo] = useState(false);
   const [followUpQuestions, setFollowUpQuestions] = useState([]);
@@ -53,6 +54,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         const data = await res.json();
         setFollowUpQuestions(data.questions);
         setShowFollowUpModal(true);
+        audio('open-modal', isMuted);
         setLoading(false);
       }
       catch (err) {
@@ -148,7 +150,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
   return (
     <div
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
-      onClick={onClose}
+      onClick={() => { vibration('button-press'); audio('close-modal', isMuted); onClose(); }}
     >
       {!showFollowUpModal && <AnimatePresence>
         <motion.div
@@ -163,7 +165,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       >
         {/* Close button */}
         <button
-          onClick={()=>{vibration('button-press'); onClose()}}
+          onClick={()=>{audio('close-modal', isMuted); vibration('button-press'); onClose()}}
           className="absolute top-4 right-4 text-[#4F5962] dark:text-white hover:text-black transition"
         >
           <X className="w-5 h-5 cursor-pointer" />
@@ -202,15 +204,16 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
             type='checkbox'
             className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
             checked={followUpsSelected && user.isPro}
-            onChange={() => setFollowUpsSelected(!followUpsSelected)}
+            onChange={() => {setFollowUpsSelected(!followUpsSelected); audio('button-press', isMuted);}}
             disabled={!user.isPro}
             title={!user.isPro ? "Follow-ups is a Pro feature. Upgrade to unlock!" : "Follow-ups"}
             />
-          Ask me follow-ups <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => setShowFollowUpsInfo(!showFollowUpsInfo)} />
+          Ask me follow-ups <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => {setShowFollowUpsInfo(!showFollowUpsInfo); audio('button-press', isMuted);}} />
         </div>
         <button
         disabled={loading}
-        onClick={followUpsSelected ? handleFollowUpsSelected : handleSubmit}
+        onPointerDown={() => { audio('button-press', isMuted); }}
+        onClick={()=> {vibration('button-press'); followUpsSelected ? handleFollowUpsSelected() : handleSubmit()}}
         className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
             ? 'bg-[#4C6CA8]/60 cursor-not-allowed'

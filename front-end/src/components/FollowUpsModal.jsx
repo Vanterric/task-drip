@@ -5,9 +5,10 @@ import { useAuth } from "../context/AuthContext";
 import VoiceCaptureButton from "./VoiceCaptureButton";
 import { DotLoader } from "./DotLoader";
 import { vibration } from "../utilities/vibration";
+import { audio } from "../utilities/audio";
 
 const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollowUpAnswers, handleSubmit, loading }) => {
-    const {user} = useAuth();
+    const {user, isMuted} = useAuth();
     return (
     <AnimatePresence>
         <motion.div
@@ -22,13 +23,15 @@ const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollow
       >
         {/* Close button */}
         <button
-          onClick={()=>{vibration('button-press'); onClose()}}
+          onClick={()=>{audio('close-modal', isMuted); vibration('button-press'); onClose()}}
           className="absolute top-4 right-4 text-[#4F5962] dark:text-white hover:text-black transition"
         >
           <X className="w-5 h-5 cursor-pointer" />
         </button>
 
         <h2 className="text-xl font-bold text-[#4F5962] dark:text-white mb-1 cursor-default flex gap-2 justify-start items-center">AI Task List Creation <span className="text-yellow-500 dark:text-yellow-300 border text-xs py-[2px] px-2 rounded-full">Pro</span></h2>
+        
+        <div className="max-h-[calc(100vh-15rem)] overflow-y-auto">
         {followUpQuestions.map((question, index) => (
   <div key={index} className='relative my-2 flex flex-col gap-1'>
     <label className="text-sm">Q{index + 1}: {question}</label>
@@ -58,12 +61,14 @@ const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollow
         />
       </div>
     )}
+    
   </div>
 ))}
-
+</div>
         <button
         disabled={loading}
         onClick={handleSubmit}
+        onPointerDown={() => { audio('button-press', isMuted); }}
         className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
             ? 'bg-[#4C6CA8]/60 cursor-not-allowed'

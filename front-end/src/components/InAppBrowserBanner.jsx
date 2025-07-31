@@ -1,4 +1,8 @@
 import { useEffect, useState } from 'react'
+import { audio } from '../utilities/audio'
+import { AnimatePresence, motion } from 'framer-motion'
+import { vibration } from '../utilities/vibration'
+import { useAuth } from '../context/AuthContext'
 
 const INAPP_DISMISSED_KEY = 'dewlist_inapp_dismissed_at'
 
@@ -15,6 +19,7 @@ const daysAgo = (key, days) => {
 
 export default function InAppBrowserBanner() {
   const [show, setShow] = useState(false)
+  const { isMuted } = useAuth()
 
   useEffect(() => {
     if (isInAppBrowser() && daysAgo(INAPP_DISMISSED_KEY, 7)) {
@@ -28,10 +33,16 @@ export default function InAppBrowserBanner() {
   }
 
   
-  if (!show) return null
+
 
   return (
-    <div className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
+    <AnimatePresence>
+    {show && <motion.div 
+    layout
+    initial={{ opacity: 0, y: 150, transition: { duration: 0.2 } }}
+    animate={{ opacity: 1, y: 0, transition: { duration: 0.2 } }}
+    exit={{ opacity: 0, y: 150, transition: { duration: 0.2 } }}
+    className="fixed bottom-4 right-4 max-w-sm w-[90vw] sm:w-auto bg-[#4C6CA8] text-white px-4 py-3 rounded-lg shadow-lg z-50 flex items-start gap-3">
       <div className="flex-1">
         <p className="font-semibold text-base cursor-default">Heads up — this isn’t a real browser</p>
         <p className="text-sm opacity-90 cursor-default">
@@ -42,12 +53,13 @@ export default function InAppBrowserBanner() {
         </p>
       </div>
       <button
-        onClick={handleDismiss}
+        onClick={() => { handleDismiss(); audio('button-press', isMuted); vibration('button-press'); }}
         className="text-white hover:text-gray-200 text-xl leading-none cursor-pointer"
         aria-label="Close in-app browser banner"
       >
         &times;
       </button>
-    </div>
+    </motion.div>}
+    </AnimatePresence>
   )
 }

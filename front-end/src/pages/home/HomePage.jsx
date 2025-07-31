@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import AddTaskModal from "../../components/AddTaskModal";
 import Sidebar from "../../components/Sidebar";
@@ -26,6 +26,9 @@ import BreakdownReveal from "../../components/BreakdownReveal";
 import { DotLoader } from "../../components/DotLoader";
 import { syncDevicePushSubs } from "../../utilities/syncDevicePushSubs";
 import Dropdown from "../../components/Dropdown";
+import { audio } from "../../utilities/audio";
+import { useNavigate } from "react-router-dom";
+import { useHasInteracted } from "../../utilities/useHasInteracted";
 
 
 const sliderVariants = {
@@ -94,7 +97,18 @@ export default function HomePage() {
    const [generatedTasks, setGeneratedTasks] = useState([{content:""},{content:''},{content:''}]);
    const [showCard, setShowCard] = useState(true);
    const [filter, setFilter] = useState('Custom');
+    const [replacing, setReplacing] = useState(false);
+   const navigate = useNavigate();
+  const hasInteracted = useHasInteracted();
+  const [layoutLoaded, setLayoutLoaded] = useState(false);
+  const [showFirst100Banner, setShowFirst100Banner] = useState(false);
+  const [previousCompletedCount, setPreviousCompletedCount] = useState(50);
 
+   useLayoutEffect(() => {
+    requestAnimationFrame(() => {
+      setLayoutLoaded(true);
+    });
+  }, []);
    useEffect(() => {
     if (!user) return;
    syncDevicePushSubs(user);
@@ -162,15 +176,16 @@ export default function HomePage() {
 
   useEffect(() => {
   const dismissed = localStorage.getItem('firstHundredBannerDismissed');
-  if (dismissed === 'true') {
-    setIsFirst100User(false);
+  if (!dismissed && isFirst100User && !isFirstTimeUser && user.isPro && layoutLoaded) {
+    setShowFirst100Banner(true);
   }
-}, [isFirst100User, setIsFirst100User]);
+}, [isFirst100User, isFirstTimeUser, user.isPro, layoutLoaded]);
 
 
   const closeFirstHundredBanner = () => {
   localStorage.setItem('firstHundredBannerDismissed', 'true');
   setIsFirst100User(false);
+  setShowFirst100Banner(false);
 };
 
 useEffect(() => {
@@ -198,6 +213,7 @@ useEffect(() => {
 
 
 function animateAndSwap(direction, swapFn) {
+  
   return new Promise((resolve) => {
     setShowCard(false); // triggers exit
 
@@ -221,13 +237,19 @@ function animateAndSwap(direction, swapFn) {
       if (showBreakDown) return
 
     setSwipeDirection("up");
+    const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
+    setPreviousCompletedCount(tasks.filter(t => t.isComplete).length);
+    setTasks((prev) =>
+      prev.map((t) =>
+        t._id === taskId ? { ...t, isComplete: !currentCompleteStatus } : t
+      )
+    );
     
   animateAndSwap("up", async () => {
    
     setLastActiveAt(user);
     const task = tasks.find(t => t._id === taskId);
-    const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
-    vibration("button-press");
+    
 
     const headers = {
       Authorization: `Bearer ${token}`,
@@ -239,14 +261,12 @@ function animateAndSwap(direction, swapFn) {
       body: JSON.stringify({ isComplete: !currentCompleteStatus }),
     });
 
-    vibration("task-completion");
+    vibration("task-completion" && nextTask!==finalTask);
+    if(viewType === 'one-task' && nextTask !== finalTask) { 
+    audio('slide', false);
+    }
     if(task._id === firstTask?._id) setFirstTask(tasks.find(t => t._id !== taskId && !t.isComplete));
     if(task._id === finalTask?._id) setFinalTask(tasks.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
-    setTasks((prev) =>
-      prev.map((t) =>
-        t._id === taskId ? { ...t, isComplete: !currentCompleteStatus } : t
-      )
-    );
   });
 };
 
@@ -255,10 +275,12 @@ function animateAndSwap(direction, swapFn) {
     if (isBreakingDownTask) return;
       if (showBreakDown) return
     setSwipeDirection("left");
+    if(viewType === 'one-task') {
+      audio('slide', false);
+    }
   animateAndSwap("left", () => {
     
     setLastActiveAt(user);
-    vibration("button-press");
     
 
     if (finalTask && taskId === finalTask._id && !isSkippedThroughAlertShown) {
@@ -285,13 +307,16 @@ function animateAndSwap(direction, swapFn) {
 const handleGoBack = (taskId) => {
   if (isBreakingDownTask) return;
   if (showBreakDown) return
+  if(viewType === 'one-task') {
+      audio('slide', false);
+    }
   setSwipeDirection("right");
   requestAnimationFrame(
     ()=>{
       animateAndSwap("right", () => {
     
     setLastActiveAt(user);
-    vibration("button-press");
+    
 
     const incomplete = tasks.filter((t) => !t.isComplete);
     if (!incomplete.length) return;
@@ -326,6 +351,9 @@ const handleTaskBreakdown = async (task) => {
   setIsBreakingDownTask(true);
   setShowDescription(false);
   setSwipeDirection("down");
+  if(showBreakDown){
+    audio('shrinkage', false);
+  }
   const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/singleTaskBreakdown`, {
     method: "POST",
     headers: {
@@ -337,14 +365,18 @@ const handleTaskBreakdown = async (task) => {
   const data = await res.json();
   setIsBreakingDownTask(false);
   setShowBreakDown(true);
+  audio('bubble-up', false);
+  audio('growth', false);
   setGeneratedTasks(data.tasks.tasks);
 };
 
 const handleCancelBreakdown = async () => {
+  if(showBreakDown){
+    audio('shrinkage', false);
+  }
   
   setIsBreakingDownTask(false);
   setShowBreakDown(false);
-  
   requestAnimationFrame(() => {
     controls.start({
       y: 0,
@@ -361,6 +393,7 @@ const handleCancelBreakdown = async () => {
 const handleReplaceWithSubtasks = async () => {
   if (!nextTask || !nextTask._id || !Array.isArray(generatedTasks) || generatedTasks.length === 0) return;
   setSwipeDirection("down");
+  setReplacing(true);
   const headers = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
@@ -424,6 +457,7 @@ const handleReplaceWithSubtasks = async () => {
     ...newTasks,
     ...reordered.filter(t => t.order > baseOrder),
   ].sort((a, b) => a.order - b.order);
+  audio('shrinkage', false);
   setShowBreakDown(false);
   setIsBreakingDownTask(false);
   setGeneratedTasks([{content:""},{content:''},{content:''}]);
@@ -434,6 +468,7 @@ const handleReplaceWithSubtasks = async () => {
     await refetchTaskListsOrUpdateUI({token,  activeTaskList, setTaskLists, setActiveTaskList, setTasks });    
   handleGoToTask(newTasks[0]._id, finalTasks); 
   }))
+  setReplacing(false);
 };
 
 
@@ -452,6 +487,14 @@ const handleGoToTask = (taskId, taskData) => {
 };
 
   const nextTask = tasks.find((t) => !t.isComplete);
+  useEffect(() => {
+    if (!hasInteracted) return;
+    if (!nextTask) return;
+    if(!user) return;
+    if (viewType === 'one-task') {
+      audio('slide', false);
+    }
+  }, [nextTask, isSkippedThroughAlertShown]);
   const completedCount = tasks.filter((t) => t.isComplete).length;
 
   function formatResetSchedule({ number, cadence, startDate }) {
@@ -609,7 +652,7 @@ const handleTaskReorder = ({ source, destination }) => {
 const handleUpdateTask = async (task) => {
   handleCancelBreakdown();
   setLastActiveAt(user);
-  vibration('button-press');
+
   const headers = {
     Authorization: `Bearer ${token}`,
     "Content-Type": "application/json",
@@ -692,22 +735,22 @@ const getTaskName = (taskId, taskListId) => {
     <div className={`min-h-screen bg-background-light flex flex-col relative text-text-primary  dark:text-text-darkprimary dark:bg-background-dark transition overflow-x-hidden`}>
       {wasDowngraded && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
-          Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>setShowUpgradeModal(true)}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
+          Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>{audio('open-modal', false); vibration("button-press"); setShowUpgradeModal(true)}}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
           <button
-            onClick={() => setWasDowngraded(!wasDowngraded)}
+            onClick={() => {audio('button-press', false); vibration("button-press"); setWasDowngraded(!wasDowngraded)}}
             className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
           >
             ×
           </button>
         </div>
       )}
-      {isFirst100User && isFirstTimeUser && user.isPro && (
+      {showFirst100Banner && (
         <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
           🎉 Whoa, look at you! You're one of the first 100 people to try DewList. 
           To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered features.
           Go wild (but like… one task at a time 😉)
           <button
-            onClick={() => closeFirstHundredBanner()}
+            onClick={() => {audio('button-press', false); vibration("button-press"); closeFirstHundredBanner()}}
             className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
           >
             ×
@@ -722,10 +765,11 @@ const getTaskName = (taskId, taskListId) => {
   {/* Left: Branding */}
   <div className="flex items-center space-x-2">
     <button
-      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} rounded-full bg-background-card dark:bg-background-darkcard shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring transition cursor-pointer`}
-      onClick={() => {vibration('button-press'); setShowSidebar(true)}}
+      className={`p-2  ${!activeTaskList ? 'glow-pulse' : ''} hover:scale-110 active:scale-100 transition-transform rounded-full bg-background-card dark:bg-background-darkcard shadow-md hover:shadow-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring transition cursor-pointer`}
+      onPointerDown = {() => { audio('button-press', false); }}
+      onClick={() => { vibration('button-press'); audio('slide', false); setShowSidebar(true)}}
     >
-      <Menu size={24}  />
+      <Menu size={24} />
     </button>
     
   </div>
@@ -760,7 +804,7 @@ const getTaskName = (taskId, taskListId) => {
 
                 {/* <BreakdownReveal key={nextTask._id} subtasks={generatedTasks} originRef={taskCardRef} visible={showBreakDown}/> */}
               </AnimatePresence>
-            <AnimatePresence mode="wait" initial={true} custom={swipeDirection}>
+            <AnimatePresence mode="wait" initial={true} custom={swipeDirection} >
               
            {showCard && <motion.div
       key={"end-"+ swipeDirection}
@@ -786,12 +830,14 @@ const getTaskName = (taskId, taskListId) => {
       </AnimatePresence>
                 <motion.div key='controls' layout className="flex gap-4 justify-center" >
                 <button
-                
+                onPointerDown={() => { audio('button-press', false); }}
                 className={`cursor-pointer group flex items-center max-[400px]:text-sm gap-2 ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring`}>
                 <CheckCircle className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
-                {showBreakDown ? "Replace":"Done"}
+                {showBreakDown ? replacing ? <span className="flex justify-center items-center gap-1">Replacing<span className="mt-2"><DotLoader/></span></span>:"Replace":"Done"}
               </button>
-              <button className="cursor-pointer group flex items-center  justify-center bg-accent-gold max-[339px]:w-10 max-[339px]:h-10 w-12 h-12 rounded-full shadow-md hover:bg-accent-goldhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusgold">
+              <button 
+              onPointerDown={() => { audio('button-press', false); }}
+              className="cursor-pointer group flex items-center  justify-center bg-accent-gold max-[339px]:w-10 max-[339px]:h-10 w-12 h-12 rounded-full shadow-md hover:bg-accent-goldhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusgold">
                 
                 <Split className="w-5 h-5 text-text-darkprimary max-[339px]:w-4 max-[339px]:h-4 transition-transform duration-200  group-hover:scale-120" />
                 <Split className="w-5 h-5 text-black absolute blur-sm max-[339px]:w-4 max-[339px]:h-4 group-hover:scale-120  transition-transform" />
@@ -799,7 +845,8 @@ const getTaskName = (taskId, taskListId) => {
               </button>
 
                   <button
-                    onClick={() => {showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
+                  onPointerDown={() => { audio('button-press', false); }}
+                    onClick={() => {vibration("button-press"); showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
                     className={`cursor-pointer group flex items-center ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} max-[400px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
                   >
                     {showBreakDown ?
@@ -810,7 +857,7 @@ const getTaskName = (taskId, taskListId) => {
                   </button>
 
                 </motion.div>
-                <motion.div key="progress-bar" layout ><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
+                <motion.div key={`progress-bar-${activeTaskList._id}`} layout ><ProgressBar completedCount={completedCount} previousCompletedCount={previousCompletedCount} tasks={tasks} /></motion.div>
               </div>)
         : !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-text-secondary text-center cursor-default">
@@ -852,14 +899,14 @@ const getTaskName = (taskId, taskListId) => {
             <div
             
     className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl z-50 font-semibold transition cursor-default flex-col flex"
-    onClick={() => setShowDescription(!showDescription)}
   >
     {nextTask.content}
     <span className={`text-xs dark:text-text-darkinfo text-text-info mt-1`}>
       {nextTask.timeEstimate ? `${nextTask.timeEstimate} min` : ''}
     </span>
           <ChevronDown
-          onClick={() => setShowDescription(!showDescription)}
+          onPointerDown={() => { showDescription ? audio('button-press', false) : audio('open-modal', false); }}
+          onClick={() => {vibration("button-press"); setShowDescription(!showDescription)}}
   className={`transition-transform duration-300 origin-center flex justify-center items-center mx-auto mt-1 cursor-pointer w-5 h-5 dark:text-white/60 text-[${colors.text.info}]`}
   style={{
     transform: showDescription ? "rotateX(180deg)" : "rotateX(0deg)",
@@ -918,9 +965,9 @@ const getTaskName = (taskId, taskListId) => {
             transition={{ delay: 0.3, duration: 0.3 }}
             className="flex items-center justify-between text-xs gap-2 font-normal mt-5"
           >
-            <div className={`cursor-pointer text-text-info dark:text-text-darkinfo`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
+            <div className={`cursor-pointer text-text-info dark:text-text-darkinfo`} onClick={() => {audio('open-modal', false);vibration("button-press"); setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>Edit Task</div>
             {nextTask.dewDate ? <div className={`flex gap-1 text-text-info dark:text-text-darkinfo items-center justify-center cursor-pointer ${
-    isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>
+    isPastDue(nextTask.dewDate) ? 'text-[#D66565]' : ''}`} onClick={() => {audio('open-modal', false);vibration("button-press"); setIsEditTaskModalOpen(true); setSelectedTask(nextTask)}}>
               <AlarmClock className="h-4 w-4"  />
               {
                 new Date(nextTask.dewDate).toLocaleDateString(undefined, {
@@ -939,13 +986,17 @@ const getTaskName = (taskId, taskListId) => {
       </div>
                 <motion.div layout key='controls' className="flex gap-4 justify-center" >
                 <button
-                onClick={() => {showBreakDown ? handleReplaceWithSubtasks() : handleComplete(nextTask._id)}}
+                onPointerDown={() => { audio('button-press', false); }}
+                onClick={() => {vibration("button-press"); showBreakDown ? handleReplaceWithSubtasks() : handleComplete(nextTask._id)}}
                 className={`cursor-pointer group flex items-center max-[400px]:text-sm gap-2 ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} bg-accent-success text-text-darkprimary px-6 py-3 rounded-xl shadow-md hover:bg-accent-successhover hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-successfocusring`}
               >
                 <CheckCircle className="w-5 h-5 max-[339px]:w-4 max-[339px]:h-4 text-text-darkprimary transition-transform duration-200 group-hover:scale-110 group-hover:rotate-[10deg]" />
-                {showBreakDown ? "Replace":"Done"}
+                {showBreakDown ? replacing ? <span className="flex justify-center items-center gap-1"><span className="mt-2"><DotLoader/></span></span>:"Replace":"Done"}
               </button>
-              <button onClick={() => {
+              <button 
+              onPointerDown={() => { audio('button-press', false); }}
+              onClick={() => {
+                vibration("button-press");
                 if(!showBreakDown) {
                 handleTaskBreakdown(nextTask)
                 } else {
@@ -979,7 +1030,8 @@ const getTaskName = (taskId, taskListId) => {
               </button>
 
                   <button
-                    onClick={() => {showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
+                    onPointerDown={() => { audio('button-press', false); }}
+                    onClick={() => {vibration("button-press"); showBreakDown ? handleCancelBreakdown() : handleSkip(nextTask._id)}}
                     className={`cursor-pointer group flex items-center ${showBreakDown ? "max-[400px]:px-4 max-[400px]:py-2" : 'max-[400px]:px-5 max-[400px]:py-2'} max-[400px]:text-sm gap-2 ${showBreakDown ? "bg-accent-destructive":"bg-accent-primary"} text-text-darkprimary px-6 py-3 rounded-xl shadow-md ${showBreakDown ? "hover:bg-accent-destructivehover":"hover:bg-accent-primaryhover"} hover:scale-105 active:scale-100 transition-all duration-200 ease-in-out outline-none focus:ring-2 focus:ring-accent-focusring`}
                   >
                     {showBreakDown ?
@@ -990,7 +1042,7 @@ const getTaskName = (taskId, taskListId) => {
                   </button>
 
                 </motion.div>
-                <motion.div key="progress-bar" layout><ProgressBar completedCount={completedCount} tasks={tasks} /></motion.div>
+                <motion.div key={`progress-bar-${activeTaskList._id}`} layout><ProgressBar completedCount={completedCount} tasks={tasks} previousCompletedCount={previousCompletedCount} /></motion.div>
               </div>
               
             ) : (<div>
@@ -1003,7 +1055,7 @@ const getTaskName = (taskId, taskListId) => {
                 </div>
               </div>
           <div key={"progress-bar"}>
-            <ProgressBar completedCount={completedCount} tasks={tasks} />
+            <ProgressBar completedCount={completedCount} tasks={tasks} previousCompletedCount={previousCompletedCount} />
             </div>
           </div>
         )}
@@ -1011,18 +1063,34 @@ const getTaskName = (taskId, taskListId) => {
       /* List View */
       (
         <div className="max-[500px]:mt-20 mt-25 ">
+          <AnimatePresence mode="wait" initial={true}>
           {tasks.length > 0 && tasks.every((task) => task.isComplete) ? (
-            <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
+            <AnimatePresence mode="wait" initial={true}>
+            <motion.div 
+            layout
+            initial={{ opacity: 0, height: 56 }}
+            animate={{ opacity: 1, height: 'auto' }}
+            exit={{ opacity: 0, height: 56 }}
+            transition={{ duration: 0.3, ease: 'easeInOut' }}
+            className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
               <TaskDripBadge />
               <div className="text-center text-accent-success text-xl font-semibold tracking-wide cursor-default">
                 All tasks complete! Chill Time.
               </div>
-              <ProgressBar completedCount={completedCount} tasks={tasks} />
-            </div>
-          ) : tasks.length > 0 && <div className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
-          <ProgressBar completedCount={completedCount} tasks={tasks} />
-          </div>}
-          <div className="flex justify-end max-w-4xl px-4 mx-auto text-sm mb-4">
+              <ProgressBar completedCount={completedCount} tasks={tasks} previousCompletedCount={previousCompletedCount} />
+            </motion.div>
+          </AnimatePresence>
+          ) : tasks.length > 0 && <motion.div 
+          layout
+          initial={{ opacity: 0, height: 250 }}
+          animate={{ opacity: 1, height: 'auto' }}
+          exit={{ opacity: 0, height: 250 }}
+          transition={{ duration: 0.3, ease: 'easeInOut' }}
+          className="flex flex-col items-center justify-center mt-6 space-y-4 mb-2 max-w-md mx-auto px-3 pb-2">
+          <ProgressBar completedCount={completedCount} tasks={tasks} previousCompletedCount={previousCompletedCount} />
+          </motion.div>}
+          </AnimatePresence>
+          {tasks.length > 0 && <div className="flex justify-end max-w-4xl px-4 mx-auto text-sm mb-4">
             <div className="w-55 flex justify-end items-center gap-2">
               <span className="text-text-info dark:text-text-darkinfo text-nowrap">Sort by:</span>
             <Dropdown 
@@ -1031,7 +1099,7 @@ const getTaskName = (taskId, taskListId) => {
               options={filter === 'Custom' ? ['↑ DewDate','↓ DewDate', '↑ Time Estimate', '↓ Time Estimate', '↑ Alphabetical', '↓ Alphabetical', 'Complete', 'Incomplete', "Custom"] : ['↑ DewDate','↓ DewDate', '↑ Time Estimate', '↓ Time Estimate', '↑ Alphabetical', '↓ Alphabetical', 'Complete', 'Incomplete']}
             />
             </div>
-            </div>
+            </div>}
         <DragDropContext onDragEnd={(source, destination) => { setFilter("Custom"); handleTaskReorder(source, destination); }} >
          { !activeTaskList || tasks.length === 0 ? (
           <p className="text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-160px)] h-[calc(100vh-200px)] mx-2 items-center justify-center">
@@ -1069,7 +1137,7 @@ const getTaskName = (taskId, taskListId) => {
                 <input
                   type="checkbox"
                   checked={task.isComplete}
-                  onChange={() => handleComplete(task._id)}
+                  onChange={() => {handleComplete(task._id); audio('button-press', false); vibration("button-press")}}
                   className="cursor-pointer appearance-none w-5 h-5 mt-[2.5px] rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
                 />
                 <div className={`flex flex-col w-full  `}>
@@ -1089,7 +1157,7 @@ const getTaskName = (taskId, taskListId) => {
                   }
                   <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
                   {task.dewDate && (
-                    <div onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
+                    <div onClick={() => {audio('open-modal', false); vibration("button-press"); setIsEditTaskModalOpen(true); setSelectedTask(task)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
                       ) ? 'text-accent-destructive' : 'text-text-info dark:text-text-darkinfo'}`}>
                         <AlarmClock className="inline-block mr-1 w-4 h-4" />
                       {new Date(task.dewDate).toLocaleDateString(undefined, {
@@ -1099,7 +1167,7 @@ const getTaskName = (taskId, taskListId) => {
                       })}
                     </div>
                   )}
-                  <div className="text-xs text-text-info dark:text-text-darkinfo cursor-pointer" onClick={() => {setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
+                  <div className="text-xs text-text-info dark:text-text-darkinfo cursor-pointer" onClick={() => {audio('open-modal', false); vibration("button-press"); setIsEditTaskModalOpen(true); setSelectedTask(task)}}>Edit Task</div>
                   </div>
                 </div>
               </div>
@@ -1118,13 +1186,14 @@ const getTaskName = (taskId, taskListId) => {
       <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
 <button
   className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
-  onClick={() => {vibration('button-press'); if (user.isPro) {setShowAIModal(true)} else {setShowUpgradeModal(true)}}}
+  onClick={() => {audio('open-modal', false); vibration('button-press'); if (user.isPro) {setShowAIModal(true)} else {setShowUpgradeModal(true)}}}
 >
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button>
       <button
   className= {`${activeTaskList && tasks.length === 0 ? 'glow-pulse' : ''} cursor-pointer max-[339px]:text-[16px] group flex items-center gap-2 bg-accent-primary text-white px-6 py-3 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onClick={() => {
+    audio('open-modal', false);
     vibration('button-press');
     if (tasks.length >= 5 && !user.isPro) {
       setShowUpgradeModal(true);
@@ -1138,6 +1207,7 @@ const getTaskName = (taskId, taskListId) => {
 </button>
 <button
   className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
+  onPointerDown={() => { audio('button-press', false); }}
   onClick={() => {vibration('button-press'); 
   const resetTaskDetails = async (list)=>{
     setActiveTaskList(list);
@@ -1158,6 +1228,7 @@ const getTaskName = (taskId, taskListId) => {
     setTasks(taskData);
   }
   resetTaskDetails({...activeTaskList});
+  setPreviousCompletedCount(0);
   setViewType(viewType === 'one-task' ? 'list' : 'one-task');}}
 >
 <div className="relative w-5 h-5 group">
@@ -1246,7 +1317,7 @@ const getTaskName = (taskId, taskListId) => {
   onUpgrade={() => {
     setShowUpgradeModal(false);
     // 🔁 send to Stripe Checkout
-    window.location.href = '/subscribe'; // or whatever your route is
+    navigate('/subscribe')
   }}
 />
 <AITaskBreakdownModal handleCancelBreakdown={handleCancelBreakdown} taskLists={taskLists} token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask} setFirstTask = {setFirstTask}/>
@@ -1264,6 +1335,7 @@ token={token}
   setFinalTask={setFinalTask}
   handleCancelBreakdown={handleCancelBreakdown}
   onSelectList={async (list) => {
+    audio('button-press', false);
     vibration('button-press')
     setActiveTaskList(list);
     handleCancelBreakdown();
