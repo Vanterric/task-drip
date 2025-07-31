@@ -32,6 +32,7 @@ const audioFiles = {
   'progress3-10': '/audio/mp3/Progress3-10.mp3',
   'progress2-10': '/audio/mp3/Progress2-10.mp3',
   'success-bubbles': '/audio/mp3/SuccessBubbles.mp3',
+  'task-complete': '/audio/mp3/TaskComplete.mp3',
 };
 
 export const preloadAudio = () => {
@@ -94,7 +95,7 @@ export const audio = (type) => {
   if (!cache[key]) {
     cache[key] = new Howl({
       src: [audioFiles[key]],
-      volume: key === 'single-drop' ? 0.05 : progressBarKeys.includes(key) ? 0.15 : key === 'success-bubbles' ? 0.25 : 0.4,
+      volume: key === 'single-drop' ? 0.05 : progressBarKeys.includes(key) ? 0.15 : key === 'success-bubbles' || key === 'task-complete' ? 0.25 : 0.4,
     });
   }
 

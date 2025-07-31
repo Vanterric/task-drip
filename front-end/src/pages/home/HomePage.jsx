@@ -26,9 +26,10 @@ import BreakdownReveal from "../../components/BreakdownReveal";
 import { DotLoader } from "../../components/DotLoader";
 import { syncDevicePushSubs } from "../../utilities/syncDevicePushSubs";
 import Dropdown from "../../components/Dropdown";
-import { audio } from "../../utilities/audio";
+import { audio, isMuted } from "../../utilities/audio";
 import { useNavigate } from "react-router-dom";
 import { useHasInteracted } from "../../utilities/useHasInteracted";
+import SuccessToast from "../../components/SuccessToast";
 
 
 const sliderVariants = {
@@ -103,6 +104,8 @@ export default function HomePage() {
   const [layoutLoaded, setLayoutLoaded] = useState(false);
   const [showFirst100Banner, setShowFirst100Banner] = useState(false);
   const [previousCompletedCount, setPreviousCompletedCount] = useState(50);
+  const [isSuccessToastOpen, setIsSuccessToastOpen] = useState(false);
+  const [lastCompletedTask, setLastCompletedTask] = useState(null);
 
    useLayoutEffect(() => {
     requestAnimationFrame(() => {
@@ -235,9 +238,27 @@ function animateAndSwap(direction, swapFn) {
   const handleComplete = async (taskId) => {
     if (isBreakingDownTask) return;
       if (showBreakDown) return
-
-    setSwipeDirection("up");
+    
+    
+    
     const currentCompleteStatus = tasks.find(t => t._id === taskId).isComplete;
+    const incompleteTasks = tasks.filter(t => !t.isComplete);
+    if (!currentCompleteStatus && viewType === 'one-task' && incompleteTasks.length > 1) {
+      if (isSuccessToastOpen){
+        setIsSuccessToastOpen(false);
+        setTimeout(() => {
+        setIsSuccessToastOpen(true);
+      }, 500);
+      }
+      else{
+        setIsSuccessToastOpen(true);
+      }
+      setLastCompletedTask(tasks.find(t => t._id === taskId));
+      setSwipeDirection("up");
+    }
+    if (currentCompleteStatus && viewType === 'one-task') {
+      setSwipeDirection("right");
+    }
     setPreviousCompletedCount(tasks.filter(t => t.isComplete).length);
     setTasks((prev) =>
       prev.map((t) =>
@@ -265,8 +286,11 @@ function animateAndSwap(direction, swapFn) {
     if(viewType === 'one-task' && nextTask !== finalTask) { 
     audio('slide', false);
     }
-    if(task._id === firstTask?._id) setFirstTask(tasks.find(t => t._id !== taskId && !t.isComplete));
-    if(task._id === finalTask?._id) setFinalTask(tasks.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
+
+      if(task._id === firstTask?._id) setFirstTask(tasks.find(t => t._id !== taskId && !t.isComplete));
+      if(task._id === finalTask?._id) setFinalTask(tasks.filter(t => !t.isComplete && t._id !== taskId).slice(-1)[0]);
+
+    
   });
 };
 
@@ -340,6 +364,67 @@ const handleGoBack = (taskId) => {
     setTasks(reordered);
   })});
 };
+
+const handleAddTask = async (text) => {
+  setSwipeDirection('right')
+  animateAndSwap("right", async () => {
+    handleCancelBreakdown();
+    let activeList = activeTaskList;
+    const headers = {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      };
+    // Step 1: Create a task list if one doesn’t exist
+    if (!activeList) {
+      const listRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
+        method: "POST",
+        headers,
+        body: JSON.stringify({ name: "My First List" }),
+      });
+  
+      activeList = await listRes.json();
+      setActiveTaskList(activeList);
+    }
+    // Step 2: Create the task using the newly created or existing list
+    const taskRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        tasklistId: activeList._id,
+        content: text.content || "",
+        description: text.description || "",
+        timeEstimate: text.timeEstimate || null,
+        dewDate: new Date(`${text.dewDate}T12:00:00`) || null,
+        order: 0, // append to beginning
+      }),
+    });
+
+    const newTask = await taskRes.json();
+    // step 3: Update the rest of the tasks in the list to shift their order by 1
+    const allTasksRes = await fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${activeList._id}`,
+      { headers }
+    );
+
+    const allTasks = await allTasksRes.json();
+    await Promise.all(
+      allTasks.map((task, index) => {
+        if (task._id === newTask._id) return; // skip the newly created task
+        return fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
+          method: "PUT",
+          headers,
+          body: JSON.stringify({ ...task, order: index + 1 }),
+        });
+      })
+    );
+
+    
+    setFirstTask(newTask)
+    setTasks((prev) => [newTask,...prev]);})
+  }
+  
+
+
 
 const handleTaskBreakdown = async (task) => {
   if (!user.isPro){
@@ -1254,61 +1339,7 @@ const getTaskName = (taskId, taskListId) => {
   onClose={() => setShowAddModal(false)}
   taskList={activeTaskList}
   tasks={tasks}
-  onSubmit={async (text) => {
-    handleCancelBreakdown();
-    let activeList = activeTaskList;
-    const headers = {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      };
-    // Step 1: Create a task list if one doesn’t exist
-    if (!activeList) {
-      const listRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasklists`, {
-        method: "POST",
-        headers,
-        body: JSON.stringify({ name: "My First List" }),
-      });
-  
-      activeList = await listRes.json();
-      setActiveTaskList(activeList);
-    }
-    // Step 2: Create the task using the newly created or existing list
-    const taskRes = await fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks`, {
-      method: "POST",
-      headers,
-      body: JSON.stringify({
-        tasklistId: activeList._id,
-        content: text.content || "",
-        description: text.description || "",
-        timeEstimate: text.timeEstimate || null,
-        dewDate: new Date(`${text.dewDate}T12:00:00`) || null,
-        order: 0, // append to beginning
-      }),
-    });
-
-    const newTask = await taskRes.json();
-    // step 3: Update the rest of the tasks in the list to shift their order by 1
-    const allTasksRes = await fetch(
-      `${import.meta.env.VITE_BACKEND_URL}/tasks?tasklistId=${activeList._id}`,
-      { headers }
-    );
-
-    const allTasks = await allTasksRes.json();
-    await Promise.all(
-      allTasks.map((task, index) => {
-        if (task._id === newTask._id) return; // skip the newly created task
-        return fetch(`${import.meta.env.VITE_BACKEND_URL}/tasks/${task._id}`, {
-          method: "PUT",
-          headers,
-          body: JSON.stringify({ ...task, order: index + 1 }),
-        });
-      })
-    );
-
-    
-    setFirstTask(newTask)
-    setTasks((prev) => [newTask,...prev]);
-  }}
+  onSubmit={async (task) => {handleAddTask(task)}}
   
 />
 <UpgradePromptModal
@@ -1392,7 +1423,7 @@ token={token}
   setFinalTask={setFinalTask}
 />
 
-
+<SuccessToast onClose={() => {setIsSuccessToastOpen(false), audio('slide', isMuted)}} isVisible={isSuccessToastOpen} onUndo={() => handleComplete(lastCompletedTask._id)} />
 <PWAInstallBanner />
 <PushNotificationBanner isSubscribedToPushNotifications={isSubscribedToPushNotifications} setIsSubscribedToPushNotifications={setIsSubscribedToPushNotifications}/>
     </div>
