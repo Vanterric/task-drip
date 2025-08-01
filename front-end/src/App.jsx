@@ -28,8 +28,15 @@ function App() {
 }, [])
 
 useEffect(() => {
-  preloadAudio();
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(() => {
+      preloadAudio();
+    });
+  } else {
+    setTimeout(preloadAudio, 1000);
+  }
 }, []);
+
 
 
 
