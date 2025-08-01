@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { vibration } from "../utilities/vibration";
 import { useAuth } from "../context/AuthContext";
 import { ThemeContext } from "../context/ThemeContext";
@@ -31,6 +31,10 @@ export default function SettingsModal({ isOpen, onClose }) {
   pushDewDate: user.pushForDewDate,
   emailDewDate: user.emailForDewDate,
 });
+
+useEffect(() => {
+  setMuteSelected(isMuted);
+}, [isMuted]);
 
 
 

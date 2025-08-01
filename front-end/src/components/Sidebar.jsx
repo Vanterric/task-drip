@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import DeleteTaskListModal from "./DeleteTaskListModal";
 import EditTaskListModal from "./EditTaskListModal";
 import { useRef, useEffect } from "react";
-import { ChartArea, Cog, Edit, Edit3, LogOut, LucideCalendarCog, Moon, Pencil, Plus, Settings, Sun, Trash2 } from "lucide-react";
+import { ChartArea, Cog, Edit, Edit3, LogOut, LucideCalendarCog, Moon, Pencil, Plus, Settings, Sun, Trash2, Volume, Volume2, VolumeOff, VolumeX } from "lucide-react";
 import { ThemeContext } from "../context/ThemeContext";
 import { vibration } from "../utilities/vibration";
 import dewListIcon from "../assets/DewList_Icon.png";
@@ -21,7 +21,7 @@ import { motion, useAnimation } from "framer-motion";
 import { unsubscribeFromPush } from "../utilities/unsubscribeFromPush";
 import { getDeviceLabel } from "../utilities/getDeviceLabel";
 import { refetchTaskListsOrUpdateUI } from "../utilities/refetchTaskListsOrUpdateUI";
-import { audio } from "../utilities/audio";
+import { audio, isMuted, setIsMuted } from "../utilities/audio";
 import { DotLoader } from "./DotLoader";
 
 
@@ -37,7 +37,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const panelRef = useRef(null);
   const { isDarkMode, setIsDarkMode } = useContext(ThemeContext);
-  const { user, isMuted } = useAuth();
+  const { user } = useAuth();
   const [isIconPickerModalOpen, setIsIconPickerModalOpen] = useState(false);
   const [isResetScheduleModalOpen, setIsResetScheduleModalOpen] = useState(false);
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false); 
@@ -45,6 +45,7 @@ export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList,
   const controls = useAnimation();
   const navigate = useNavigate();
   const [addingTask, setAddingTask] = useState(false);
+  const [muteToggle, setMuteToggle] = useState(isMuted);
 useEffect(() => {
   if (isOpen) {
     controls.start({ x: 0, transition: { type: "spring", stiffness: 300, damping: 25 } });
@@ -52,6 +53,10 @@ useEffect(() => {
     controls.start({ x: -288, transition: { type: "tween", duration: 0.2 } });
   }
 }, [isOpen]);
+
+useEffect(() => {
+  setIsMuted(muteToggle);
+}, [muteToggle]);
 
 
 useEffect(() => {
@@ -317,11 +322,11 @@ useEffect(() => {
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
           <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' src = {user.isPro? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user.isPro ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList Pro</div> : <div onClick={()=>{audio('open-modal', isMuted);vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
-          <button onClick={() => {audio('button-press', isMuted);vibration('button-press'); setIsDarkMode(!isDarkMode);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
-            {isDarkMode ? (
-              <Sun className="w-5 h-5 text-white" />
+          <button onClick={() => {vibration('button-press'); setMuteToggle(!muteToggle); setTimeout(()=>audio('button-press', muteToggle), 0);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
+            {!muteToggle ? (
+              <Volume2 className="w-5 h-5 dark:text-text-darkprimary text-text-primary" />
             ) : (
-              <Moon className="w-5 h-5 text-[#4F5962]" />
+              <VolumeX className="w-5 h-5 dark:text-text-darkprimary text-text-primary" />
             )}
           </button>
         </div>
