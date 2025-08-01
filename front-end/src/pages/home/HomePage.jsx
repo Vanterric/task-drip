@@ -880,7 +880,7 @@ const getTaskName = (taskId, taskListId) => {
       
       {viewType === "one-task" ? 
       /* One-Task View */
-      (<div className="flex-grow flex flex-col items-center justify-center px-4 mb-3">
+      (<div className="flex-grow flex flex-col items-center justify-center px-2 mb-3">
         {loading ? (
           <p className="text-lg text-text-secondary">Loading tasks...</p>
         ) : isSkippedThroughAlertShown && nextTask ? (
@@ -908,7 +908,7 @@ const getTaskName = (taskId, taskListId) => {
               className="w-full max-w-md text-center space-y-6 z-50"
             >
               
-            <div className="bg-background-insetcard z-50 dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 text-xl font-semibold transition cursor-default">
+            <div className="bg-background-insetcard z-50 dark:bg-background-darkinsetcard rounded-3xl shadow-[inset_0_4px_8px_rgba(0,0,0,0.2)] p-6 mx-2 text-xl font-semibold transition cursor-default">
           <p>End of List</p><p>Click skip to start over</p>
           </div>
       </motion.div>}
@@ -983,7 +983,7 @@ const getTaskName = (taskId, taskListId) => {
               
             <div
             
-    className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg pt-6 px-6 pb-2 text-xl z-50 font-semibold transition cursor-default flex-col flex"
+    className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-lg mx-2 pt-6 px-6 pb-2 text-xl z-50 font-semibold transition cursor-default flex-col flex"
   >
     {nextTask.content}
     <span className={`text-xs dark:text-text-darkinfo text-text-info mt-1`}>
