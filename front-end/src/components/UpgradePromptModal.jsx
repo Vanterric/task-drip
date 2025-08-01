@@ -1,6 +1,6 @@
 import React from 'react';
 import { vibration } from '../utilities/vibration';
-import dewListLogo from '../assets/DewListGold.png';
+const dewListLogo = '/DewListGold.png';
 import { AnimatePresence, motion } from 'framer-motion';
 import { audio } from '../utilities/audio';
 import { useAuth } from '../context/AuthContext';

@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { CheckCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { vibration } from '../../utilities/vibration';
-import dewlistLogo from '../../assets/DewListGold.png';
+const dewlistLogo = '/DewListGold.png';
 import { audio } from '../../utilities/audio';
 import { AnimatePresence, motion } from 'framer-motion';
 import { DotLoader } from '../../components/DotLoader';

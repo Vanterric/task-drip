@@ -2,7 +2,7 @@ import { Check, CheckCircle, ChevronDown, Moon, RefreshCw, Sun } from "lucide-re
 import { useContext, useEffect, useRef, useState } from "react";
 import { vibration } from "../../utilities/vibration";
 import { audio } from "../../utilities/audio";
-import DewList_Logo from "../../assets/DewList_Logo.png";
+const DewList_Logo = "DewList_Logo.png";
 import { ListTodo, Sparkles, Bot } from "lucide-react";
 import { ThemeContext } from "../../context/ThemeContext";
 import { testimonials } from "./testimonials";

@@ -1,5 +1,5 @@
-import DewListIcon from "../assets/DewList_Logo.png";
-import DewListGold from "../assets/DewListGold.png";
+const DewListIcon = "/DewList_Logo.png";
+const DewListGold = "/DewListGold.png";
 import { useAuth } from "../context/AuthContext";
 
 export default function TaskDripBadge() {
