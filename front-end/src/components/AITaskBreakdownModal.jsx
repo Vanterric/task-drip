@@ -1,5 +1,5 @@
 import { Info, X } from 'lucide-react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { vibration } from '../utilities/vibration';
 import getRelevantIcon from '../utilities/getRelevantIcon';
 import { handleUpdateIcon } from '../utilities/handleUpdateIcon';
@@ -41,7 +41,6 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       if (!user.isPro) return;
       if (!goal.trim()) return;
       setLoading(true);
-      console.log('Fetching follow-up questions for goal:', goal);
       try {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ai/followups`, {
           method: 'POST',
@@ -63,7 +62,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       }
     }
 
-  const handleSubmit = async () => {
+  const handleSubmit = async (goal, followUpQuestions, followUpAnswers) => {
     if (!goal.trim()) return;
     vibration('button-press')
     setLoading(true);
@@ -152,7 +151,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm"
       onClick={() => { vibration('button-press'); audio('close-modal', isMuted); onClose(); }}
     >
-      {!showFollowUpModal && <AnimatePresence>
+      {<AnimatePresence>
         <motion.div
         layout
       initial={{ opacity: 0, scale: 0.95 }}
@@ -160,7 +159,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       exit={{ opacity: 0, scale: 0.95 }}
       transition={{ duration: 0.2 }}>
       <div
-        className="bg-background-card dark:bg-background-darkcard rounded-3xl shadow-xl p-6 max-w-md mx-4 relative"
+        className={`bg-background-card dark:bg-background-darkcard rounded-3xl shadow-xl p-6 max-w-md mx-4 relative ${showFollowUpModal ? 'hidden' : ''}`}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Close button */}
@@ -213,7 +212,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         <button
         disabled={loading}
         onPointerDown={() => { audio('button-press', isMuted); }}
-        onClick={()=> {vibration('button-press'); followUpsSelected ? handleFollowUpsSelected() : handleSubmit()}}
+        onClick={()=> {vibration('button-press'); followUpsSelected ? handleFollowUpsSelected() : handleSubmit(goal, followUpQuestions, followUpAnswers)}}
         className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
             ? 'bg-[#4C6CA8]/60 cursor-not-allowed'
@@ -225,7 +224,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
       </div>
       </motion.div>
       </AnimatePresence>}
-      {showFollowUpModal && <FollowUpsModal onClose={()=>setShowFollowUpModal(false)} followUpQuestions={followUpQuestions} followUpAnswers={followUpAnswers} setFollowUpAnswers={setFollowUpAnswers} handleSubmit={handleSubmit} loading={loading} />}
+      {showFollowUpModal && <FollowUpsModal onClose={()=>setShowFollowUpModal(false)} followUpQuestions={followUpQuestions} followUpAnswers={followUpAnswers} goal={goal} setFollowUpAnswers={setFollowUpAnswers} handleSubmit={handleSubmit} loading={loading} />}
     </div>
   );
 }

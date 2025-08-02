@@ -467,7 +467,7 @@ useEffect(() => {
         })}
       </div>
     </div>
-<Reveal className="h-[100vh] flex flex-col justify-center items-center" margin={"-" + (window.innerHeight/2) + 'px'} yOffset={0} delay={.5}>
+<Reveal className="h-[100vh] flex flex-col justify-center items-center" margin={"-" + (window.innerHeight/3) + 'px'} yOffset={0} delay={.5}>
 <div className="text-center mt-32 pb-20 pt-20 border-t border-b border-[#4F596240] dark:border-white/10 px-6 transition relative">
   <h2 className="text-4xl md:text-5xl font-bold text-[#4F5962] dark:text-white mb-6 transition">
     Ready to Dew this?

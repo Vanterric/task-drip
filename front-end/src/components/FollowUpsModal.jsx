@@ -7,7 +7,7 @@ import { DotLoader } from "./DotLoader";
 import { vibration } from "../utilities/vibration";
 import { audio } from "../utilities/audio";
 
-const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollowUpAnswers, handleSubmit, loading }) => {
+const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollowUpAnswers, handleSubmit, loading, goal }) => {
     const {user, isMuted} = useAuth();
     return (
     <AnimatePresence>
@@ -67,7 +67,7 @@ const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollow
 </div>
         <button
         disabled={loading}
-        onClick={handleSubmit}
+        onClick={() => handleSubmit(goal, followUpQuestions, followUpAnswers)}
         onPointerDown={() => { audio('button-press', isMuted); }}
         className={`mt-4 px-6 py-3 w-full text-sm font-medium rounded-lg transition text-white ${
             loading
