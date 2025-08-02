@@ -13,6 +13,8 @@ import { useAuth } from "../../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { DotLoader } from "../../components/DotLoader";
 import { AnimatePresence, motion } from "framer-motion";
+import { Reveal } from "../../components/Reveal";
+import Hero from "../../components/Hero";
 
 
 export default function LoginPage() {
@@ -30,8 +32,12 @@ export default function LoginPage() {
   const { setToken, setUser } = useAuth();
   const navigate = useNavigate();
   const [passwordConfirm, setPasswordConfirm] = useState(""); // not actually meant to confirm password. Used as bot bait
-
-
+  const section1Ref = useRef(null);
+  const section2Ref = useRef(null);
+  const section3Ref = useRef(null);
+  const section4Ref = useRef(null);
+  const section5Ref = useRef(null);
+  const section6Ref = useRef(null);
 
   const faqs = [
   {
@@ -150,50 +156,35 @@ useEffect(() => {
   };
 
   return (
-    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5]  dark:bg-[#212732] px-6 max-[540px]:px-4 py-20 transition overflow-x-hidden cursor-default">
-      <div className="absolute top-[-100px] left-[-100px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
+    <div className="min-h-screen w-full flex flex-col items-center justify-center bg-[#FAECE5]  dark:bg-[#212732] px-6 max-[540px]:px-4 pb-20 transition overflow-x-hidden cursor-default">
+      <div className="fixed top-[-100px] left-[-100px] pointer-events-none z-0">
+        <div className="absolute w-[300px] h-[300px] max-w-[50vw] max-h-[50vw] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite] [animation-delay:1.33s]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite] [animation-delay:2.66s]"/>
+      </div>
+      <div className="fixed bottom-[100px] right-[100px] translate-x-[-50%] translate-y-[-50%] pointer-events-none z-0">
+        <div className="absolute w-[300px] h-[300px] max-w-[50vw] max-h-[50vw] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite] [animation-delay:1.33s]"/>
+        <div className="absolute w-[250px] h-[250px] max-w-[50vw] max-h-[50vw] border border-[#D4E3FF] dark:border-[#4C6CA8] rounded-full opacity-0 animate-[rippleWave_4s_linear_infinite] [animation-delay:2.66s]"/>
+      </div>
 
-      <button onClick={() => {vibration('button-press'); audio('button-press', false); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-5 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
+
+      <button onClick={() => {vibration('button-press'); audio('button-press', false); setIsDarkMode(!isDarkMode);}} className="p-2 rounded-full z-20 hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer fixed bottom-4 left-4">
             {isDarkMode ? (
               <Sun className="w-10 h-10 text-white" />
             ) : (
               <Moon className="w-10 h-10 text-[#4F5962]" />
             )}
           </button>
-      <div className="text-center flex items-center justify-center flex-col h-[80vh]">
-        
-        <img src={DewList_Logo} alt="DewList Logo" className="w-32 mb-6" />
-        <h1 className="text-4xl md:text-6xl font-bold text-[#4F5962] dark:text-white mb-2 text-center transition">
-          DewList
-        </h1>
-        <h2 className="text-2xl md:text-3xl font-semibold text-[#4F5962] dark:text-white mb-4 text-center transition">
-          One task at a time.
-        </h2>
-        <div className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 text-center max-w-2xl  transition max-[540px]:text-sm">
-          {referrerName!=="" ? <div>{referrerName} thinks you'll love this. <i>We do too.</i><br/><br/></div> : ""} DewList helps ADHD brains focus by showing <br/> just one task at a time. No clutter. No chaos. Just clarity.
-        </div>
-        <button
-          onClick={() => {
-            audio("open-modal", false);
-            vibration("button-press");
-            setShowModal(true);
-          }}
-          className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white px-8 py-4 rounded-2xl text-lg font-semibold transition cursor-pointer"
-        >
-          Try it free!
-        </button>
-        <div className="mt-6 text-[#4F5962] dark:text-white text-sm transition cursor-pointer hover:underline" onPointerDown={()=>{audio("button-press", false), vibration('button-press')}} onClick={() => {
-          document.getElementById("productDemo")?.scrollIntoView({ behavior: "smooth" });
-        }}>
-          Watch a Demo
-        </div>
-      </div>
+      <Hero referrerName={referrerName} setShowModal={setShowModal} sectionRefs={[section1Ref, section2Ref, section3Ref, section4Ref, section5Ref, section6Ref]}/>
 
      
-
-      <div className="w-full px-6 py-20 bg-white dark:bg-[#1C222C] transition flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto">
+<Reveal className="z-10">
+      <div ref={section1Ref}  className="w-full px-6 z-[10] py-20 bg-white/50 dark:bg-black/20 transition flex flex-col md:flex-row items-center gap-10 max-w-6xl mx-auto rounded-3xl backdrop-blur-xs shadow-lg">
   {/* Visual Mockup */}
-  <div className="w-full md:w-1/2 flex justify-center">
+  <div  className="w-full md:w-1/2 flex justify-center z-[20]">
   <div className="rounded-3xl border border-[#E0ECFC] dark:border-[#4F596240] shadow-xl p-6 bg-white dark:bg-[#4F5962] w-full max-w-md space-y-6 transition">
     <div className="text-center text-xl font-semibold text-[#4F5962] dark:text-white transition">
       Build landing page section 2.
@@ -225,41 +216,53 @@ useEffect(() => {
 
   {/* Feature List */}
   <div className="w-full md:w-1/2 text-left relative">
-  <div className="absolute top-[-100px] right-[0px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
+  <Reveal >
   <h2 className="text-3xl font-bold text-[#4F5962] dark:text-white mb-6 transition">Why DewList works</h2>
+  </Reveal>
   <ul className="space-y-6">
-    <li className="flex items-start gap-3">
-      <ListTodo className="w-15 h-15 text-[#4C6CA8] mt-1 mr-1" />
+    <Reveal margin="-150px">
+    <li className="flex items-start gap-3 justify-start ">
+      <ListTodo className="w-15 min-w-8 h-auto text-[#4C6CA8] mt-1 " />
       <div>
         <p className="text-lg font-semibold text-[#4F5962] dark:text-white transition">Just one task, seriously.</p>
         <p className="text-[#91989E] dark:text-[#D4E3FF] transition">DewList keeps your mind clear by showing only your current task. You can’t overthink a list you can’t see.</p>
       </div>
     </li>
+    </Reveal>
+    <Reveal margin="-150px">
     <li className="flex items-start gap-3">
-      <Sparkles className="w-15 h-15 text-[#4C6CA8] mt-1 mr-1" />
+      <Sparkles className="w-15 min-w-8 h-auto mt-2 text-[#4C6CA8]" />
       <div>
         <p className="text-lg font-semibold text-[#4F5962] dark:text-white transition">ADHD-calibrated design.</p>
         <p className="text-[#91989E] dark:text-[#D4E3FF] transition">Minimal UI. Gentle colors. Subtle haptics. Everything is tuned to reduce overwhelm and help you finish what you start.</p>
       </div>
     </li>
-    <li className="flex items-start gap-3">
-      <Bot className="w-15 h-15 text-[#4C6CA8] mt-2 mr-1" />
+    </Reveal>
+    <Reveal margin="-150px">
+    <li className="flex items-start gap-3 justify-start">
+      <Bot className="w-15 min-w-8 h-auto text-[#4C6CA8] mt-2" />
       <div>
         <p className="text-lg font-semibold text-[#4F5962] dark:text-white transition">Built-in task helper.</p>
         <p className="text-[#91989E] dark:text-[#D4E3FF] transition">Write what you want to get done, and DewList gently breaks it into steps using AI. It’s like your to-do list finally gets you.</p>
       </div>
     </li>
+    </Reveal>
   </ul>
 </div>
 </div>
+</Reveal>
 
-<div className="w-full flex flex-col md:flex-row items-center justify-between gap-12 mt-50 max-w-6xl">
-  
+<div className="h-[100vh] relative"/>
+
+<Reveal className="z-10">
+<div ref={section2Ref} className="w-full py-2 flex flex-col md:flex-row items-center justify-between gap-12 max-w-6xl">
   <div className="w-full md:w-1/2 text-left">
-  
+  <Reveal>
     <h2 className="text-3xl font-bold text-[#4F5962] dark:text-white mb-6 transition">
       Built with you
     </h2>
+    </Reveal>
+    <Reveal margin="-150px">
     <p className="text-lg text-[#91989E] dark:text-[#D4E3FF] mb-4 transition">
       DewList isn’t bloated with features you’ll never use. We only build what you ask for—seriously.
     </p>
@@ -269,17 +272,18 @@ useEffect(() => {
     <p className="text-lg text-[#4C6CA8] dark:text-[#D4E3FF] font-semibold transition">
       Ask, and we shall dew.
     </p>
+    </Reveal>
   </div>
-
-  <div className="w-full md:w-1/2 flex justify-center">
-    <div className="rounded-3xl border border-[#E0ECFC] dark:border-[#4F596240] bg-white dark:bg-[#2A313D] p-6 w-full max-w-md shadow-lg space-y-4 transition">
-      <div className="bg-[#F6F8FA] dark:bg-[#4F5962] rounded-xl p-4 transition">
+  <Reveal margin="-150px" className="w-full md:w-1/2">
+  <div className=" flex justify-center">
+    <div className="rounded-3xl border border-[#E0ECFC] dark:border-[#4F596240] bg-white/50 dark:bg-black/20 backdrop-blur-xs p-6 w-full max-w-md shadow-lg space-y-4 transition">
+      <div className="bg-[#F6F8FA] dark:bg-[#4F5962] rounded-xl p-4 transition shadow-lg">
         <p className="text-sm text-[#4F5962] dark:text-white font-semibold transition">
           “Can you add a widget that shows task history?”
         </p>
         <p className="text-xs text-[#91989E] mt-1">— You, probably</p>
       </div>
-      <div className="bg-[#FAECE5] dark:bg-[#3A3F4F] rounded-xl p-4 transition">
+      <div className="bg-[#FAECE5] dark:bg-[#3A3F4F] rounded-xl p-4 transition shadow-lg">
         <p className="text-sm text-[#4F5962] dark:text-white font-semibold transition">
           “Done. It’s live.”
         </p>
@@ -287,15 +291,22 @@ useEffect(() => {
       </div>
     </div>
   </div>
+  </Reveal>
 </div>
+</Reveal>
 
-<div className="w-full py-20 px-4 md:px-10 bg-[#FAECE5] bg-white dark:bg-[#1C222C] max-w-6xl mt-50 relative transition">
-  <div className="absolute bottom-[-200px] left-[-100px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
+<div className="h-[100vh]"/>
+
+<Reveal className="z-10">
+<div ref={section3Ref} className="w-full py-20 px-4 md:px-10 bg-[#FAECE5] bg-white/50 dark:bg-black/20 max-w-6xl relative transition rounded-3xl shadow-lg backdrop-blur-xs">
+  <Reveal margin="-150px">
   <h2 className="text-3xl md:text-4xl font-bold text-center text-[#4F5962] dark:text-white mb-12 transition">
     What people are saying
   </h2>
+  </Reveal>
   <div className="max-w-5xl mx-auto grid gap-8 md:grid-cols-3">
     {testimonials.map(({ name, role, quote }, i) => (
+      <Reveal delay={i * 0.1} margin="-200px" key={i}>
       <div
         key={i}
         className="bg-white dark:bg-[#4F5962] border border-[#E0ECFC] dark:border-[#4F596240] rounded-3xl p-6 shadow-md flex flex-col justify-between transition"
@@ -305,22 +316,31 @@ useEffect(() => {
           — {name}, {role}
         </div>
       </div>
+      </Reveal>
     ))}
   </div>
 </div>
+</Reveal>
 
+<div className="h-[100vh]"/>
 
-<div className="w-full max-w-6xl mx-auto mt-20 px-4">
+<Reveal className="z-10 w-full max-w-6xl mx-auto px-4">
+<div ref={section4Ref} className="">
+  <Reveal >
   <h2 className="text-3xl md:text-5xl font-bold text-[#4F5962] dark:text-white mb-6 text-center transition">
     Pick your pace
   </h2>
+  </Reveal>
+  <Reveal margin="-150px">
   <p className="text-lg text-[#91989E] dark:text-[#D4E3FF] text-center max-w-2xl mx-auto mb-12 transition">
     DewList starts simple. If it helps, go Pro. If not, no stress.
   </p>
+  </Reveal>
 
   <div className="flex flex-col md:flex-row gap-6 justify-center">
     {/* Free Tier */}
-    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8 w-full max-w-sm border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
+    <Reveal margin="-200px" className="w-full max-w-sm">
+    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8  border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
       <div>
         <h3 className="text-3xl font-bold text-[#4F5962] dark:text-white mb-2 transition">Free</h3>
         <p className="text-xl font-extrabold text-[#4C6CA8] dark:text-[#90A9D6] mb-4 transition">Forever</p>
@@ -343,9 +363,11 @@ useEffect(() => {
         Try it Free!
       </button>
     </div>
+    </Reveal>
 
     {/* Pro Tier */}
-    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8 w-full max-w-sm border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
+    <Reveal margin="-200px" className="w-full max-w-sm">
+    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8  border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
       <div>
         <h3 className="text-3xl font-bold text-yellow-500 dark:text-yellow-300 mb-2 transition">Pro</h3>
         <p className="text-xl font-extrabold text-[#4C6CA8] mb-4 dark:text-[#90A9D6] transition">$5/mo · $30/yr · $100 once</p>
@@ -373,33 +395,45 @@ useEffect(() => {
         Try it Free!
       </button>
     </div>
+    </Reveal>
   </div>
-
+  <Reveal margin="-150px">
   <p className="mt-10 text-sm text-[#91989E] dark:text-[#D4E3FF] text-center transition">
     No trials. No weird timers. Just use it. Upgrade if it helps.
   </p>
+  </Reveal>
 </div>
-<div className="w-full max-w-6xl mx-auto mt-20 px-4" id="productDemo">
+</Reveal>
+
+<div className="h-[100vh]"/>
+
+<div ref={section5Ref} className="w-full z-10 max-w-6xl mx-auto mt-20 px-4" id="productDemo">
   <div className="mt-5">
     <SupademoEmbed />
   </div>
 </div>
 
-<div className="w-full max-w-4xl mx-auto mt-32 px-4 relative">
-  <div className="absolute bottom-[100px] right-[-500px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
+<div className="h-[100vh]"/>
+
+<div className="z-10" ref={section6Ref}>
+<div className="w-full max-w-4xl mx-auto px-4 relative">
+  <Reveal>
       <h2 className="text-3xl md:text-5xl font-bold text-[#4F5962] dark:text-white mb-6 text-center transition">
         Questions?
       </h2>
+  </Reveal>
+  <Reveal margin="-150px">
       <p className="text-lg text-[#91989E] dark:text-[#D4E3FF] text-center mb-12 transition">
         You’re not the only one wondering. Here’s what people usually ask.
       </p>
-
+  </Reveal>
       <div className="space-y-4">
         {faqs.map((faq, i) => {
           const contentRef = useRef(null);
           const isOpen = openIndex === i;
 
           return (
+            <Reveal key={i}>
             <div
               key={i}
               className="border border-[#E0ECFC] dark:border-[#4F596240] rounded-xl overflow-hidden transition-all"
@@ -411,7 +445,7 @@ useEffect(() => {
                 {faq.question}
                 <ChevronDown
                   className={`w-5 h-5 transition-transform duration-300 cursor-pointer ${
-                    isOpen ? "rotate-180" : ""
+                    isOpen ? "" : "rotate-[-90deg]"
                   }`}
                 />
               </button>
@@ -421,20 +455,20 @@ useEffect(() => {
                 style={{
                   maxHeight: isOpen ? `${contentRef.current?.scrollHeight}px` : "0px",
                 }}
-                className="px-5 overflow-hidden transition-all duration-300 ease-in-out"
+                className="px-5 overflow-hidden transition-all duration-300 ease-in-out backdrop-blur-xs bg-white/50 dark:bg-black/20"
               >
                 <div className="pb-4 text-[#91989E] dark:text-[#D4E3FF] text-sm leading-relaxed mt-3 transition">
                   {faq.answer}
                 </div>
               </div>
             </div>
+            </Reveal>
           );
         })}
       </div>
     </div>
-
-<div className="text-center mt-32 pt-20 border-t border-[#4F596240] dark:border-white/10 px-6 transition relative">
-<div className="absolute bottom-[-200px] left-[-800px] w-[300px] h-[300px] bg-[#D4E3FF] dark:bg-[#4C6CA8] opacity-30 blur-[100px] rounded-full z-[1]"></div>
+<Reveal className="h-[100vh] flex flex-col justify-center items-center" margin={"-" + (window.innerHeight/2) + 'px'} yOffset={0} delay={.5}>
+<div className="text-center mt-32 pb-20 pt-20 border-t border-b border-[#4F596240] dark:border-white/10 px-6 transition relative">
   <h2 className="text-4xl md:text-5xl font-bold text-[#4F5962] dark:text-white mb-6 transition">
     Ready to Dew this?
   </h2>
@@ -452,8 +486,8 @@ useEffect(() => {
     Try it Free
   </button>
 </div>
-
-<footer className="mt-10 translate-y-10 pt-20 text-center text-sm text-[#91989E] dark:text-[#D4E3FF] border-t border-[#4F596240] dark:border-white/10 flex flex-col items-center gap-4 transition">
+</Reveal>
+<footer className=" translate-y-10 text-center text-sm text-[#91989E] dark:text-[#D4E3FF]  flex flex-col items-center gap-4 transition">
   <img
     src={DewList_Logo}
     alt="DewList Logo"
@@ -492,7 +526,7 @@ useEffect(() => {
     </a>
   </p>
 </footer>
-
+</div>
 
 
       {showModal && (
