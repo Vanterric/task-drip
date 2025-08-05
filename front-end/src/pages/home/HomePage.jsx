@@ -15,7 +15,7 @@ import { setLastActiveAt } from "../../utilities/setLastActiveAt";
 import getRelevantIcon from "../../utilities/getRelevantIcon";
 import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
-import { motion, AnimatePresence, useAnimation } from "framer-motion";
+import { motion, AnimatePresence, useAnimation, animate } from "framer-motion";
 import EditTaskModal from "../../components/EditTaskModal";
 import { ColorContext } from "../../context/ColorContext";
 import { useContext } from "react";
@@ -1319,6 +1319,8 @@ const getTaskName = (taskId, taskListId) => {
   className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onPointerDown={() => { audio('button-press', false); }}
   onClick={() => {vibration('button-press'); 
+    setSwipeDirection('up');
+    animateAndSwap('up', async () => {
   const resetTaskDetails = async (list)=>{
     setActiveTaskList(list);
 
@@ -1339,7 +1341,10 @@ const getTaskName = (taskId, taskListId) => {
   }
   resetTaskDetails({...activeTaskList});
   setPreviousCompletedCount(0);
-  setViewType(viewType === 'one-task' ? 'list' : 'one-task');}}
+  setViewType(viewType === 'one-task' ? 'list' : 'one-task');
+  })
+}
+}
 >
 <div className="relative w-5 h-5 group">
   <List
