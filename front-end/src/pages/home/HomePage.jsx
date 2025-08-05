@@ -567,10 +567,7 @@ const handleGoToTask = (taskId, taskData) => {
     }
     return;
   }
-  console.log("Going to task", taskId);
-  console.log("Task data:", taskData);
   const taskIndex = taskData.findIndex((t) => t._id === taskId);
-  console.log("Task index:", taskIndex);
   const before = taskData.slice(0, taskIndex);
   const after = taskData.slice(taskIndex);
   const reordered = [...after, ...before];
