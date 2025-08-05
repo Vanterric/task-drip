@@ -559,7 +559,18 @@ const handleReplaceWithSubtasks = async () => {
 
 //handle go to specific task by finding it in tasks and splitting and inverting the array so that everything before it is pushed to the end, but as if each were skipped one at a time
 const handleGoToTask = (taskId, taskData) => {
+  // if in listview, just scroll to the task
+  if (viewType === 'list') {
+    const taskElement = document.getElementById(taskId);
+    if (taskElement) {
+      taskElement.scrollIntoView({ behavior: 'smooth', block: 'start', });
+    }
+    return;
+  }
+  console.log("Going to task", taskId);
+  console.log("Task data:", taskData);
   const taskIndex = taskData.findIndex((t) => t._id === taskId);
+  console.log("Task index:", taskIndex);
   const before = taskData.slice(0, taskIndex);
   const after = taskData.slice(taskIndex);
   const reordered = [...after, ...before];
@@ -1032,7 +1043,7 @@ const getTaskName = (taskId, taskListId) => {
                     const taskName = getTaskName(dep.task, dep.list);
                     return (
                     <li key={dep._id} className={`text-sm ${isCompleted ? 'line-through opacity-50' : ''}`}>
-                      <a className="text-accent-primary underline dark:text-accent-focusring" href={`https://dewlist.app/app?tasklistId=${dep.list}&taskId=${dep.task}`}>{taskName}</a>
+                      <span className="text-accent-primary underline dark:text-accent-focusring" onClick={() => {audio('button-press'); vibration("button-press"); handleGoToTask(dep.task, tasks)}}>{taskName}</span>
                     </li>
                   )
                   })}
@@ -1202,9 +1213,10 @@ const getTaskName = (taskId, taskListId) => {
       >
         
         {tasks.map((task, index) => (
-          <Draggable key={task._id} draggableId={task._id} index={index}>
+          <Draggable key={task._id}  draggableId={task._id} index={index}>
             {(provided) => (
               <div
+                id={task._id}
                 ref={provided.innerRef}
                 {...provided.draggableProps}
                 className={` mt-2 p-4 flex flex-col items-center justify-center rounded-lg shadow-md bg-background-card dark:bg-background-darkcard w-full cursor-default ${task.isComplete ? 'opacity-50' : ''}  relative `}
@@ -1238,6 +1250,24 @@ const getTaskName = (taskId, taskListId) => {
                     </div>
                   </div>
                   }
+                   {task.dependencies && task.dependencies.length > 0 && (
+              <div className="mt-4">
+                <span className="font-semibold">Dependencies:</span>
+                <div>
+                  {task.dependencies.map((dep, i) => {
+                    const isCompleted = checkIfCompleted(dep.task, dep.list)
+                    const taskName = getTaskName(dep.task, dep.list);;
+                    return (
+                    <span key={dep._id} className={`text-sm ${isCompleted ? 'line-through opacity-50' : ''}`}>
+                      <span className="text-accent-primary underline dark:text-accent-focusring cursor-pointer" onClick={() => {audio('button-press'); vibration("button-press"); handleGoToTask(dep.task, tasks)}}>{taskName}
+                      </span>
+                      {i < task.dependencies.length - 1 ? ', ' : ''}
+                    </span>
+                  )
+                  })}
+                </div>
+              </div>
+            )}
                   <div className={`flex items-center mt-2 ${task.dewDate ? 'justify-between' : 'justify-end'} w-full`}>
                   {task.dewDate && (
                     <div onClick={() => {audio('open-modal', false); vibration("button-press"); setIsEditTaskModalOpen(true); setSelectedTask(task)}} className={`text-xs flex cursor-pointer ${isPastDue(task.dewDate
