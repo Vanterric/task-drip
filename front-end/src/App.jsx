@@ -9,6 +9,7 @@ import InAppBrowserBanner from "./components/InAppBrowserBanner";
 import ReferrerDashboard from "./pages/referrer-dashboard/ReferrerDashboard";
 import { consoleMessageToCuriousUsers } from "./utilities/consoleMessageToCuriousUsers";
 import {preloadAudio} from "./utilities/audio";
+import SigninPage from "./pages/login/SignInPage";
 
 function App() {
 
@@ -59,6 +60,7 @@ useEffect(() => {
     <Router>
       <Routes>
         <Route path={`/login`} element={<LoginPage />} />
+        <Route path={`/signin`} element={<SigninPage />} />
         <Route path="/unlock" element={<UnlockPage />} />
         <Route path="/app" element={<PrivateRoute><HomePage /></PrivateRoute>} />
         <Route path="/subscribe" element={<PrivateRoute><SubscribePage /></PrivateRoute>} />

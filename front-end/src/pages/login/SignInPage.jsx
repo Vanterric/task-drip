@@ -1,5 +1,5 @@
 import { Check, CheckCircle, ChevronDown, Moon, RefreshCw, Sun } from "lucide-react";
-import { useContext, useEffect, useRef, useState } from "react";
+import { use, useContext, useEffect, useRef, useState } from "react";
 import { vibration } from "../../utilities/vibration";
 import { audio } from "../../utilities/audio";
 const DewList_Logo = "DewList_Logo.png";
@@ -17,7 +17,7 @@ import { Reveal } from "../../components/Reveal";
 import Hero from "../../components/Hero";
 
 
-export default function LoginPage() {
+export default function SigninPage() {
   const [showModal, setShowModal] = useState(false);
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState("idle");
@@ -29,7 +29,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [selectedMagicLinkAuth, setSelectedMagicLinkAuth] = useState(false);
   const [showPasswordIncorrect, setShowPasswordIncorrect] = useState(false);
-  const { setToken, setUser } = useAuth();
+  const { setToken, setUser, isAuthenticated } = useAuth();
   const navigate = useNavigate();
   const [passwordConfirm, setPasswordConfirm] = useState(""); // not actually meant to confirm password. Used as bot bait
   const section1Ref = useRef(null);
@@ -76,6 +76,11 @@ export default function LoginPage() {
 useEffect(() => {
   setReferrerName(referrer === "" ? "" : mapRefferer(referrer));
 }, [referrer])
+
+useEffect(() => {
+    if (!isAuthenticated) return;
+    navigate("/app");
+}, [isAuthenticated])
 
 
   const toggle = (i) => {
@@ -178,7 +183,7 @@ useEffect(() => {
               <Moon className="w-10 h-10 text-[#4F5962]" />
             )}
           </button>
-      <Hero buttonText='Try it Free!' referrerName={referrerName} setShowModal={setShowModal} sectionRefs={[section1Ref, section2Ref, section3Ref, section4Ref, section5Ref, section6Ref]}/>
+      <Hero buttonText={"Login"} referrerName={referrerName} setShowModal={setShowModal} sectionRefs={[section1Ref, section2Ref, section3Ref, section4Ref, section5Ref, section6Ref]}/>
 
      
 <Reveal className="z-10">
@@ -360,7 +365,7 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free!
+        Login
       </button>
     </div>
     </Reveal>
@@ -392,7 +397,7 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free!
+        Login
       </button>
     </div>
     </Reveal>
@@ -483,7 +488,7 @@ useEffect(() => {
     }}
     className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white px-10 py-4 rounded-2xl text-lg font-semibold transition cursor-pointer"
   >
-    Try it Free
+    Login
   </button>
 </div>
 </Reveal>
@@ -542,7 +547,7 @@ useEffect(() => {
       transition={{ duration: 0.2 }}
       className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-2xl p-6 md:p-10 max-w-lg w-full">
             <h2 className="text-2xl font-bold text-center text-[#4F5962] dark:text-white mb-4">
-              Welcome to DewList!
+              Welcome Back!
             </h2>
             <p className="text-center text-[#91989E] mb-6">
               Log in with a password or a magic link.
@@ -618,7 +623,7 @@ useEffect(() => {
           : <span className="flex justify-center items-center gap-1">Logging In <span className="mt-2"><DotLoader/></span></span>
         : selectedMagicLinkAuth
         ? "Send Magic Link"
-        : "Get Started"}
+        : "Login"}
     </button>
 
     {status === "error" && (

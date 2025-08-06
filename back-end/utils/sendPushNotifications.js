@@ -51,7 +51,7 @@ sendPushNotifications = async (resetUserIds = []) => {
     const payload = JSON.stringify({
       title: "Hey, it’s DewList 👋",
       body: getRandomMessage(),
-      url: '/',
+      url: '/signin',
       userId:user._id,
       badge: '/icons/icon-192.png', 
     icon: '/icons/icon-192.png', 

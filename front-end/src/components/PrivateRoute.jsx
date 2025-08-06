@@ -3,5 +3,5 @@ import { useAuth } from "../context/AuthContext";
 
 export default function PrivateRoute({ children }) {
   const { isAuthenticated } = useAuth();
-  return isAuthenticated ? children : <Navigate to={`/login${location.search}`} />;
+  return isAuthenticated ? children : <Navigate to={`/signin${location.search}`} />;
 }

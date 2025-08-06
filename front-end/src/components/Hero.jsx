@@ -3,7 +3,7 @@ import { useEffect, useRef, useState } from "react";
 import { audio } from "../utilities/audio";
 import { vibration } from "../utilities/vibration";
 
-export default function Hero({ referrerName, setShowModal, sectionRefs }) {
+export default function Hero({ referrerName, setShowModal, sectionRefs, buttonText }) {
   const containerRef = useRef(null);
    const logoOpacity = useMotionValue(1);
     const sectionHeadersOpacity = useMotionValue(1);
@@ -115,7 +115,7 @@ useEffect(() => {
         className="bg-[#4C6CA8] hover:bg-[#3A5D91] text-white px-8 py-4 rounded-2xl text-lg font-semibold transition cursor-pointer"
         style={{ opacity: textOpacity }}
       >
-        Try it free!
+        {buttonText}
       </motion.button>
 
       <motion.div

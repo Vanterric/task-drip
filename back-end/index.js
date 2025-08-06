@@ -469,7 +469,7 @@ const verifyToken = (req, res, next) => {
     const token = jwt.sign(
       { email: user.email, id: user._id },
       process.env.JWT_SECRET,
-      { expiresIn: '7d' }
+      { expiresIn: '30d' }
     );
 
     // Optionally store the session token (e.g. if used for magic links too)

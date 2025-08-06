@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
     setUser(null);
     localStorage.removeItem("authToken");
     localStorage.removeItem("user");
-    window.location.href = "/login";
+    window.location.href = "/signin";
   };
 
   const verifyToken = async () => {
