@@ -951,11 +951,14 @@ const getTaskName = (taskId, taskListId) => {
                 <motion.div key={`progress-bar-${activeTaskList._id}`} layout ><ProgressBar completedCount={completedCount} previousCompletedCount={previousCompletedCount} tasks={tasks} /></motion.div>
               </div>)
         : !activeTaskList || tasks.length === 0 ? (
-          <p className="text-lg text-text-secondary text-center cursor-default">
+          <div className="flex flex-col items-center justify-center px-4">
+            <img className="h-40 mb-5" src="/Seedling.webp" alt="No tasks" />
+          <p className="text-lg text-text-info dark:text-text-darkinfo text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
             : "No tasks here yet. Tap Add Task to add your first."}
         </p>
+        </div>
         
         ) : nextTask ? (
           
@@ -1193,11 +1196,14 @@ const getTaskName = (taskId, taskListId) => {
             </div>}
         <DragDropContext onDragEnd={(source, destination) => { setFilter("Custom"); handleTaskReorder(source, destination); }} >
          { !activeTaskList || tasks.length === 0 ? (
-          <p className="text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-160px)] h-[calc(100vh-200px)] mx-2 items-center justify-center">
+          <div className="flex flex-col items-center justify-center px-4 text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-173px)] h-[calc(100vh-213px)] mx-2 items-center justify-center">
+            <img className="h-40 mb-5" src="/Seedling.webp" alt="No tasks" />
+          <p className="text-lg text-text-info dark:text-text-darkinfo text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
             : "No tasks here yet. Tap Add Task to add your first."}
         </p>
+        </div>
         
         ) : null}
 
