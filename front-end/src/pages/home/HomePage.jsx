@@ -1341,7 +1341,7 @@ const getTaskName = (taskId, taskListId) => {
   }
   resetTaskDetails({...activeTaskList});
   setPreviousCompletedCount(0);
-  setViewType(viewType === 'one-task' ? 'list' : 'one-task');
+  setTimeout(() => { setViewType(viewType === 'one-task' ? 'list' : 'one-task') }, 0);
   })
 }
 }
