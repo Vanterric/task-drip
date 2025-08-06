@@ -37,7 +37,6 @@ export default function ProgressBar({ previousCompletedCount, completedCount, ta
       if (hasInteracted && progress > 0 && progress < 100) {
         const percentPrevious = previousCompletedCount / totalTasks * 100;
         const difference = progress - percentPrevious;
-        console.log('Progress difference:', previousCompletedCount, '->', completedCount, '=>', difference);
         if (difference >= 90 && difference < 100) {
           audio('progress9-10', isMuted);
         } else if (difference >= 80 && difference < 90) {
