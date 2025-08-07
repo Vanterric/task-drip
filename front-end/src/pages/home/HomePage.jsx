@@ -952,7 +952,7 @@ const getTaskName = (taskId, taskListId) => {
               </div>)
         : !activeTaskList || tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center px-4">
-            <img className="h-40 mb-5" src="/Seedling.webp" alt="No tasks" />
+            <img loading="lazy" className="h-40 mb-5" src="/Seedling.webp" alt="No tasks" />
           <p className="text-lg text-text-info dark:text-text-darkinfo text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."
@@ -1197,7 +1197,7 @@ const getTaskName = (taskId, taskListId) => {
         <DragDropContext onDragEnd={(source, destination) => { setFilter("Custom"); handleTaskReorder(source, destination); }} >
          { !activeTaskList || tasks.length === 0 ? (
           <div className="flex flex-col items-center justify-center px-4 text-lg text-text-secondary text-center cursor-default flex flex-col max-[500px]:h-[calc(100vh-173px)] h-[calc(100vh-213px)] mx-2 items-center justify-center">
-            <img className="h-40 mb-5" src="/Seedling.webp" alt="No tasks" />
+            <img className="h-40 mb-5" loading="lazy" src="/Seedling.webp" alt="No tasks" />
           <p className="text-lg text-text-info dark:text-text-darkinfo text-center cursor-default">
           {!activeTaskList
             ? "No lists yet. Tap the menu to create one."

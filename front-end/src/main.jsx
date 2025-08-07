@@ -1,25 +1,34 @@
-import { StrictMode } from 'react'
+import { StrictMode, lazy, Suspense } from 'react';
 import { createRoot } from 'react-dom/client'
 import './index.css'
-import App from './App.jsx'
-import { AuthProvider } from './context/AuthContext.jsx'
-import { loadStripe } from '@stripe/stripe-js';
-import { Elements } from '@stripe/react-stripe-js';
-import { ThemeProvider } from './context/ThemeContext.jsx'
-import { ColorProvider } from './context/ColorContext.jsx'
 
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
+document.getElementById("preload-screen")?.remove();
+
+
+const App = lazy(() => import('./App.jsx'));
+const { AuthProvider } = await import('./context/AuthContext.jsx');
+const { ThemeProvider } = await import('./context/ThemeContext.jsx');
+const { ColorProvider } = await import('./context/ColorContext.jsx');
+
+
+
+
+
+
+
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Suspense fallback={<div />}>
     <AuthProvider>
       <ThemeProvider>
         <ColorProvider>
-      <Elements stripe={stripePromise}>
+      
     <App />
-    </Elements>
+    
     </ColorProvider>
     </ThemeProvider>
     </AuthProvider>
+    </Suspense>
   </StrictMode>,
 )

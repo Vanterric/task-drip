@@ -8,6 +8,8 @@
 <meta property="og:image:type" content="image/webp" />
 <meta property="og:url" content="https://dewlist.app/" />
 <meta property="og:type" content="website" />
+<link rel="preload" as="image" href="/DewList_Logo.png" />
+<link rel="preload" as="image" href="/DewListGold.png" />
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
@@ -38,6 +40,19 @@
 
   </head>
   <body>
+    <div id="preload-screen" style="
+      height: 100vh;
+      width: 100vw;
+      background-color: #212732;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Lexend', sans-serif;
+      font-size: 1rem;
+      color: #4F5962;
+    ">
+    Loading DewList...
+  </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

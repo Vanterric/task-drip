@@ -2,7 +2,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Lexend'], // exact quotes here matter
+        sans: ['Lexend', 'system-ui', 'sans-serif'], 
       },
       colors: {
         text: {
