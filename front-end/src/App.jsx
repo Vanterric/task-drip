@@ -2,7 +2,6 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-d
 import { lazy, Suspense } from "react";
 import { useEffect, useState } from "react";
 import { consoleMessageToCuriousUsers } from "./utilities/consoleMessageToCuriousUsers";
-import {preloadAudio} from "./utilities/audio";
 import SubscribeWrapper from "./SubscribeWrapper";
 import { preloadStripe } from "./utilities/preloadStripe";
 
@@ -44,15 +43,7 @@ useEffect(() => {
   }
 }, [])
 
-useEffect(() => {
-  if ('requestIdleCallback' in window) {
-    requestIdleCallback(() => {
-      preloadAudio();
-    });
-  } else {
-    setTimeout(preloadAudio, 1000);
-  }
-}, []);
+
 
 
 

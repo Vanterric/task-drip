@@ -35,20 +35,6 @@ const audioFiles = {
   'task-complete': 'https://storage.googleapis.com/dewlist_interaction_audio/TaskComplete.mp3',
 };
 
-export const preloadAudio = () => {
-  Object.entries(audioFiles).forEach(([key, src]) => {
-    if (!cache[key]) {
-      cache[key] = new Howl({
-        src: [src],
-        volume:
-          key === 'single-drop' ? 0.05 :
-          progressBarKeys.includes(key) ? 0.15 :
-          key === 'success-bubbles' ? 0.25 : 0.4,
-        preload: true, // just to be explicit
-      });
-    }
-  });
-};
 
 
 const getRandomInt = (min, max) =>
