@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { consoleMessageToCuriousUsers } from "./utilities/consoleMessageToCuriousUsers";
 import SubscribeWrapper from "./SubscribeWrapper";
 import { preloadStripe } from "./utilities/preloadStripe";
+import { useAuth } from "./context/AuthContext";
 
 const LoginPage = lazy(() => import("./pages/login/LoginPage"));
 const SigninPage = lazy(() => import("./pages/login/SignInPage"));
@@ -17,7 +18,7 @@ const InAppBrowserBanner = lazy(() => import("./components/InAppBrowserBanner"))
 
 function App() {
 
-
+const {isAuthenticated} = useAuth();
 
 useEffect(() => {
   if ('requestIdleCallback' in window) {
@@ -96,7 +97,7 @@ useEffect(() => {
   }
 />
 <Route path = "/referrer-dashboard" element = {<PrivateRoute><ReferrerDashboard/></PrivateRoute>}/>
-        <Route path="/" element={<Navigate to={`/app${location.search}`} />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to={`/app${location.search}`} /> : <Navigate to={`/login`} />} />
       </Routes>
     </Router>
     <InAppBrowserBanner />
