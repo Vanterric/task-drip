@@ -142,7 +142,7 @@ export default function FirstTimeUserTaskBreakdownModal({ isOpen, onClose, setAc
             {dailyPromptMap[dayOfWeek]} <br/> <br />
             Tell us, and we’ll turn it into a simple, doable task list!<br /><br />
             <i>Normally this is a Pro-only feature, but your first one's on us </i>🎁 <br/> <br/>
-            <i>If you like it, consider upgrading to Pro! You'll be able to create new task lists with a text description by clicking the "<Stars className='inline h-4'/>" button on the bottom left of the screen.</i>
+            <i>If you like it, consider upgrading to Pro! You'll be able to create new task lists with a text description by clicking the <span className='text-[#4C6CA8] whitespace-nowrap dark:text-[#AAB8C2]'>"<Stars className='inline h-4'/>"</span> button on the bottom left of the screen.</i>
             </p>
         <textarea
           disabled={loading}

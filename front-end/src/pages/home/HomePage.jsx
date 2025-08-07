@@ -191,7 +191,7 @@ export default function HomePage() {
 
 useEffect(() => {
   const checkFirstTime = async () => {
-    if (isFirstTimeUser) {
+    if (isFirstTimeUser && !localStorage.getItem('dismissedFirstTimeModal')) {
       setShowFirstTimeModal(true);
     }
   };
@@ -1388,7 +1388,7 @@ const getTaskName = (taskId, taskListId) => {
   }}
 />
 <AITaskBreakdownModal handleCancelBreakdown={handleCancelBreakdown} taskLists={taskLists} token={token} isOpen={showAIModal} onClose={() => setShowAIModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists} setFinalTask = {setFinalTask} setFirstTask = {setFirstTask}/>
-  <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => setShowFirstTimeModal(false)} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
+  <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => {setShowFirstTimeModal(false); localStorage.setItem('dismissedFirstTimeModal', 'true')}} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
 token={token}
