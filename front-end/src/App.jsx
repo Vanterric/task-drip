@@ -97,7 +97,7 @@ useEffect(() => {
   }
 />
 <Route path = "/referrer-dashboard" element = {<PrivateRoute><ReferrerDashboard/></PrivateRoute>}/>
-        <Route path="/" element={isAuthenticated ? <Navigate to={`/app${location.search}`} /> : <Navigate to={`/login`} />} />
+        <Route path="/" element={isAuthenticated ? <Navigate to={`/app${location.search}`} /> : <Navigate to={`/login${location.search}`} />} />
       </Routes>
     </Router>
     <InAppBrowserBanner />

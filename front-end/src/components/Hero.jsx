@@ -100,8 +100,8 @@ useEffect(() => {
 
       <motion.div className="text-lg md:text-xl text-[#91989E] dark:text-[#D4E3FF] mb-8 max-w-2xl transition max-[540px]:text-sm" style={{ opacity: textOpacity }}>
         {referrerName !== "" && (
-          <div>
-            {referrerName} thinks you'll love this. <i>We do too.</i><br /><br />
+          <div className="mb-2">
+            {referrerName} thinks you'll love this. <i>We do too.</i>
           </div>
         )}
         A powerful, minimalist task app built<br /> for neurodivergent and overwhelmed minds.
