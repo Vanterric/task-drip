@@ -2,6 +2,7 @@ import { useScroll, useTransform, motion, useMotionValue, delay } from "framer-m
 import { useEffect, useRef, useState } from "react";
 import { audio } from "../utilities/audio";
 import { vibration } from "../utilities/vibration";
+import { scrollTo } from "../utilities/scrollTo";
 
 export default function Hero({ referrerName, setShowModal, sectionRefs, buttonText }) {
   const containerRef = useRef(null);
@@ -126,7 +127,7 @@ useEffect(() => {
           vibration("button-press");
         }}
         onClick={() => {
-          document.getElementById("productDemo")?.scrollIntoView({ behavior: "smooth" });
+          scrollTo(document.getElementById("productDemo"), {duration: 5, offset:0})
         }}
       >
         Watch a Demo
