@@ -995,12 +995,11 @@ app.post('/create-customer-portal-session', async (req, res) => {
       ${followUpQuestions && 'Here is some additional context about the goal: '}${followUpQuestions && followUpQuestions.map((q,i) => {if (followUpAnswers[i]) return `\n\nQ: ${q}\nA: ${followUpAnswers[i]}`; else return ''}).join('')}
 `;
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4.1-nano',
     messages: [
       { role: 'system', content: systemPromptTaskBreakdown},
       { role: 'user', content: prompt },
     ],
-    temperature: 0.5,
     response_format: { type: "json_object" }
   });
       const raw = response.choices?.[0]?.message?.content;
@@ -1029,12 +1028,11 @@ app.post('/create-customer-portal-session', async (req, res) => {
       Goal: "${goal}"
 `;
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4.1-nano',
     messages: [
       { role: 'system', content: systemPromptFollowUpQuestions},
       { role: 'user', content: prompt },
     ],
-    temperature: 0.5,
     response_format: { type: "json_object" }
   });
       const raw = response.choices?.[0]?.message?.content;
@@ -1067,12 +1065,11 @@ app.post('/create-customer-portal-session', async (req, res) => {
       Here is the user's task that needs polishing (it won't necessarily be going at the end of the task list, so consider that):
       Task: "${task}"`;
       const response = await openai.chat.completions.create({
-        model: 'gpt-3.5-turbo',
+        model: 'gpt-4.1-nano',
         messages: [
           { role: 'system', content: systemPromptPolishTask},
           { role: 'user', content: prompt },
         ],
-        temperature: 0.5,
         response_format: { type: "json_object" }
       });
       const polished = response.choices?.[0]?.message?.content?.trim();
@@ -1104,7 +1101,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
 
     const transcription = await openai.audio.transcriptions.create({
       file: fs.createReadStream(newPath),
-      model: 'whisper-1',
+      model: 'gpt-4o-mini-transcribe',
       response_format: 'text',
       language: 'en',
     });
@@ -1140,12 +1137,11 @@ app.post('/ai/singleTaskBreakdown', verifyToken, async (req, res) => {
       As a reminder, your response MUST be in valid JSON format, containing a single object with a "tasks" key that is an array of task objects. 
 `;
   const response = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4.1-nano',
     messages: [
       { role: 'system', content: systemPromptTaskBreakdownSingle},
       { role: 'user', content: prompt },
     ],
-    temperature: 0.5,
     response_format: { type: "json_object" }
   });
       const raw = response.choices?.[0]?.message?.content;

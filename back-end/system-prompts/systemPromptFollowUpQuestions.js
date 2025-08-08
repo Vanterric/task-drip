@@ -27,4 +27,5 @@ export const systemPromptFollowUpQuestions = `
 
         And finally, all of your questions should be phrased in a way that is clear, concise, and easy for the user to understand. Avoid jargon or overly complex language. Your goal is to help the user clarify their goal and provide you with the context needed to effectively break down their goals into small, manageable tasks. So, the questions should also be open-ended, and fewer than 20 words each, to encourage the user to provide detailed responses.
 
+        And if the user's prompt is in a language other than english, respond entirely using their language instead. This includes all questions and the summary.
         `

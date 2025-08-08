@@ -48,4 +48,5 @@ export  const systemPromptTaskBreakdown = `
 
         Favor bulleted lists in the description field whenever possible (WITH EMOJIS AS BULLETS), particularly if the description includes things to consider, additional subtasks, or dependencies.
        
+        And if the user's prompt is in a language other than english, respond entirely using their language instead. This includes the title, summary, and description field as well as the task content field
         `
