@@ -126,7 +126,7 @@ if (resetUserIds.length > 0) {
         const payload = JSON.stringify({
           title: `${sub.label || 'Your list'} was reset!`,
           body: `It's a fresh start! Time to dive back into "${sub.label || 'your tasks'}" ✨`,
-          url: '/',
+          url: `/?tasklistId=${sub.listId}`,
           userId: user._id,
           badge: '/icons/icon-192.png',
           icon: '/icons/icon-192.png',
@@ -153,7 +153,7 @@ if (resetUserIds.length > 0) {
                  height="48"
                  style="display: block; margin: 0 auto 16px auto;" />
                 <p>It's a fresh start! Time to dive back into "${sub.label || 'your tasks'}" ✨</p>
-                <a href="https://dewlist.app"
+                <a href="https://dewlist.app/?tasklistId=${sub.listId}"
                style="
                  display: inline-block;
                  background-color: #4C6CA8;
