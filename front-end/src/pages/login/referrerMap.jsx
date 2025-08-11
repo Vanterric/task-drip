@@ -5,6 +5,7 @@ const referrerMap = {
     ruthgallegos: 'Ruth',
     compassionatecoachfiona: 'Fiona',
     victoriabahadoor: 'Victoria',
+    raymondbrunell: 'Raymond',
 };
 
 export const mapRefferer = (referrer) => {

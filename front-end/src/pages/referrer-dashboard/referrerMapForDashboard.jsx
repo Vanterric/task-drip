@@ -35,7 +35,13 @@ const referrerMapForDashboard = (email) => {
             name: "Victoria",
             referralLink: "victoriabahadoor",
             percentShare: .1,
+        },
+        "raymond@investwise-ai.com":{
+            name: "Raymond",
+            referralLink: "raymondbrunell",
+            percentShare: .1,
         }
+
     };
 
     if (referrerMap[email]) {
