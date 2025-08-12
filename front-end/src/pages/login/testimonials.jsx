@@ -12,7 +12,7 @@ export const testimonials = [
     {
       name: 'Ruth',
       role: "Real Estate Broker",
-      quote:"DewList makes is so easy to capture thoughts on the fly. Client follow-ups, personal errands, reminders to take care of myself - everything goes into my Dewlist."
+      quote:"DewList makes it so easy to capture thoughts on the fly. Client follow-ups, personal errands, reminders to take care of myself - everything goes into my Dewlist."
     },
   {
     name: "Davie",
