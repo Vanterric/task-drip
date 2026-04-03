@@ -12,6 +12,7 @@ import FirstTimeUserTaskBreakdownModal from "../../components/FirstTimeUserTaskB
 import PWAInstallBanner from "../../components/PWAInstallBanner";
 import PushNotificationBanner from "../../components/PushNotificationBanner";
 import { setLastActiveAt } from "../../utilities/setLastActiveAt";
+import { canUseOneTaskView, canUseAI, getMaxLists, getMaxTasksPerList } from '../../utils/tier';
 import getRelevantIcon from "../../utilities/getRelevantIcon";
 import { handleUpdateIcon } from "../../utilities/handleUpdateIcon";
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
@@ -66,7 +67,7 @@ const sliderVariants = {
 
 
 export default function HomePage() {
-  const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, isFirst100User, setIsFirstTimeUser, setIsFirst100User, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
+  const { token, user, wasDowngraded, setWasDowngraded, isFirstTimeUser, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications } = useAuth();
   const [activeTaskList, setActiveTaskList] = useState(null);
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -79,7 +80,10 @@ export default function HomePage() {
   const [finalTask, setFinalTask] = useState(null);
   const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
-  const [viewType, setViewType] = useState(localStorage.getItem("defaultView") || 'one-task'); // 'one-task' or 'list'
+  const [viewType, setViewType] = useState(() => {
+    const saved = localStorage.getItem("defaultView");
+    return saved || 'list';
+  });
   const [draggedId, setDraggedId] = useState(null);
   const [showDescription, setShowDescription] = useState(localStorage.getItem("defaultTaskState") === 'expanded');
   const [isEditTaskModalOpen, setIsEditTaskModalOpen] = useState(false);
@@ -100,7 +104,7 @@ export default function HomePage() {
    const navigate = useNavigate();
   const hasInteracted = useHasInteracted();
   const [layoutLoaded, setLayoutLoaded] = useState(false);
-  const [showFirst100Banner, setShowFirst100Banner] = useState(false);
+  const [upgradeReason, setUpgradeReason] = useState('limit');
   const [previousCompletedCount, setPreviousCompletedCount] = useState(50);
   const [isSuccessToastOpen, setIsSuccessToastOpen] = useState(false);
   const [lastCompletedTask, setLastCompletedTask] = useState(null);
@@ -114,6 +118,12 @@ export default function HomePage() {
     if (!user) return;
    syncDevicePushSubs(user);
     }, [user]);
+
+  useEffect(() => {
+    if (user && !canUseOneTaskView(user)) {
+      setViewType('list');
+    }
+  }, [user]);
 
     useEffect(() => {
       setVisibleTask(tasks[0]);
@@ -174,20 +184,6 @@ export default function HomePage() {
   if (token) fetchData();
 }, [token]);
 
-
-  useEffect(() => {
-  const dismissed = localStorage.getItem('firstHundredBannerDismissed');
-  if (!dismissed && isFirst100User && !isFirstTimeUser && user.isPro && layoutLoaded) {
-    setShowFirst100Banner(true);
-  }
-}, [isFirst100User, isFirstTimeUser, user.isPro, layoutLoaded]);
-
-
-  const closeFirstHundredBanner = () => {
-  localStorage.setItem('firstHundredBannerDismissed', 'true');
-  setIsFirst100User(false);
-  setShowFirst100Banner(false);
-};
 
 useEffect(() => {
   const checkFirstTime = async () => {
@@ -425,7 +421,8 @@ const handleAddTask = async (text) => {
 
 
 const handleTaskBreakdown = async (task) => {
-  if (!user.isPro){
+  if (!canUseAI(user)){
+    setUpgradeReason('ai');
     setShowUpgradeModal(true);
     return;
   }
@@ -829,19 +826,6 @@ const getTaskName = (taskId, taskListId) => {
           Your Pro subscription has ended. You’ve been downgraded to Free. <div className="font-semibold cursor-pointer inline-block" onClick={()=>{audio('open-modal', false); vibration("button-press"); setShowUpgradeModal(true)}}>Upgrade to Pro</div> to unlock unlimited task lists and tasks.
           <button
             onClick={() => {audio('button-press', false); vibration("button-press"); setWasDowngraded(!wasDowngraded)}}
-            className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
-          >
-            ×
-          </button>
-        </div>
-      )}
-      {showFirst100Banner && (
-        <div className="bg-[#D4E3FF] text-[#4F5962] px-8 py-2 text-sm text-center relative z-11 rounded-lg shadow-md cursor-default">
-          🎉 Whoa, look at you! You're one of the first 100 people to try DewList. 
-          To say thanks, we’ve unlocked a whole month of Pro for you — unlimited tasks, lists, and AI-powered features.
-          Go wild (but like… one task at a time 😉)
-          <button
-            onClick={() => {audio('button-press', false); vibration("button-press"); closeFirstHundredBanner()}}
             className="absolute right-4 top-2 text-[#4F5962] hover:text-[#3A5D91] cursor-pointer"
           >
             ×
@@ -1302,7 +1286,7 @@ const getTaskName = (taskId, taskListId) => {
       <div className="flex justify-between items-center px-2 py-2 fixed bottom-0 left-0 right-0 z-10 max-w-fit gap-4 mx-auto backdrop-blur-md dark:bg-white/10 bg-white/50 border-t border-white/20 shadow-md rounded-full mb-2">
 <button
   className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-text-darkprimary px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
-  onClick={() => {audio('open-modal', false); vibration('button-press'); if (user.isPro) {setShowAIModal(true)} else {setShowUpgradeModal(true)}}}
+  onClick={() => {audio('open-modal', false); vibration('button-press'); if (canUseAI(user)) {setShowAIModal(true)} else {setUpgradeReason('ai'); setShowUpgradeModal(true)}}}
 >
 <Sparkles className="w-5 h-5 text-white transition-transform duration-200 group-hover:rotate-12 group-hover:scale-110" />
 </button>
@@ -1311,7 +1295,8 @@ const getTaskName = (taskId, taskListId) => {
   onClick={() => {
     audio('open-modal', false);
     vibration('button-press');
-    if (tasks.length >= 5 && !user.isPro) {
+    if (tasks.length >= getMaxTasksPerList(user)) {
+      setUpgradeReason('limit');
       setShowUpgradeModal(true);
       return;
     }
@@ -1324,7 +1309,12 @@ const getTaskName = (taskId, taskListId) => {
 <button
   className= {`cursor-pointer group flex items-center gap-2 bg-accent-primary text-white px-4 py-4 rounded-full text-lg shadow-xl hover:bg-accent-primaryhover hover:scale-105 transition-all duration-200 ease-in-out active:scale-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-focusring`}
   onPointerDown={() => { audio('button-press', false); }}
-  onClick={() => {vibration('button-press'); 
+  onClick={() => {vibration('button-press');
+    if (viewType === 'list' && !canUseOneTaskView(user)) {
+      setUpgradeReason('limit');
+      setShowUpgradeModal(true);
+      return;
+    }
     setSwipeDirection('up');
     animateAndSwap('up', async () => {
   const resetTaskDetails = async (list)=>{
@@ -1381,6 +1371,7 @@ const getTaskName = (taskId, taskListId) => {
 <UpgradePromptModal
   isOpen={showUpgradeModal}
   onClose={() => setShowUpgradeModal(false)}
+  reason={upgradeReason}
   onUpgrade={() => {
     setShowUpgradeModal(false);
     // 🔁 send to Stripe Checkout
@@ -1422,7 +1413,8 @@ token={token}
     setTasks(taskData);
   }}
   onAddTaskList={async (name) => {
-    if (!user.isPro && taskLists.length >= 3) {
+    if (taskLists.length >= getMaxLists(user)) {
+      setUpgradeReason('limit');
       setShowUpgradeModal(true)
       setShowSidebar(false)
       return;
