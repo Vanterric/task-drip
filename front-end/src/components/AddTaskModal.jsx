@@ -9,6 +9,7 @@ import { safeParsePolished } from "../utilities/safeParsePolished";
 import VoiceCaptureButton from "./VoiceCaptureButton";
 import { DotLoader } from "./DotLoader";
 import {audio} from "../utilities/audio";
+import { canUseAI } from "../utils/tier";
 
 export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, tasks }) {
   const [taskText, setTaskText] = useState("");
@@ -97,7 +98,7 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
             className="w-full px-4 py-3 border border-text-secondary dark:border-text-darksecondary rounded-xl focus:outline-none focus:ring-2 focus:ring-accent-focusring"
           />
           <div>
-            {user.isPro && <VoiceCaptureButton setState={setTaskText} />}
+            {canUseAI(user) && <VoiceCaptureButton setState={setTaskText} />}
           </div>
           </div>
           {showPolishItInfo && (
@@ -116,10 +117,10 @@ export default function AddTaskModal({ isOpen, onClose, onSubmit, taskList, task
           <input
             type='checkbox'
             className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
-            checked={polishItSelected && user.isPro}
+            checked={polishItSelected && canUseAI(user)}
             onChange={() => {audio('button-press', isMuted); setPolishItSelected(!polishItSelected)}}
-            disabled={!user.isPro}
-            title={!user.isPro ? "Polish it is a Pro feature. Upgrade to unlock!" : "Polish it"}
+            disabled={!canUseAI(user)}
+            title={!canUseAI(user) ? "Polish it is a Pro feature. Upgrade to unlock!" : "Polish it"}
             />
           Polish it <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => {audio('button-press', isMuted); setShowPolishItInfo(!showPolishItInfo)}} />
         </div>

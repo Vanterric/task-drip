@@ -118,7 +118,7 @@ if (resetUserIds.length > 0) {
     });
 
     for (const user of resetUsers) {
-      if (!user.isPro) continue; // Only pro users get reset notifications
+      if (user.tier === 'free') continue; // Only paid users get reset notifications
 
       const resetSubs = user.pushSubscriptions.filter(sub => sub.type === 'reset');
 
@@ -140,7 +140,7 @@ if (resetUserIds.length > 0) {
         }
         
         if(user.emailForReset) {
-          if (!user.isPro) continue
+          if (user.tier === 'free') continue
           try {
             await resend.emails.send({
               from: 'DewList <noreply@dewlist.app>',
@@ -220,7 +220,7 @@ if (resetUserIds.length > 0) {
     }
 
     const userIds = Object.keys(userTasksMap);
-    const users = await User.find({ _id: { $in: userIds }, isPro: true });
+    const users = await User.find({ _id: { $in: userIds }, tier: { $in: ['focus', 'pro'] } });
 
     for (const user of users) {
       const tasks = userTasksMap[user._id.toString()];

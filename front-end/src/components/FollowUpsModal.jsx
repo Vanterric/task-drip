@@ -6,6 +6,7 @@ import VoiceCaptureButton from "./VoiceCaptureButton";
 import { DotLoader } from "./DotLoader";
 import { vibration } from "../utilities/vibration";
 import { audio } from "../utilities/audio";
+import { canUseAI } from "../utils/tier";
 
 const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollowUpAnswers, handleSubmit, loading, goal }) => {
     const {user, isMuted} = useAuth();
@@ -48,7 +49,7 @@ const FollowUpsModal = ({ onClose, followUpQuestions, followUpAnswers, setFollow
       }
       placeholder="Write your answer here..."
     ></textarea>
-    {user.isPro && (
+    {canUseAI(user) && (
       <div className='absolute bottom-4 right-2'>
         <VoiceCaptureButton
           setState={(value) =>

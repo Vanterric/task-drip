@@ -10,6 +10,7 @@ import { DotLoader } from './DotLoader';
 import { AnimatePresence, motion } from 'framer-motion';
 import FollowUpsModal from './FollowUpsModal';
 import { audio } from '../utilities/audio';
+import { canUseAI } from '../utils/tier';
 
 export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, onClose, setActiveTaskList, setTasks, setTaskLists, setFinalTask, setFirstTask, token, taskLists }) {
   if (!isOpen) return null;
@@ -38,7 +39,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
     const dayOfWeek = today.toLocaleString('en-US', { weekday: 'long' });
 
     const handleFollowUpsSelected = async () => {
-      if (!user.isPro) return;
+      if (!canUseAI(user)) return;
       if (!goal.trim()) return;
       setLoading(true);
       try {
@@ -183,7 +184,7 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         placeholder="e.g. Plan my startup launch"
         ></textarea>
         <div className='absolute bottom-4 right-2'>
-        {user.isPro && <VoiceCaptureButton setState={setGoal} />}
+        {canUseAI(user) && <VoiceCaptureButton setState={setGoal} />}
         </div>
         </div>
         {showFollowUpsInfo && (
@@ -202,10 +203,10 @@ export default function AITaskBreakdownModal({ handleCancelBreakdown, isOpen, on
         <input
             type='checkbox'
             className="disabled:cursor-not-allowed disabled:bg-text-info  cursor-pointer appearance-none w-5 h-5 rounded-sm border shrink-0 border-text-secondary bg-white checked:bg-accent-primary checked:border-accent-primary focus:outline-none focus:ring-2 focus:ring-accent-focusring transition-all duration-150 relative"
-            checked={followUpsSelected && user.isPro}
+            checked={followUpsSelected && canUseAI(user)}
             onChange={() => {setFollowUpsSelected(!followUpsSelected); audio('button-press', isMuted);}}
-            disabled={!user.isPro}
-            title={!user.isPro ? "Follow-ups is a Pro feature. Upgrade to unlock!" : "Follow-ups"}
+            disabled={!canUseAI(user)}
+            title={!canUseAI(user) ? "Follow-ups is a Pro feature. Upgrade to unlock!" : "Follow-ups"}
             />
           Ask me follow-ups <span className="text-yellow-500 dark:text-yellow-300 text-xs border px-2 rounded-full py-[2px]">Pro</span> <Info className="w-3 h-3 text-text-primary dark:text-white cursor-pointer" onClick={() => {setShowFollowUpsInfo(!showFollowUpsInfo); audio('button-press', isMuted);}} />
         </div>

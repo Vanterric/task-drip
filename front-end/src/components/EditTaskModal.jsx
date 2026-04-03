@@ -10,6 +10,7 @@ import { DotLoader } from "./DotLoader";
 import {Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions} from "@headlessui/react";
 import Dropdown from "./Dropdown";
 import { audio } from "../utilities/audio";
+import { canUseAI } from "../utils/tier";
 
 export default function EditTaskModal({handleCancelBreakdown, isOpen, onClose, onSubmit, task, setTasks, taskList, taskLists, setFirstTask, setFinalTask, tasks}) {
   const [title, setTitle] = useState("");
@@ -194,7 +195,7 @@ useEffect(() => {
             state={selectedTaskList}
             setState={setSelectedTaskList}
             options={taskLists.map((list) => ({ option: list._id, label: list.name }))}
-            disabled={!user.isPro}
+            disabled={user?.tier === 'free'}
           />
         </label>
         <label className="text-[#91989E] dark:text-white block">
@@ -211,7 +212,7 @@ useEffect(() => {
                 }))
               }
               multiple
-              disabled={!user.isPro}
+              disabled={user?.tier === 'free'}
             />
           </div>
 
@@ -224,7 +225,7 @@ useEffect(() => {
             placeholder="No Time Estimate Set"
             value={timeEstimate}
             onChange={(e) => setTimeEstimate(e.target.value)}
-            disabled={!user.isPro}
+            disabled={user?.tier === 'free'}
             className="w-full disabled:opacity-50 mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
@@ -234,7 +235,7 @@ useEffect(() => {
             type="date"
             value={dewDate}
             onChange={(e) => setDewDate(e.target.value)}
-            disabled={!user.isPro}
+            disabled={user?.tier === 'free'}
             className="w-full disabled:opacity-50 mt-1 px-4 py-3 border border-[#4F596254] dark:border-white rounded-xl focus:outline-none focus:ring-2 focus:ring-[#90A9D6] "
           />
         </label>
@@ -250,8 +251,8 @@ useEffect(() => {
               <input
                 type="checkbox"
                 id="get-notifications"
-                checked={isNotificationsEnabled && dewDate && user.isPro}
-                disabled={!user.isPro || !dewDate}
+                checked={isNotificationsEnabled && dewDate && user?.tier !== 'free'}
+                disabled={user?.tier === 'free' || !dewDate}
                 onChange={(e) => {
                   vibration('button-press');
                   audio('button-press', isMuted);

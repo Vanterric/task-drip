@@ -252,9 +252,9 @@ const NotificationSettings = ({ settings, setSettings }) => {
 
           {/* Subscription */}
           <div>
-            <p className="font-medium">Subscription: {user.proSubscriptionType ? capitalizeFirst(user.proSubscriptionType) : user.isPro ? "One Month Pro Free" : "Free Plan"}</p>
+            <p className="font-medium">Subscription: {user.proSubscriptionType ? capitalizeFirst(user.proSubscriptionType) : user?.tier !== 'free' ? `${capitalizeFirst(user?.tier)} Trial` : "Free Plan"}</p>
             <div className="flex gap-2 mt-2">
-              {user.isPro ? user.proSubscriptionType !== 'lifetime' && user.proSubscriptionType !== null ? <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); handleManageSubscription()}}>
+              {user?.tier !== 'free' ? user.proSubscriptionType !== 'lifetime' && user.proSubscriptionType !== null ? <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); handleManageSubscription()}}>
                 Manage Subscription
               </button> : user.proSubscriptionType === 'lifetime' ? <p className="text-sm italic">Thanks for being a lifetime member!</p> : <p className="text-sm italic">Thanks for trying out DewList!</p> : <button className="text-sm underline hover:opacity-70 cursor-pointer" onClick={() => {vibration('button-press'); window.location.href = '/subscribe'}}>
                 Upgrade
