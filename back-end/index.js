@@ -19,6 +19,7 @@ const upload = multer({ dest: 'uploads/' });
 const { promisify } = require('util');
 const rename = promisify(fs.rename);
 const unlink = promisify(fs.unlink);
+const { canUseAI, getMaxLists, getMaxTasksPerList, tierFromPriceId } = require('./utils/tier');
 
 app.use(cors({
   origin: ['https://dewlist.app', 'http://localhost:5173'], // add your live and dev origins
@@ -87,9 +88,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   await User.updateOne(
     { _id: user._id },
     {
-      isPro: true,
+      tier: 'pro',
       isLifeTimePro: true,
-      proSubscriptionType: 'lifetime',
+      proSubscriptionType: 'pro-lifetime',
       proExpiresAt: null,
       lastDatePaid: Date.now(),
       ...(customerId && !user.stripeCustomerId && { stripeCustomerId: customerId }),
@@ -162,11 +163,11 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
           await User.updateOne(
             { _id: user._id },
             {
-              isPro: true,
+              tier: tierFromPriceId(item?.price?.id) || 'pro',
               isLifeTimePro: false,
               stripeCustomerId: customerId,
               stripeSubscriptionId: subscriptionId,
-              proSubscriptionType,
+              proSubscriptionType: `${tierFromPriceId(item?.price?.id) || 'pro'}-${interval === 'year' ? 'yearly' : 'monthly'}`,
               proExpiresAt: proExpiresAt,
               lastDatePaid: Date.now(),
             }
@@ -216,9 +217,9 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
   await User.updateOne(
     { stripeSubscriptionId: subscriptionId },
     {
-      isPro: true,
+      tier: tierFromPriceId(item?.price?.id) || 'pro',
       isLifeTimePro: false,
-      proSubscriptionType,
+      proSubscriptionType: `${tierFromPriceId(item?.price?.id) || 'pro'}-${interval === 'year' ? 'yearly' : 'monthly'}`,
       lastDatePaid: Date.now(),
       proExpiresAt,
     }
@@ -267,7 +268,10 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
 
   await User.updateOne(
     { stripeSubscriptionId: subscriptionId },
-    { proSubscriptionType }
+    {
+      tier: tierFromPriceId(item?.price?.id) || 'pro',
+      proSubscriptionType: `${tierFromPriceId(item?.price?.id) || 'pro'}-${interval === 'year' ? 'yearly' : 'monthly'}`,
+    }
   );
 
   console.log(`🔁 Updated subscription type → ${proSubscriptionType} for ${subscriptionId}`);
@@ -285,7 +289,7 @@ app.post('/webhook', express.raw({ type: 'application/json' }), async (req, res)
       await User.updateOne(
         { stripeSubscriptionId: subscriptionId },
         {
-          isPro: false,
+          tier: 'free',
           isLifeTimePro: false,
           stripeSubscriptionId: null,
           proSubscriptionType: null,
@@ -367,30 +371,16 @@ const verifyToken = (req, res, next) => {
     try {
       let user = await User.findOne({ email: lowerCaseEmail });
       if (!user) {
-      const userCount = await User.countDocuments();
-      const isFirstHundredUser = userCount < 100;
-      let proExpiresAt = null;
-
-        if (isFirstHundredUser) {
-          proExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-        }
-
-        if (referrer) {
-          if (proExpiresAt) {
-            proExpiresAt = new Date(proExpiresAt.getTime() + 30 * 24 * 60 * 60 * 1000);
-          } else {
-            proExpiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000);
-          }
-        }
-
-      const isPro = isFirstHundredUser || !!referrer;
+      let proExpiresAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000); // 3-day trial
+      if (referrer) {
+        proExpiresAt = new Date(proExpiresAt.getTime() + 3 * 24 * 60 * 60 * 1000); // +3 days
+      }
 
       user = await User.create({
         email: lowerCaseEmail,
-        referrer: referrer || null, // Store referrer if provided
+        referrer: referrer || null,
         proExpiresAt: proExpiresAt,
-        isPro: isPro,
-        isFirstHundredUser: isFirstHundredUser,
+        tier: 'pro',
       });
 
       const firstTaskList = await TaskList.create({ name: "Getting Started", userId: user._id, icon:"droplet", order: 0 });
@@ -429,18 +419,10 @@ const verifyToken = (req, res, next) => {
 
     // If user doesn't exist, create them
     if (!user) {
-      const userCount = await User.countDocuments();
-      const isFirstHundredUser = userCount < 100;
-
-      let proExpiresAt = isFirstHundredUser
-        ? new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
-        : null;
-
+      let proExpiresAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000);
       if (referrer) {
-        proExpiresAt = new Date((proExpiresAt || Date.now()) + 30 * 24 * 60 * 60 * 1000);
+        proExpiresAt = new Date(proExpiresAt.getTime() + 3 * 24 * 60 * 60 * 1000);
       }
-
-      const isPro = isFirstHundredUser || !!referrer;
       const hashedPassword = await bcrypt.hash(password, 10);
 
       user = await User.create({
@@ -448,8 +430,7 @@ const verifyToken = (req, res, next) => {
         password: hashedPassword,
         referrer: referrer || null,
         proExpiresAt,
-        isPro,
-        isFirstHundredUser,
+        tier: 'pro',
       });
       const firstTaskList = await TaskList.create({ name: "Getting Started", userId: user._id, icon:"droplet", order: 0 });
       await Task.create({ content: "Create My DewList Account", description: "If you're seeing this, you can go ahead and check this one off your list 😉", tasklistId: firstTaskList._id });
@@ -480,7 +461,7 @@ const verifyToken = (req, res, next) => {
       token,
       user: {
         email: user.email,
-        isPro: user.isPro,
+        tier: user.tier,
         isLifeTimePro: user.isLifeTimePro,
         proExpiresAt: user.proExpiresAt,
       },
@@ -519,7 +500,7 @@ const verifyToken = (req, res, next) => {
         token: sessionToken,
         user: {
           email: user.email,
-          isPro: user.isPro,
+          tier: user.tier,
           isLifeTimePro: user.isLifeTimePro,
           proExpiresAt: user.proExpiresAt,
         },
@@ -534,7 +515,7 @@ const verifyToken = (req, res, next) => {
     const { email } = req.body;
   
     try {
-      await User.updateOne({ email }, { isPro: false });
+      await User.updateOne({ email }, { tier: 'free' });
       res.json({ success: true });
     } catch (err) {
       console.error("Downgrade error:", err);
@@ -652,13 +633,13 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ id:user._id, email: user.email, isPro: user.isPro, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isFirstHundredUser: user.isFirstHundredUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType, pushForInactivity: user.pushForInactivity, pushForReset: user.pushForReset, pushForDewDate: user.pushForDewDate, emailForInactivity: user.emailForInactivity, emailForReset: user.emailForReset, emailForDewDate: user.emailForDewDate });
+    res.json({ id:user._id, email: user.email, tier: user.tier, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType, pushForInactivity: user.pushForInactivity, pushForReset: user.pushForReset, pushForDewDate: user.pushForDewDate, emailForInactivity: user.emailForInactivity, emailForReset: user.emailForReset, emailForDewDate: user.emailForDewDate });
   });
 
   
   app.post('/user/upgrade', verifyToken, async (req, res) => {
     const user = await User.findById(req.user.id);
-    user.isPro = true;
+    user.tier = 'pro';
     await user.save();
     res.json({ success: true });
   });
@@ -720,7 +701,7 @@ app.post('/snoozePush', async (req, res) => {
     const order = req.body.order || 0;
     
   
-    if (!user.isPro && count >= 3) return res.status(403).json({ error: 'Free tier limit reached' });
+    if (count >= getMaxLists(user)) return res.status(403).json({ error: 'Free tier limit reached' });
 
     const { name, icon = "clipboard-check" } = req.body;
   
@@ -799,7 +780,7 @@ app.post('/snoozePush', async (req, res) => {
     const taskCount = await Task.countDocuments({ tasklistId });
     console.log(`req.body:`, req.body);
     console.log(`req.body.content:`, req.body.content);
-    if (!user.isPro && taskCount >= 5) return res.status(403).json({ error: 'Free tier limit' });
+    if (taskCount >= getMaxTasksPerList(user)) return res.status(403).json({ error: 'Free tier limit' });
   
     const task = await Task.create({ tasklistId, content: req.body.content, order: req.body.order || 0, description: req.body.description || '', timeEstimate: req.body.timeEstimate || null, dewDate: req.body.dewDate || null });
     user.lastActiveAt = new Date();
@@ -862,9 +843,7 @@ app.post('/snoozePush', async (req, res) => {
     }
   
     const amountMap = {
-      monthly: 500,
-      yearly: 3000,
-      lifetime: 10000,
+      'pro-lifetime': 15000,
     };
   
     const paymentIntent = await stripe.paymentIntents.create({
@@ -895,12 +874,16 @@ app.post('/snoozePush', async (req, res) => {
   const priceMap =
   process.env.ENVIRONMENT === 'dev'
     ? {
-        monthly: 'price_1RFIo6RWVGtxvtb5uf6mF81I',    
-        yearly: 'price_1RFIouRWVGtxvtb51zP0eT2J',
+        'focus-monthly': 'price_FOCUS_MONTHLY_TEST',
+        'focus-yearly': 'price_FOCUS_YEARLY_TEST',
+        'pro-monthly': 'price_PRO_MONTHLY_TEST',
+        'pro-yearly': 'price_PRO_YEARLY_TEST',
       }
     : {
-        monthly: 'price_1RgXtiDFl6DTTJEmAOXQr2A4',  
-        yearly: 'price_1RgXtiDFl6DTTJEm7g5gS59Z',
+        'focus-monthly': 'price_FOCUS_MONTHLY_PROD',
+        'focus-yearly': 'price_FOCUS_YEARLY_PROD',
+        'pro-monthly': 'price_PRO_MONTHLY_PROD',
+        'pro-yearly': 'price_PRO_YEARLY_PROD',
       };
 
       let session;
@@ -982,7 +965,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   app.post('/ai/breakdown', verifyToken, async (req, res) => {
     const { goal, followUpQuestions, followUpAnswers } = req.body;
     const user = await User.findById(req.user.id);
-    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!canUseAI(user)) return res.status(403).json({ error: 'Pro feature' });
     if (!goal || goal.length < 5) {
       return res.status(400).json({ error: 'Invalid goal' });
     }
@@ -1016,7 +999,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   app.post('/ai/followups', verifyToken, async (req, res) => {
     const { goal } = req.body;
     const user = await User.findById(req.user.id);
-    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!canUseAI(user)) return res.status(403).json({ error: 'Pro feature' });
     if (!goal || goal.length < 5) {
       return res.status(400).json({ error: 'Invalid goal' });
     }
@@ -1052,7 +1035,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
     const { task } = req.body;
     const user = await User.findById(req.user.id);
     console.log("currentTasks:", req.body.currentTasks);
-    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!canUseAI(user)) return res.status(403).json({ error: 'Pro feature' });
     if (!task || task.length < 5) {
       return res.status(400).json({ error: 'Invalid task' });
     }
@@ -1084,7 +1067,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
   // AI Transcription
   app.post('/ai/transcribe', verifyToken, upload.single('audio'), async (req, res) => {
   const user = await User.findById(req.user.id);
-  if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+  if (!canUseAI(user)) return res.status(403).json({ error: 'Pro feature' });
 
   const filePath = req.file?.path;
   const originalName = req.file?.originalname;
@@ -1120,7 +1103,7 @@ app.post('/create-customer-portal-session', async (req, res) => {
 app.post('/ai/singleTaskBreakdown', verifyToken, async (req, res) => {
     const { task, list} = req.body;
     const user = await User.findById(req.user.id);
-    if (!user.isPro) return res.status(403).json({ error: 'Pro feature' });
+    if (!canUseAI(user)) return res.status(403).json({ error: 'Pro feature' });
     if (!task || task.length < 5 || !list) {
       return res.status(400).json({ error: 'Missing Task or Task List from Fetch' });
     }

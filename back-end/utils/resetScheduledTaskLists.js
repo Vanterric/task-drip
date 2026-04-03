@@ -25,7 +25,7 @@ async function resetScheduledTaskLists() {
   for (const list of allLists) {
     const { number, cadence, startDate, lastReset } = list.resetSchedule;
     const user = await User.findById(list.userId);
-    if (!user || !user.isPro) continue;
+    if (!user || user.tier !== 'pro') continue;
 
     const start = new Date(startDate); // UTC
 
