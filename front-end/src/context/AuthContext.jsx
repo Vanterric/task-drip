@@ -5,7 +5,6 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(() => localStorage.getItem("authToken") || null);
-  const [isFirst100User, setIsFirst100User] = useState(false);
   const [isFirstTimeUser, setIsFirstTimeUser] = useState(false);
   const [isSubscribedToPushNotifications, setIsSubscribedToPushNotifications] = useState(false);
   const [isMuted, setIsMuted] = useState(localStorage.getItem("isMuted") === "true");
@@ -19,16 +18,15 @@ export function AuthProvider({ children }) {
 
 
   useEffect(() => {
-    
-    if (!user?.isPro || !user?.proExpiresAt) return;
-  
+    if (user?.tier !== 'pro' && user?.tier !== 'focus') return;
+    if (!user?.proExpiresAt) return;
+
     const now = new Date();
     const expiry = new Date(user.proExpiresAt);
-    
+
     if (expiry < now) {
-      
-      const downgradedUser = { ...user, isPro: false };
-  
+      const downgradedUser = { ...user, tier: 'free' };
+
       fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/downgrade`, {
         method: 'POST',
         headers: {
@@ -37,9 +35,9 @@ export function AuthProvider({ children }) {
         },
         body: JSON.stringify({ email: user.email }),
       });
-      
+
       setUser(downgradedUser);
-      localStorage.setItem('user', JSON.stringify(downgradedUser)); 
+      localStorage.setItem('user', JSON.stringify(downgradedUser));
       setWasDowngraded(true);
     }
   }, [user]);
@@ -59,7 +57,6 @@ export function AuthProvider({ children }) {
         const data = await res.json();
         
         setUser(data);
-        setIsFirst100User(data.isFirstHundredUser || false);
         setIsFirstTimeUser(data.isFirstTimeUser || false);
          if (user?.pushSubscriptions) {
           checkIfCurrentDeviceSubscribed(user.pushSubscriptions, setIsSubscribedToPushNotifications);
@@ -112,7 +109,7 @@ export function AuthProvider({ children }) {
   };
   verifyToken();
   return (
-    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirst100User, isFirstTimeUser, setIsFirst100User, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications, isMuted, setIsMuted }}>
+    <AuthContext.Provider value={{ token, user, isAuthenticated, setToken, setUser, logout, wasDowngraded, setWasDowngraded, isFirstTimeUser, setIsFirstTimeUser, isSubscribedToPushNotifications, setIsSubscribedToPushNotifications, isMuted, setIsMuted }}>
       {children}
     </AuthContext.Provider>
   );
