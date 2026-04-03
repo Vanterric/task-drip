@@ -20,6 +20,8 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     if (user?.tier !== 'pro' && user?.tier !== 'focus') return;
     if (!user?.proExpiresAt) return;
+    // Don't downgrade users with active Stripe subscriptions
+    if (user?.stripeSubscriptionId || user?.isLifeTimePro) return;
 
     const now = new Date();
     const expiry = new Date(user.proExpiresAt);

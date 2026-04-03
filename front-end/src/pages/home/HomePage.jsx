@@ -81,8 +81,7 @@ export default function HomePage() {
   const [skippedThroughEntireTaskList, setSkippedThroughEntireTaskList] = useState(false);
   const [isSkippedThroughAlertShown, setIsSkippedThroughAlertShown] = useState(false);
   const [viewType, setViewType] = useState(() => {
-    const saved = localStorage.getItem("defaultView");
-    return saved || 'list';
+    return localStorage.getItem("defaultView") || 'list';
   });
   const [draggedId, setDraggedId] = useState(null);
   const [showDescription, setShowDescription] = useState(localStorage.getItem("defaultTaskState") === 'expanded');
@@ -120,8 +119,14 @@ export default function HomePage() {
     }, [user]);
 
   useEffect(() => {
-    if (user && !canUseOneTaskView(user)) {
+    if (!user) return;
+    if (!canUseOneTaskView(user)) {
       setViewType('list');
+      return;
+    }
+    // If user can use one-task view and has no saved preference, default to one-task
+    if (!localStorage.getItem("defaultView")) {
+      setViewType('one-task');
     }
   }, [user]);
 

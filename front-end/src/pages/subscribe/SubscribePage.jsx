@@ -48,6 +48,7 @@ export default function SubscribePage() {
 
   const [billingCycle, setBillingCycle] = useState('monthly');
   const [selectedTier, setSelectedTier] = useState(null);
+  const [showCardElement, setShowCardElement] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [subscribed, setSubscribed] = useState(false);
@@ -144,7 +145,7 @@ export default function SubscribePage() {
             {['monthly', 'yearly'].map((cycle) => (
               <button
                 key={cycle}
-                onClick={() => { audio('button-press', isMuted); vibration('button-press'); setBillingCycle(cycle); }}
+                onClick={() => { audio('button-press', isMuted); vibration('button-press'); setBillingCycle(cycle); setShowCardElement(false); }}
                 className={`px-4 py-2 rounded-full text-sm font-medium transition cursor-pointer ${billingCycle === cycle ? 'bg-[#4C6CA8] text-white' : 'bg-white dark:bg-[#4F5962] text-[#4F5962] dark:text-white border border-[#4C6CA8] dark:border-[#7A8A9E]'}`}
               >
                 {cycle === 'monthly' ? 'Monthly' : 'Yearly'}
@@ -187,7 +188,7 @@ export default function SubscribePage() {
                   <div className="text-center text-sm text-[#91989E] py-2">—</div>
                 ) : (
                   <button
-                    onClick={() => handleSubscribe(key, tier.plans[billingCycle]?.stripePlan)}
+                    onClick={() => { setShowCardElement(false); handleSubscribe(key, tier.plans[billingCycle]?.stripePlan); }}
                     disabled={loading}
                     className="w-full bg-[#4C6CA8] text-white py-2 rounded-lg font-medium hover:bg-[#3A5D91] transition cursor-pointer disabled:opacity-60"
                   >
@@ -197,7 +198,7 @@ export default function SubscribePage() {
 
                 {isPro && (
                   <button
-                    onClick={() => handleSubscribe('pro', 'pro-lifetime')}
+                    onClick={() => { setShowCardElement(true); handleSubscribe('pro', 'pro-lifetime'); }}
                     disabled={loading || isCurrent}
                     className="w-full text-sm text-[#4C6CA8] dark:text-[#7AB5E8] underline cursor-pointer disabled:opacity-40"
                   >
@@ -210,7 +211,7 @@ export default function SubscribePage() {
         </div>
 
         <AnimatePresence>
-          {selectedTier === 'pro' && (
+          {showCardElement && (
             <motion.div
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}

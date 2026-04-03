@@ -633,7 +633,7 @@ app.post('/snoozePush', async (req, res) => {
     const user = await User.findById(req.user.id);
     user.lastActiveAt = new Date();
     await user.save();
-    res.json({ id:user._id, email: user.email, tier: user.tier, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isLifeTimePro: user.isLifeTimePro, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType, pushForInactivity: user.pushForInactivity, pushForReset: user.pushForReset, pushForDewDate: user.pushForDewDate, emailForInactivity: user.emailForInactivity, emailForReset: user.emailForReset, emailForDewDate: user.emailForDewDate });
+    res.json({ id:user._id, email: user.email, tier: user.tier, createdAt: user.createdAt, isFirstTimeUser: user.isFirstTimeUser, isLifeTimePro: user.isLifeTimePro, stripeSubscriptionId: user.stripeSubscriptionId, proExpiresAt: user.proExpiresAt, pushSubscriptions: user.pushSubscriptions || [], isReferrer: user.isReferrer, referrer: user.referrer, proSubscriptionType: user.proSubscriptionType, pushForInactivity: user.pushForInactivity, pushForReset: user.pushForReset, pushForDewDate: user.pushForDewDate, emailForInactivity: user.emailForInactivity, emailForReset: user.emailForReset, emailForDewDate: user.emailForDewDate });
   });
 
   
@@ -871,6 +871,8 @@ app.post('/snoozePush', async (req, res) => {
       await user.save();
     }
 
+  const baseUrl = process.env.ENVIRONMENT === 'dev' ? 'http://localhost:5173' : 'https://dewlist.app';
+
   const priceMap =
   process.env.ENVIRONMENT === 'dev'
     ? {
@@ -900,8 +902,8 @@ app.post('/snoozePush', async (req, res) => {
     ],
     allow_promotion_codes: true,
     metadata: { plan, referrer: user.referrer || null },
-    success_url: 'https://dewlist.app/subscribe?status=success',
-    cancel_url: 'https://dewlist.app/subscribe',
+    success_url: `${baseUrl}/subscribe?status=success`,
+    cancel_url: `${baseUrl}/subscribe`,
   });
 } catch (err) {
   console.warn('Failed with existing customer ID. Creating a new customer...', err);
@@ -927,8 +929,8 @@ app.post('/snoozePush', async (req, res) => {
     ],
     allow_promotion_codes: true,
     metadata: { plan, referrer: user.referrer || null },
-    success_url: 'https://dewlist.app/subscribe?status=success',
-    cancel_url: 'https://dewlist.app/subscribe',
+    success_url: `${baseUrl}/subscribe?status=success`,
+    cancel_url: `${baseUrl}/subscribe`,
   });
 }
 
@@ -1244,7 +1246,7 @@ app.get('/getReferredUsers', async (req, res) => {
   
   if (referrer === 'derrickgallegos') {
     try {
-      const users = await User.find().select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType lastActiveAt').lean();
+      const users = await User.find().select('email createdAt tier proExpiresAt -_id lastDatePaid proSubscriptionType lastActiveAt').lean();
       return res.json({ users });
     } catch (err) {
       console.error('Error fetching all users:', err);
@@ -1254,7 +1256,7 @@ app.get('/getReferredUsers', async (req, res) => {
 
   // if referrer is anyone else, get just their referred users
   try {
-    const users = await User.find({ referrer }).select('email createdAt isPro proExpiresAt -_id lastDatePaid proSubscriptionType').lean();
+    const users = await User.find({ referrer }).select('email createdAt tier proExpiresAt -_id lastDatePaid proSubscriptionType').lean();
     res.json({ users });
   } catch (err) {
     console.error('Error fetching referred users:', err);
