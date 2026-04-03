@@ -876,10 +876,10 @@ app.post('/snoozePush', async (req, res) => {
   const priceMap =
   process.env.ENVIRONMENT === 'dev'
     ? {
-        'focus-monthly': 'price_FOCUS_MONTHLY_TEST',
-        'focus-yearly': 'price_FOCUS_YEARLY_TEST',
-        'pro-monthly': 'price_PRO_MONTHLY_TEST',
-        'pro-yearly': 'price_PRO_YEARLY_TEST',
+        'focus-monthly': 'price_1THvtPDFl6DTTJEmNA87sOTn',
+        'focus-yearly': 'price_1THvtoDFl6DTTJEmigE5B2e7',
+        'pro-monthly': 'price_1THvu4DFl6DTTJEmtIi1hlTl',
+        'pro-yearly': 'price_1THvuNDFl6DTTJEmdlf0kcQY',
       }
     : {
         'focus-monthly': 'price_FOCUS_MONTHLY_PROD',

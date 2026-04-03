@@ -1,12 +1,10 @@
 const PRICE_TO_TIER = {
-  'price_FOCUS_MONTHLY_TEST': 'focus',
-  'price_FOCUS_YEARLY_TEST': 'focus',
-  'price_PRO_MONTHLY_TEST': 'pro',
-  'price_PRO_YEARLY_TEST': 'pro',
-  'price_FOCUS_MONTHLY_PROD': 'focus',
-  'price_FOCUS_YEARLY_PROD': 'focus',
-  'price_PRO_MONTHLY_PROD': 'pro',
-  'price_PRO_YEARLY_PROD': 'pro',
+  // Test / Dev
+  'price_1THvtPDFl6DTTJEmNA87sOTn': 'focus',  // Focus Monthly
+  'price_1THvtoDFl6DTTJEmigE5B2e7': 'focus',  // Focus Yearly
+  'price_1THvu4DFl6DTTJEmtIi1hlTl': 'pro',    // Pro Monthly
+  'price_1THvuNDFl6DTTJEmdlf0kcQY': 'pro',    // Pro Yearly
+  // Production (add when live mode prices are created)
 };
 
 function canUseOneTaskView(user) {
