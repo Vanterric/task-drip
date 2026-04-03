@@ -1,11 +1,14 @@
-const PRICE_TO_TIER = {
-  // Test / Dev
-  'price_1THvtPDFl6DTTJEmNA87sOTn': 'focus',  // Focus Monthly
-  'price_1THvtoDFl6DTTJEmigE5B2e7': 'focus',  // Focus Yearly
-  'price_1THvu4DFl6DTTJEmtIi1hlTl': 'pro',    // Pro Monthly
-  'price_1THvuNDFl6DTTJEmdlf0kcQY': 'pro',    // Pro Yearly
-  // Production (add when live mode prices are created)
-};
+// Built dynamically from env — no hardcoded price IDs
+function buildPriceToTier() {
+  const map = {};
+  if (process.env.STRIPE_PRICE_FOCUS_MONTHLY) map[process.env.STRIPE_PRICE_FOCUS_MONTHLY] = 'focus';
+  if (process.env.STRIPE_PRICE_FOCUS_YEARLY) map[process.env.STRIPE_PRICE_FOCUS_YEARLY] = 'focus';
+  if (process.env.STRIPE_PRICE_PRO_MONTHLY) map[process.env.STRIPE_PRICE_PRO_MONTHLY] = 'pro';
+  if (process.env.STRIPE_PRICE_PRO_YEARLY) map[process.env.STRIPE_PRICE_PRO_YEARLY] = 'pro';
+  return map;
+}
+
+const PRICE_TO_TIER = buildPriceToTier();
 
 function canUseOneTaskView(user) {
   return user.tier === 'focus' || user.tier === 'pro';

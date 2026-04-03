@@ -873,20 +873,12 @@ app.post('/snoozePush', async (req, res) => {
 
   const baseUrl = process.env.ENVIRONMENT === 'dev' ? 'http://localhost:5173' : 'https://dewlist.app';
 
-  const priceMap =
-  process.env.ENVIRONMENT === 'dev'
-    ? {
-        'focus-monthly': 'price_1THvtPDFl6DTTJEmNA87sOTn',
-        'focus-yearly': 'price_1THvtoDFl6DTTJEmigE5B2e7',
-        'pro-monthly': 'price_1THvu4DFl6DTTJEmtIi1hlTl',
-        'pro-yearly': 'price_1THvuNDFl6DTTJEmdlf0kcQY',
-      }
-    : {
-        'focus-monthly': 'price_FOCUS_MONTHLY_PROD',
-        'focus-yearly': 'price_FOCUS_YEARLY_PROD',
-        'pro-monthly': 'price_PRO_MONTHLY_PROD',
-        'pro-yearly': 'price_PRO_YEARLY_PROD',
-      };
+  const priceMap = {
+    'focus-monthly': process.env.STRIPE_PRICE_FOCUS_MONTHLY,
+    'focus-yearly': process.env.STRIPE_PRICE_FOCUS_YEARLY,
+    'pro-monthly': process.env.STRIPE_PRICE_PRO_MONTHLY,
+    'pro-yearly': process.env.STRIPE_PRICE_PRO_YEARLY,
+  };
 
       let session;
   try {
