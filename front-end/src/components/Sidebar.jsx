@@ -437,7 +437,7 @@ useEffect(() => {
                     onClick={() => {
                       vibration('button-press');
                       audio('open-modal', isMuted);
-                      if (user.isPro) {
+                      if (user?.tier === 'pro') {
                         setIsResetScheduleModalOpen(true);
                         setListToEdit(list);
                         setActiveKebab(null);

@@ -5,14 +5,32 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { audio } from '../utilities/audio';
 import { useAuth } from '../context/AuthContext';
 
-export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
+export default function UpgradePromptModal({ isOpen, onClose, onUpgrade, reason }) {
   if (!isOpen) return null;
   const { isMuted } = useAuth();
+
+  const isAIBlock = reason === 'ai';
+  const tierName = isAIBlock ? 'Pro' : 'Focus';
+  const price = isAIBlock ? '$8/month' : '$4/month';
+
+  const features = isAIBlock
+    ? [
+        'AI-powered task list creation',
+        'AI task polishing & breakdown',
+        'Voice-to-task input',
+        'Unlimited lists & tasks',
+        'Scheduled task list resets',
+      ]
+    : [
+        'One-task-at-a-time focus view',
+        'Up to 3 task lists',
+        'Upgrade to Pro for AI features',
+      ];
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
       <AnimatePresence>
-      <motion.div 
+      <motion.div
       layout
       key="modal"
       initial={{ opacity: 0, scale: 0.95 }}
@@ -21,25 +39,20 @@ export default function UpgradePromptModal({ isOpen, onClose, onUpgrade }) {
       transition={{ duration: 0.2 }}
       className="bg-white rounded-2xl shadow-xl w-11/12 max-w-md p-6 space-y-4 text-center dark:bg-[#4F5962]">
       <img src={dewListLogo} alt="DewList Logo" className="w-16 h-16 mx-auto mb-5" />
-        <h2 className="text-2xl font-bold text-yellow-500 dark:text-yellow-300 cursor-default border py-2 w-fit mx-auto px-4 rounded-full">Upgrade to Pro</h2>
-        <p className="text-[#4F5962] dark:text-white text-base cursor-default flex gap-1 justify-center items-center">
-          You’ve hit the free-tier limit. <span className="text-yellow-500 dark:text-yellow-300 border py-[2px] px-2 rounded-full text-xs">Pro</span> unlocks:
+        <h2 className="text-2xl font-bold text-yellow-500 dark:text-yellow-300 cursor-default border py-2 w-fit mx-auto px-4 rounded-full">Upgrade to {tierName}</h2>
+        <p className="text-[#4F5962] dark:text-white text-base cursor-default">
+          {isAIBlock ? 'AI features require a Pro subscription.' : "Unlock the full DewList experience."}
         </p>
         <ul className="text-left text-[#4F5962] dark:text-white text-sm pl-4 list-disc space-y-1 cursor-default">
-          <li>Unlimited task lists</li>
-          <li>Unlimited tasks per list</li>
-          <li>Scheduled task list reset</li>
-          <li>AI-powered task polishing</li>
-          <li>AI-powered task breakdown</li>
-          <li>AI-powered task list creation</li>
+          {features.map((f, i) => <li key={i}>{f}</li>)}
         </ul>
-        <p className="font-semibold text-yellow-500 dark:text-yellow-300 cursor-default">Just $5/month or $30/year</p>
+        <p className="font-semibold text-yellow-500 dark:text-yellow-300 cursor-default">Starting at {price}</p>
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <button
             className="cursor-pointer bg-[#4C6CA8] text-white py-2 px-4 rounded-xl hover:bg-opacity-90 transition hover:bg-[#3A5D91]"
             onClick={()=>{audio('button-press', isMuted) ;vibration('button-press'); onUpgrade()}}
           >
-            Upgrade Now
+            See Plans
           </button>
           <button
             className="text-[#91989E] hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer"
