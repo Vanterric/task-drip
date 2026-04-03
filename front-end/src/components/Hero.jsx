@@ -24,7 +24,7 @@ const [index,setIndex] = useState(0);
   const sectionHeaders = [
     "Built by Overwhelmed \nMinds, for Overwhelmed Minds",
     "Informed by Interviews with \n Coaches, Therapists, and Real Users",
-    "Free Forever, \nbut Pro is Better 😎",
+    "Free to Start, \nFocus to Thrive 🎯",
     "Not convinced yet? \nCheck out the Product Demo!",
     "Still scrolling? \nThe app's way more fun.",
   ]

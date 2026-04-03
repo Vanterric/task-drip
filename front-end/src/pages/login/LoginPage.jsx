@@ -43,7 +43,7 @@ export default function LoginPage() {
   {
     question: "Do I have to pay?",
     answer:
-      "Not unless you want to. The free tier is surprisingly generous and sticks around forever. Go Pro if you want more features or just feel like buying me a fancy coffee.",
+      "Nope. DewList is free forever with 1 list and 5 tasks. Want the focus view? That's $4/mo. Want AI and unlimited everything? Pro is $8/mo. Every new account starts with 3 days of full Pro access.",
   },
   {
     question: "What’s the catch?",
@@ -333,22 +333,22 @@ useEffect(() => {
   </Reveal>
   <Reveal margin="-150px">
   <p className="text-lg text-[#91989E] dark:text-[#D4E3FF] text-center max-w-2xl mx-auto mb-12 transition">
-    DewList starts simple. If it helps, go Pro. If not, no stress.
+    Three tiers. One mission. Find your focus.
   </p>
   </Reveal>
 
   <div className="flex flex-col md:flex-row gap-6 justify-center">
     {/* Free Tier */}
     <Reveal margin="-200px" className="w-full max-w-sm">
-    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8  border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
+    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8 border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
       <div>
         <h3 className="text-3xl font-bold text-[#4F5962] dark:text-white mb-2 transition">Free</h3>
         <p className="text-xl font-extrabold text-[#4C6CA8] dark:text-[#90A9D6] mb-4 transition">Forever</p>
         <ul className="text-[#4F5962] dark:text-[#D4E3FF] space-y-2 text-left transition">
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 1 task list</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 5 tasks per list</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 3 lists total</li>
           <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Sync across devices</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> No required upgrade</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 3-day Pro trial included</li>
         </ul>
       </div>
 
@@ -360,27 +360,52 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free!
+        Get Started
+      </button>
+    </div>
+    </Reveal>
+
+    {/* Focus Tier */}
+    <Reveal margin="-200px" className="w-full max-w-sm">
+    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8 border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
+      <div>
+        <h3 className="text-3xl font-bold text-[#4C6CA8] dark:text-[#90A9D6] mb-2 transition">Focus</h3>
+        <p className="text-xl font-extrabold text-[#4C6CA8] dark:text-[#90A9D6] mb-4 transition">$4/mo · $36/yr</p>
+        <ul className="text-[#4F5962] dark:text-[#D4E3FF] space-y-2 text-left transition">
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 3 task lists</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> 5 tasks per list</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> One-task-at-a-time view</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> The core ADHD-friendly experience</li>
+        </ul>
+      </div>
+
+      <button
+        onClick={() => {
+          audio("open-modal", false);
+          vibration("button-press");
+          setShowModal(true);
+        }}
+        className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
+      >
+        Get Started
       </button>
     </div>
     </Reveal>
 
     {/* Pro Tier */}
     <Reveal margin="-200px" className="w-full max-w-sm">
-    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8  border border-[#E0ECFC] dark:border-[#4F596240] flex flex-col justify-between transition">
+    <div className="bg-white dark:bg-[#4F5962] rounded-3xl shadow-lg p-8 border-2 border-yellow-500 dark:border-yellow-300 flex flex-col justify-between transition relative">
+      <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-yellow-500 text-white text-xs font-bold px-3 py-1 rounded-full">BEST VALUE</span>
       <div>
         <h3 className="text-3xl font-bold text-yellow-500 dark:text-yellow-300 mb-2 transition">Pro</h3>
-        <p className="text-xl font-extrabold text-[#4C6CA8] mb-4 dark:text-[#90A9D6] transition">$5/mo · $30/yr · $100 once</p>
+        <p className="text-xl font-extrabold text-[#4C6CA8] mb-4 dark:text-[#90A9D6] transition">$8/mo · $72/yr · $150 once</p>
         <ul className="text-[#4F5962] dark:text-[#D4E3FF] space-y-2 text-left transition">
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Unlimited tasks</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Unlimited lists</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> List reset scheduling</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> DewDate™ scheduling</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Priority feature requests</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task polishing</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task list creation</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task breakdowns</li>
-          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> $100 forever option if you’re bold</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Unlimited tasks & lists</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> One-task-at-a-time view</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI-powered task creation</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> AI task polishing & breakdowns</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Voice-to-task input</li>
+          <li className="flex items-center gap-2"><Check className="w-5 h-5" /> Scheduled list resets</li>
         </ul>
       </div>
 
@@ -392,14 +417,14 @@ useEffect(() => {
         }}
         className="mt-6 bg-[#4C6CA8] hover:bg-[#3A5D91] text-white py-3 px-6 rounded-xl font-semibold transition cursor-pointer"
       >
-        Try it Free!
+        Get Started
       </button>
     </div>
     </Reveal>
   </div>
   <Reveal margin="-150px">
   <p className="mt-10 text-sm text-[#91989E] dark:text-[#D4E3FF] text-center transition">
-    No trials. No weird timers. Just use it. Upgrade if it helps.
+    Every new account gets 3 days of full Pro access. No credit card required.
   </p>
   </Reveal>
 </div>
