@@ -3,14 +3,13 @@ const mongoose = require('mongoose');
 const UserSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: false },
-  isPro: { type: Boolean, default: false },
+  tier: { type: String, enum: ['free', 'focus', 'pro'], default: 'free' },
   magicToken: { type: String }, // Short-lived token for login
   createdAt: { type: Date, default: Date.now },
   isLifeTimePro: { type: Boolean, default: false }, // For lifetime users
   proExpiresAt: { type: Date, default:null }, // For subscription users,
-  proSubscriptionType: { type: String, enum: ['monthly', 'yearly', "lifetime", null], default: null }, // Subscription type
+  proSubscriptionType: { type: String, enum: ['focus-monthly', 'focus-yearly', 'pro-monthly', 'pro-yearly', 'pro-lifetime', null], default: null }, // Subscription type
   lastDatePaid: { type: Date, default: null }, // Last date user paid
-  isFirstHundredUser: { type: Boolean, default: false }, // For first 100 users
   isFirstTimeUser: { type: Boolean, default: true }, // For first-time users
   pushSubscriptions: [
   {
