@@ -25,7 +25,7 @@ import { audio, isMuted, setIsMuted } from "../utilities/audio";
 import { DotLoader } from "./DotLoader";
 
 
-export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setFinalTask, handleCancelBreakdown }) {
+export default function Sidebar({ isOpen, onClose, taskLists = [], onSelectList, onAddTaskList, token, setTaskLists, setActiveTaskList, activeTaskList, setTasks, setShowUpgradeModal, setUpgradeReason, setFinalTask, handleCancelBreakdown }) {
   const { logout } = useAuth();
   const [showInput, setShowInput] = useState(false);
   const [newListName, setNewListName] = useState("");
@@ -320,7 +320,7 @@ useEffect(() => {
   initial={{ x: -288 }}
 >
         <div className={`p-4 border-b border-[rgba(79,89,98,0.2)] dark:border-[rgba(255,255,255,0.2)] text-xl font-bold dark:text-white text-[#4F5962] flex items-center justify-between transition`}>
-          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' loading="lazy" src = {user?.tier !== 'free' ? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user?.tier !== 'free' ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList {user?.tier === 'pro' ? 'Pro' : 'Focus'}</div> : <div onClick={()=>{audio('open-modal', isMuted);vibration('button-press');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
+          <div className="flex gap-2 items-center cursor-default"><img alt='DewList Logo' loading="lazy" src = {user?.tier !== 'free' ? dewListGold : dewListIcon} className="h-8 w-8 cursor-default"/>{user?.tier !== 'free' ? <div className='cursor-default transition dark:border-yellow-300 border-yellow-500 border py-1 px-3 text-[12px] text-yellow-500 dark:text-yellow-300 rounded-full'>DewList {user?.tier === 'pro' ? 'Pro' : 'Focus'}</div> : <div onClick={()=>{audio('open-modal', isMuted);vibration('button-press');setUpgradeReason('go-pro');setShowUpgradeModal(true); onClose()}} className=' cursor-pointer transition dark:border-white border-[##4F5962] border py-1 px-3 text-[12px] text-[#4F5962] dark:text-white rounded-full'>Go Pro</div>}</div>
 
           <button onClick={() => {vibration('button-press'); setMuteToggle(!muteToggle); setTimeout(()=>audio('button-press', muteToggle), 0);}} className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-800 transition cursor-pointer">
             {!muteToggle ? (
@@ -442,6 +442,7 @@ useEffect(() => {
                         setListToEdit(list);
                         setActiveKebab(null);
                       } else {
+                        setUpgradeReason('scheduled-resets');
                         setShowUpgradeModal(true);
                         onClose();
                       }

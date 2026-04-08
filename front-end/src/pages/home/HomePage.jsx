@@ -103,7 +103,7 @@ export default function HomePage() {
    const navigate = useNavigate();
   const hasInteracted = useHasInteracted();
   const [layoutLoaded, setLayoutLoaded] = useState(false);
-  const [upgradeReason, setUpgradeReason] = useState('limit');
+  const [upgradeReason, setUpgradeReason] = useState('task-limit');
   const [previousCompletedCount, setPreviousCompletedCount] = useState(50);
   const [isSuccessToastOpen, setIsSuccessToastOpen] = useState(false);
   const [lastCompletedTask, setLastCompletedTask] = useState(null);
@@ -1301,7 +1301,7 @@ const getTaskName = (taskId, taskListId) => {
     audio('open-modal', false);
     vibration('button-press');
     if (tasks.length >= getMaxTasksPerList(user)) {
-      setUpgradeReason('limit');
+      setUpgradeReason('task-limit');
       setShowUpgradeModal(true);
       return;
     }
@@ -1316,7 +1316,7 @@ const getTaskName = (taskId, taskListId) => {
   onPointerDown={() => { audio('button-press', false); }}
   onClick={() => {vibration('button-press');
     if (viewType === 'list' && !canUseOneTaskView(user)) {
-      setUpgradeReason('limit');
+      setUpgradeReason('one-task-view');
       setShowUpgradeModal(true);
       return;
     }
@@ -1387,6 +1387,7 @@ const getTaskName = (taskId, taskListId) => {
   <FirstTimeUserTaskBreakdownModal isOpen={showFirstTimeModal} onClose={() => {setShowFirstTimeModal(false); localStorage.setItem('dismissedFirstTimeModal', 'true')}} setActiveTaskList={setActiveTaskList} setTasks={setTasks} setTaskLists={setTaskLists}/>
 <Sidebar
 setShowUpgradeModal={setShowUpgradeModal}
+setUpgradeReason={setUpgradeReason}
 token={token}
   isOpen={showSidebar}
   onClose={() => setShowSidebar(false)}
@@ -1419,7 +1420,7 @@ token={token}
   }}
   onAddTaskList={async (name) => {
     if (taskLists.length >= getMaxLists(user)) {
-      setUpgradeReason('limit');
+      setUpgradeReason('list-limit');
       setShowUpgradeModal(true)
       setShowSidebar(false)
       return;
