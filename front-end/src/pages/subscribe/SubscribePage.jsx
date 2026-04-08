@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useNavigate } from 'react-router-dom';
-import { CheckCircle, Check } from 'lucide-react';
+import { CheckCircle, Check, AlertTriangle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { vibration } from '../../utilities/vibration';
 import { audio } from '../../utilities/audio';
@@ -56,11 +56,20 @@ export default function SubscribePage() {
   const queryParams = new URLSearchParams(window.location.search);
   const checkoutSuccess = queryParams.get('status') === 'success';
 
+  // When the page loads with ?status=success, we immediately enter "confirming" state
+  // and start polling the back-end. Initialized from checkoutSuccess so the loading UI
+  // is rendered on the first frame instead of flashing the plan-selection UI first.
+  const [confirmingUpgrade, setConfirmingUpgrade] = useState(checkoutSuccess);
+  const [confirmError, setConfirmError] = useState(null);
+
   useEffect(() => {
     if (checkoutSuccess) handleUpgradeComplete();
   }, [checkoutSuccess]);
 
   const handleUpgradeComplete = async () => {
+    setConfirmingUpgrade(true);
+    setConfirmError(null);
+
     const pollUntilUpgraded = async (retries = 10) => {
       for (let i = 0; i < retries; i++) {
         const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/auth/validate?token=${localStorage.getItem('authToken')}`);
@@ -74,10 +83,20 @@ export default function SubscribePage() {
       }
       throw new Error("Timed out waiting for upgrade");
     };
-    await pollUntilUpgraded();
-    setLoading(false);
-    vibration('button-press');
-    setSubscribed(true);
+
+    try {
+      await pollUntilUpgraded();
+      setLoading(false);
+      vibration('button-press');
+      setSubscribed(true);
+    } catch (err) {
+      console.error('handleUpgradeComplete failed:', err);
+      setConfirmError(
+        "Your payment may have gone through, but we couldn't confirm the upgrade in time. Stripe usually finishes processing within a minute. Try refreshing — if the problem persists, contact support."
+      );
+    } finally {
+      setConfirmingUpgrade(false);
+    }
   };
 
   const handleSubscribe = async (tierKey, plan) => {
@@ -128,6 +147,44 @@ export default function SubscribePage() {
           <button onClick={() => { audio('button-press', isMuted); vibration('button-press'); navigate('/app'); }} className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition cursor-pointer">
             Go back to DewList
           </button>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (confirmingUpgrade) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6 text-center">
+          <div className="flex justify-center"><DotLoader /></div>
+          <h2 className="text-xl font-semibold text-[#4F5962] dark:text-white cursor-default">Confirming your upgrade…</h2>
+          <p className="text-sm text-text-info dark:text-text-darkinfo cursor-default">Just a moment while we verify your payment with Stripe.</p>
+        </motion.div>
+      </div>
+    );
+  }
+
+  if (confirmError) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-[#FAECE5] dark:bg-[#212732] px-4">
+        <motion.div initial={{ opacity: 0, scale: 0.95 }} animate={{ opacity: 1, scale: 1 }} className="w-full max-w-md bg-white dark:bg-[#4F5962] shadow-xl rounded-xl p-6 space-y-6 text-center">
+          <AlertTriangle className="w-12 h-12 mx-auto text-yellow-500 dark:text-yellow-300" />
+          <h2 className="text-xl font-semibold text-[#4F5962] dark:text-white cursor-default">Couldn’t confirm upgrade</h2>
+          <p className="text-sm text-text-info dark:text-text-darkinfo cursor-default">{confirmError}</p>
+          <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <button
+              onClick={() => { audio('button-press', isMuted); vibration('button-press'); window.location.reload(); }}
+              className="bg-[#4C6CA8] text-white px-6 py-3 rounded-full font-medium hover:bg-[#3A5D91] transition cursor-pointer"
+            >
+              Try Again
+            </button>
+            <button
+              onClick={() => { audio('button-press', isMuted); vibration('button-press'); navigate('/app'); }}
+              className="text-[#91989E] hover:text-[#4F5962] dark:hover:text-white transition cursor-pointer"
+            >
+              Go back to DewList
+            </button>
+          </div>
         </motion.div>
       </div>
     );
